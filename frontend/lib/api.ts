@@ -1,5 +1,14 @@
 import { API_BASE_URL } from "@/lib/constants";
 import type { ApiErrorBody, TokenResponse, User } from "@/types/auth";
+import type {
+  AdmissionInput,
+  AdmissionRecord,
+  FirstSemesterInput,
+  FirstSemesterRecord,
+  Student,
+  StudentInput,
+  StudentPage,
+} from "@/types/student";
 
 export class ApiError extends Error {
   constructor(
@@ -44,5 +53,109 @@ export async function fetchCurrentUser(token: string): Promise<User> {
     headers: { Authorization: `Bearer ${token}` },
   });
   return parseResponse<User>(response);
+}
+
+function bearerHeaders(token: string, includeJson = false): HeadersInit {
+  return {
+    Authorization: `Bearer ${token}`,
+    ...(includeJson ? { "Content-Type": "application/json" } : {}),
+  };
+}
+
+export async function fetchStudents(
+  token: string,
+  page: number,
+  pageSize: number,
+  search: string,
+): Promise<StudentPage> {
+  const params = new URLSearchParams({ page: String(page), page_size: String(pageSize) });
+  if (search.trim()) params.set("search", search.trim());
+  const response = await fetch(`${API_BASE_URL}/students?${params}`, {
+    headers: bearerHeaders(token),
+  });
+  return parseResponse<StudentPage>(response);
+}
+
+export async function fetchStudent(token: string, studentId: string): Promise<Student> {
+  const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
+    headers: bearerHeaders(token),
+  });
+  return parseResponse<Student>(response);
+}
+
+export async function createStudent(token: string, payload: StudentInput): Promise<Student> {
+  const response = await fetch(`${API_BASE_URL}/students`, {
+    method: "POST",
+    headers: bearerHeaders(token, true),
+    body: JSON.stringify(payload),
+  });
+  return parseResponse<Student>(response);
+}
+
+export async function updateStudent(
+  token: string,
+  studentId: string,
+  payload: Partial<StudentInput>,
+): Promise<Student> {
+  const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
+    method: "PATCH",
+    headers: bearerHeaders(token, true),
+    body: JSON.stringify(payload),
+  });
+  return parseResponse<Student>(response);
+}
+
+export async function deleteStudent(token: string, studentId: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
+    method: "DELETE",
+    headers: bearerHeaders(token),
+  });
+  if (!response.ok) await parseResponse<never>(response);
+}
+
+export async function fetchAdmission(
+  token: string,
+  studentId: string,
+): Promise<AdmissionRecord> {
+  const response = await fetch(`${API_BASE_URL}/students/${studentId}/admission`, {
+    headers: bearerHeaders(token),
+  });
+  return parseResponse<AdmissionRecord>(response);
+}
+
+export async function saveAdmission(
+  token: string,
+  studentId: string,
+  payload: AdmissionInput,
+): Promise<AdmissionRecord> {
+  const response = await fetch(`${API_BASE_URL}/students/${studentId}/admission`, {
+    method: "PUT",
+    headers: bearerHeaders(token, true),
+    body: JSON.stringify(payload),
+  });
+  return parseResponse<AdmissionRecord>(response);
+}
+
+export async function fetchFirstSemester(
+  token: string,
+  studentId: string,
+): Promise<FirstSemesterRecord> {
+  const response = await fetch(`${API_BASE_URL}/students/${studentId}/semester-1`, {
+    headers: bearerHeaders(token),
+  });
+  return parseResponse<FirstSemesterRecord>(response);
+}
+
+export async function saveFirstSemester(
+  token: string,
+  studentId: string,
+  payload: FirstSemesterInput,
+): Promise<FirstSemesterRecord> {
+  const response = await fetch(`${API_BASE_URL}/students/${studentId}/semester-1`, {
+    method: "PUT",
+    headers: bearerHeaders(token, true),
+    body: JSON.stringify(payload),
+  });
+  return parseResponse<FirstSemesterRecord>(response);
 }
 
