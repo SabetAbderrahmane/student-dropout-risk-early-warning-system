@@ -28,7 +28,9 @@ SEMESTER_PAYLOAD = {
 
 
 @pytest.fixture()
-def academic_admin_headers(client: TestClient, create_user, auth_headers) -> dict[str, str]:
+def academic_admin_headers(
+    client: TestClient, create_user, auth_headers
+) -> dict[str, str]:
     create_user(username="academic_admin", role=UserRole.ACADEMIC_ADMIN)
     return auth_headers("academic_admin")
 
@@ -122,9 +124,7 @@ def test_student_delete_cascades_related_records(
 def test_nonexistent_student_returns_controlled_404(
     client: TestClient, academic_admin_headers
 ) -> None:
-    response = client.get(
-        f"/api/v1/students/{uuid4()}", headers=academic_admin_headers
-    )
+    response = client.get(f"/api/v1/students/{uuid4()}", headers=academic_admin_headers)
 
     assert response.status_code == 404
     assert response.json()["error"]["code"] == "STUDENT_NOT_FOUND"
@@ -180,7 +180,9 @@ def test_system_admin_has_read_only_student_access(
 
     assert client.get("/api/v1/students", headers=headers).status_code == 200
     assert (
-        client.post("/api/v1/students", headers=headers, json=STUDENT_PAYLOAD).status_code
+        client.post(
+            "/api/v1/students", headers=headers, json=STUDENT_PAYLOAD
+        ).status_code
         == 403
     )
 
@@ -191,7 +193,9 @@ def test_admission_record_is_created_updated_and_retrieved(
     student = create_student(client, academic_admin_headers)
     endpoint = f"/api/v1/students/{student['id']}/admission"
 
-    created = client.put(endpoint, headers=academic_admin_headers, json=ADMISSION_PAYLOAD)
+    created = client.put(
+        endpoint, headers=academic_admin_headers, json=ADMISSION_PAYLOAD
+    )
     updated = client.put(
         endpoint,
         headers=academic_admin_headers,
@@ -241,7 +245,12 @@ def test_advisor_can_read_but_not_modify_admission(
     client.put(endpoint, headers=academic_admin_headers, json=ADMISSION_PAYLOAD)
 
     assert client.get(endpoint, headers=advisor_headers).status_code == 200
-    assert client.put(endpoint, headers=advisor_headers, json=ADMISSION_PAYLOAD).status_code == 403
+    assert (
+        client.put(
+            endpoint, headers=advisor_headers, json=ADMISSION_PAYLOAD
+        ).status_code
+        == 403
+    )
 
 
 def test_first_semester_record_is_created_updated_and_retrieved(
@@ -250,7 +259,9 @@ def test_first_semester_record_is_created_updated_and_retrieved(
     student = create_student(client, academic_admin_headers)
     endpoint = f"/api/v1/students/{student['id']}/semester-1"
 
-    created = client.put(endpoint, headers=academic_admin_headers, json=SEMESTER_PAYLOAD)
+    created = client.put(
+        endpoint, headers=academic_admin_headers, json=SEMESTER_PAYLOAD
+    )
     updated = client.put(
         endpoint,
         headers=academic_admin_headers,
@@ -280,6 +291,100 @@ def test_invalid_semester_numeric_values_are_rejected(
     assert response.json()["error"]["code"] == "VALIDATION_ERROR"
 
 
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("marital_status_code", 7),
+        ("nationality_code", 999),
+        ("displaced", 2),
+        ("gender_code", -1),
+    ],
+)
+def test_invalid_student_prediction_codes_are_rejected(
+    field: str,
+    value: int,
+    client: TestClient,
+    academic_admin_headers,
+) -> None:
+    response = client.post(
+        "/api/v1/students",
+        headers=academic_admin_headers,
+        json={**STUDENT_PAYLOAD, field: value},
+    )
+
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "VALIDATION_ERROR"
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("application_mode_code", 3),
+        ("application_order", 10),
+        ("course_code", 999),
+        ("daytime_evening_attendance", 2),
+        ("previous_qualification_code", 999),
+        ("mother_occupation_code", 999),
+        ("admission_grade", 201),
+    ],
+)
+def test_invalid_admission_prediction_values_are_rejected(
+    field: str,
+    value: int,
+    client: TestClient,
+    academic_admin_headers,
+) -> None:
+    student = create_student(client, academic_admin_headers)
+    response = client.put(
+        f"/api/v1/students/{student['id']}/admission",
+        headers=academic_admin_headers,
+        json={**ADMISSION_PAYLOAD, field: value},
+    )
+
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "VALIDATION_ERROR"
+
+
+def test_extended_prediction_fields_round_trip_without_becoming_required(
+    client: TestClient,
+    academic_admin_headers,
+) -> None:
+    student = create_student(
+        client,
+        academic_admin_headers,
+        marital_status_code=1,
+        nationality_code=41,
+        gender_code=0,
+        age_at_enrollment=19,
+    )
+    admission = client.put(
+        f"/api/v1/students/{student['id']}/admission",
+        headers=academic_admin_headers,
+        json={
+            **ADMISSION_PAYLOAD,
+            "application_mode_code": 1,
+            "application_order": 0,
+            "course_code": 9500,
+            "daytime_evening_attendance": 1,
+            "unemployment_rate": 10.8,
+            "inflation_rate": -0.8,
+            "gdp": -3.12,
+        },
+    )
+    semester = client.put(
+        f"/api/v1/students/{student['id']}/semester-1",
+        headers=academic_admin_headers,
+        json={**SEMESTER_PAYLOAD, "without_evaluations": 1},
+    )
+
+    assert student["nationality_code"] == 41
+    assert admission.status_code == 200
+    assert admission.json()["course_code"] == 9500
+    assert admission.json()["inflation_rate"] == -0.8
+    assert semester.status_code == 200
+    assert semester.json()["without_evaluations"] == 1
+
+
 def test_missing_semester_record_returns_controlled_404(
     client: TestClient, academic_admin_headers
 ) -> None:
@@ -302,7 +407,10 @@ def test_advisor_can_read_but_not_modify_first_semester(
     client.put(endpoint, headers=academic_admin_headers, json=SEMESTER_PAYLOAD)
 
     assert client.get(endpoint, headers=advisor_headers).status_code == 200
-    assert client.put(endpoint, headers=advisor_headers, json=SEMESTER_PAYLOAD).status_code == 403
+    assert (
+        client.put(endpoint, headers=advisor_headers, json=SEMESTER_PAYLOAD).status_code
+        == 403
+    )
 
 
 def test_pagination_metadata_and_page_size(
