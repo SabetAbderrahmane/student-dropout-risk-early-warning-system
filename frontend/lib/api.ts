@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "@/lib/constants";
 import type { ApiErrorBody, TokenResponse, User } from "@/types/auth";
+import type { ImportErrorPage, ImportJob, ImportJobPage } from "@/types/import";
 import type {
   AdmissionInput,
   AdmissionRecord,
@@ -39,7 +40,10 @@ async function parseResponse<T>(response: Response): Promise<T> {
   );
 }
 
-export async function login(username: string, password: string): Promise<TokenResponse> {
+export async function login(
+  username: string,
+  password: string,
+): Promise<TokenResponse> {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -68,7 +72,10 @@ export async function fetchStudents(
   pageSize: number,
   search: string,
 ): Promise<StudentPage> {
-  const params = new URLSearchParams({ page: String(page), page_size: String(pageSize) });
+  const params = new URLSearchParams({
+    page: String(page),
+    page_size: String(pageSize),
+  });
   if (search.trim()) params.set("search", search.trim());
   const response = await fetch(`${API_BASE_URL}/students?${params}`, {
     headers: bearerHeaders(token),
@@ -76,14 +83,20 @@ export async function fetchStudents(
   return parseResponse<StudentPage>(response);
 }
 
-export async function fetchStudent(token: string, studentId: string): Promise<Student> {
+export async function fetchStudent(
+  token: string,
+  studentId: string,
+): Promise<Student> {
   const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
     headers: bearerHeaders(token),
   });
   return parseResponse<Student>(response);
 }
 
-export async function createStudent(token: string, payload: StudentInput): Promise<Student> {
+export async function createStudent(
+  token: string,
+  payload: StudentInput,
+): Promise<Student> {
   const response = await fetch(`${API_BASE_URL}/students`, {
     method: "POST",
     headers: bearerHeaders(token, true),
@@ -105,7 +118,10 @@ export async function updateStudent(
   return parseResponse<Student>(response);
 }
 
-export async function deleteStudent(token: string, studentId: string): Promise<void> {
+export async function deleteStudent(
+  token: string,
+  studentId: string,
+): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
     method: "DELETE",
     headers: bearerHeaders(token),
@@ -117,9 +133,12 @@ export async function fetchAdmission(
   token: string,
   studentId: string,
 ): Promise<AdmissionRecord> {
-  const response = await fetch(`${API_BASE_URL}/students/${studentId}/admission`, {
-    headers: bearerHeaders(token),
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/students/${studentId}/admission`,
+    {
+      headers: bearerHeaders(token),
+    },
+  );
   return parseResponse<AdmissionRecord>(response);
 }
 
@@ -128,11 +147,14 @@ export async function saveAdmission(
   studentId: string,
   payload: AdmissionInput,
 ): Promise<AdmissionRecord> {
-  const response = await fetch(`${API_BASE_URL}/students/${studentId}/admission`, {
-    method: "PUT",
-    headers: bearerHeaders(token, true),
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/students/${studentId}/admission`,
+    {
+      method: "PUT",
+      headers: bearerHeaders(token, true),
+      body: JSON.stringify(payload),
+    },
+  );
   return parseResponse<AdmissionRecord>(response);
 }
 
@@ -140,9 +162,12 @@ export async function fetchFirstSemester(
   token: string,
   studentId: string,
 ): Promise<FirstSemesterRecord> {
-  const response = await fetch(`${API_BASE_URL}/students/${studentId}/semester-1`, {
-    headers: bearerHeaders(token),
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/students/${studentId}/semester-1`,
+    {
+      headers: bearerHeaders(token),
+    },
+  );
   return parseResponse<FirstSemesterRecord>(response);
 }
 
@@ -151,11 +176,75 @@ export async function saveFirstSemester(
   studentId: string,
   payload: FirstSemesterInput,
 ): Promise<FirstSemesterRecord> {
-  const response = await fetch(`${API_BASE_URL}/students/${studentId}/semester-1`, {
-    method: "PUT",
-    headers: bearerHeaders(token, true),
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/students/${studentId}/semester-1`,
+    {
+      method: "PUT",
+      headers: bearerHeaders(token, true),
+      body: JSON.stringify(payload),
+    },
+  );
   return parseResponse<FirstSemesterRecord>(response);
 }
 
+export async function fetchImports(
+  token: string,
+  page: number,
+  pageSize: number,
+): Promise<ImportJobPage> {
+  const params = new URLSearchParams({
+    page: String(page),
+    page_size: String(pageSize),
+  });
+  const response = await fetch(`${API_BASE_URL}/imports?${params}`, {
+    headers: bearerHeaders(token),
+  });
+  return parseResponse<ImportJobPage>(response);
+}
+
+export async function fetchImportErrors(
+  token: string,
+  importId: string,
+  page: number,
+  pageSize: number,
+): Promise<ImportErrorPage> {
+  const params = new URLSearchParams({
+    page: String(page),
+    page_size: String(pageSize),
+  });
+  const response = await fetch(
+    `${API_BASE_URL}/imports/${importId}/errors?${params}`,
+    {
+      headers: bearerHeaders(token),
+    },
+  );
+  return parseResponse<ImportErrorPage>(response);
+}
+
+export async function uploadStudentCsv(
+  token: string,
+  file: File,
+): Promise<ImportJob> {
+  const body = new FormData();
+  body.append("file", file);
+  const response = await fetch(`${API_BASE_URL}/imports/csv`, {
+    method: "POST",
+    headers: bearerHeaders(token),
+    body,
+  });
+  return parseResponse<ImportJob>(response);
+}
+
+export async function downloadImportTemplate(token: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/imports/template`, {
+    headers: bearerHeaders(token),
+  });
+  if (!response.ok) await parseResponse<never>(response);
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "student-import-template.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}

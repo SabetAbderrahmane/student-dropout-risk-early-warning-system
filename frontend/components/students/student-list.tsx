@@ -4,7 +4,12 @@ import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { ApiError, createStudent, fetchCurrentUser, fetchStudents } from "@/lib/api";
+import {
+  ApiError,
+  createStudent,
+  fetchCurrentUser,
+  fetchStudents,
+} from "@/lib/api";
 import { clearAccessToken, getAccessToken } from "@/lib/auth";
 import type { User } from "@/types/auth";
 import type { StudentPage } from "@/types/student";
@@ -32,17 +37,24 @@ export function StudentList() {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
 
-  const load = useCallback(async (accessToken: string, targetPage: number, query: string) => {
-    setLoading(true);
-    setError("");
-    try {
-      setData(await fetchStudents(accessToken, targetPage, 25, query));
-    } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Unable to load students.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const load = useCallback(
+    async (accessToken: string, targetPage: number, query: string) => {
+      setLoading(true);
+      setError("");
+      try {
+        setData(await fetchStudents(accessToken, targetPage, 25, query));
+      } catch (caught) {
+        setError(
+          caught instanceof ApiError
+            ? caught.message
+            : "Unable to load students.",
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     const accessToken = getAccessToken();
@@ -73,7 +85,11 @@ export function StudentList() {
       });
       router.push(`/students/${student.id}`);
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Unable to create student.");
+      setError(
+        caught instanceof ApiError
+          ? caught.message
+          : "Unable to create student.",
+      );
     }
   }
 
@@ -86,12 +102,22 @@ export function StudentList() {
           <div className="eyebrow">Student domain</div>
           <h1>Students</h1>
           <p className="muted">
-            {user ? `${user.full_name} · ${user.role.replaceAll("_", " ")}` : "Loading account…"}
+            {user
+              ? `${user.full_name} · ${user.role.replaceAll("_", " ")}`
+              : "Loading account…"}
           </p>
         </div>
         <div className="header-actions">
+          {user?.role !== "ACADEMIC_ADVISOR" ? (
+            <Link className="secondary-button compact" href="/imports">
+              CSV imports
+            </Link>
+          ) : null}
           {canEdit ? (
-            <button className="primary-button compact" onClick={() => setShowCreate(!showCreate)}>
+            <button
+              className="primary-button compact"
+              onClick={() => setShowCreate(!showCreate)}
+            >
               {showCreate ? "Close form" : "Add student"}
             </button>
           ) : null}
@@ -113,17 +139,30 @@ export function StudentList() {
           <form className="form-grid" onSubmit={handleCreate}>
             <label>
               Student number
-              <input value={studentNumber} onChange={(e) => setStudentNumber(e.target.value)} required />
+              <input
+                value={studentNumber}
+                onChange={(e) => setStudentNumber(e.target.value)}
+                required
+              />
             </label>
             <label>
               Name
-              <input value={name} onChange={(e) => setName(e.target.value)} required />
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
             </label>
             <label>
               Gender
-              <input value={gender} onChange={(e) => setGender(e.target.value)} />
+              <input
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              />
             </label>
-            <button className="primary-button" type="submit">Create student</button>
+            <button className="primary-button" type="submit">
+              Create student
+            </button>
           </form>
         </section>
       ) : null}
@@ -143,22 +182,39 @@ export function StudentList() {
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
           />
-          <button className="primary-button compact" type="submit">Search</button>
+          <button className="primary-button compact" type="submit">
+            Search
+          </button>
         </form>
-        {error ? <p className="form-error" role="alert">{error}</p> : null}
+        {error ? (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        ) : null}
         {loading ? <p className="muted">Loading students…</p> : null}
-        {!loading && data.items.length === 0 ? <p className="empty-state">No students found.</p> : null}
+        {!loading && data.items.length === 0 ? (
+          <p className="empty-state">No students found.</p>
+        ) : null}
         {data.items.length ? (
           <div className="table-wrap">
             <table>
-              <thead><tr><th>Student number</th><th>Name</th><th>Gender</th><th></th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Student number</th>
+                  <th>Name</th>
+                  <th>Gender</th>
+                  <th></th>
+                </tr>
+              </thead>
               <tbody>
                 {data.items.map((student) => (
                   <tr key={student.id}>
                     <td>{student.student_number}</td>
                     <td>{student.name}</td>
                     <td>{student.gender ?? "—"}</td>
-                    <td><Link href={`/students/${student.id}`}>View details</Link></td>
+                    <td>
+                      <Link href={`/students/${student.id}`}>View details</Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -166,10 +222,25 @@ export function StudentList() {
           </div>
         ) : null}
         <div className="pagination-row">
-          <span>{data.total} total · Page {data.page} of {Math.max(data.total_pages, 1)}</span>
+          <span>
+            {data.total} total · Page {data.page} of{" "}
+            {Math.max(data.total_pages, 1)}
+          </span>
           <div>
-            <button className="secondary-button compact" disabled={page <= 1} onClick={() => setPage(page - 1)}>Previous</button>
-            <button className="secondary-button compact" disabled={data.total_pages === 0 || page >= data.total_pages} onClick={() => setPage(page + 1)}>Next</button>
+            <button
+              className="secondary-button compact"
+              disabled={page <= 1}
+              onClick={() => setPage(page - 1)}
+            >
+              Previous
+            </button>
+            <button
+              className="secondary-button compact"
+              disabled={data.total_pages === 0 || page >= data.total_pages}
+              onClick={() => setPage(page + 1)}
+            >
+              Next
+            </button>
           </div>
         </div>
       </section>
