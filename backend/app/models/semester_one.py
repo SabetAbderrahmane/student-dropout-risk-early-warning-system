@@ -22,6 +22,11 @@ class FirstSemesterRecord(Base):
         CheckConstraint("evaluations >= 0", name="evaluations_nonnegative"),
         CheckConstraint("approved_units >= 0", name="approved_units_nonnegative"),
         CheckConstraint("average_grade >= 0", name="average_grade_nonnegative"),
+        CheckConstraint("average_grade <= 20", name="average_grade_maximum"),
+        CheckConstraint(
+            "without_evaluations IS NULL OR without_evaluations >= 0",
+            name="without_evaluations_nonnegative",
+        ),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
@@ -33,6 +38,7 @@ class FirstSemesterRecord(Base):
     evaluations: Mapped[int] = mapped_column(Integer)
     approved_units: Mapped[int] = mapped_column(Integer)
     average_grade: Mapped[Decimal] = mapped_column(Numeric(8, 2))
+    without_evaluations: Mapped[int | None] = mapped_column(Integer, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
@@ -41,4 +47,3 @@ class FirstSemesterRecord(Base):
     )
 
     student: Mapped[Student] = relationship(back_populates="first_semester_record")
-
