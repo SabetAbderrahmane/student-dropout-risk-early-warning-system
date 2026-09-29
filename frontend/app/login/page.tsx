@@ -51,8 +51,11 @@ export default function LoginPage() {
             </div>
           </dl>
           <p className="muted">
-            Domain workflows and dashboards will be added only in their approved phases.
+            Student records are available according to your backend-enforced role permissions.
           </p>
+          <Link className="primary-link" href="/students">
+            Open students
+          </Link>
           <button
             className="secondary-button"
             type="button"
@@ -110,4 +113,3 @@ export default function LoginPage() {
     </main>
   );
 }
-

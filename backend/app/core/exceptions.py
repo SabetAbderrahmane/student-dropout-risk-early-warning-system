@@ -5,6 +5,21 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 
+class ApplicationError(Exception):
+    def __init__(
+        self,
+        status_code: int,
+        code: str,
+        message: str,
+        details: Any | None = None,
+    ) -> None:
+        self.status_code = status_code
+        self.code = code
+        self.message = message
+        self.details = details
+        super().__init__(message)
+
+
 def _error_payload(code: str, message: str, details: Any | None = None) -> dict[str, Any]:
     error: dict[str, Any] = {"code": code, "message": message}
     if details is not None:
@@ -43,5 +58,12 @@ async def validation_exception_handler(
     return JSONResponse(
         status_code=422,
         content=_error_payload("VALIDATION_ERROR", "Request validation failed.", details),
+    )
+
+
+async def application_exception_handler(_: Request, exc: ApplicationError) -> JSONResponse:
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=_error_payload(exc.code, exc.message, exc.details),
     )
 

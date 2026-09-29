@@ -1,14 +1,16 @@
 # Student Dropout Risk Early Warning System
 
-Phase 1 and Phase 2 foundation for the locked modular-monolith architecture:
+Phase 1 through Phase 3 implementation for the locked modular-monolith architecture:
 
 - Next.js frontend
 - FastAPI backend
 - PostgreSQL with SQLAlchemy 2.x and Alembic
 - Argon2 password hashing, JWT access tokens, and backend RBAC
+- Student, admission, and first-semester academic record management
+- Database-backed student search and pagination
 - Docker Compose development environment
 
-Student, import, prediction, warning, intervention, follow-up, and dashboard domains are intentionally not implemented yet.
+Import, prediction, warning, intervention, follow-up, audit, and dashboard domains are intentionally not implemented yet.
 
 ## Run with Docker Compose
 
@@ -42,6 +44,8 @@ Login accepts JSON. The `username` field may contain either the account username
 
 Use the returned token as `Authorization: Bearer <access_token>`.
 
+Student read endpoints allow all three roles. Student creation, editing, deletion, admission updates, and first-semester updates are restricted to `ACADEMIC_ADMIN`. Student deletion deliberately cascades to its admission and first-semester records at both the ORM and PostgreSQL foreign-key levels.
+
 ## Backend development
 
 Create a virtual environment, install `backend/requirements-dev.txt`, export the variables from `backend/.env.example`, and run:
@@ -61,4 +65,3 @@ cd frontend
 npm ci
 npm run dev
 ```
-
