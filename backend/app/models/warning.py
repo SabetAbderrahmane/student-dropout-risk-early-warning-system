@@ -9,6 +9,7 @@ from sqlalchemy import (
     ForeignKey,
     ForeignKeyConstraint,
     String,
+    UniqueConstraint,
     func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -44,6 +45,7 @@ class Warning(Base):
     __tablename__ = "warnings"
     __table_args__ = (
         CheckConstraint("risk_level <> 'LOW'", name="qualifying_risk"),
+        UniqueConstraint("id", "student_id", name="uq_warnings_intervention_identity"),
         ForeignKeyConstraint(
             ["prediction_id", "student_id", "risk_level"],
             [
