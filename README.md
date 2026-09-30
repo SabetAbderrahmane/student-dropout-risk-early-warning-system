@@ -72,8 +72,10 @@ python -m app.ml.training.train
 The command evaluates Logistic Regression, Random Forest, and XGBoost with a
 stratified five-fold development search, calibrates risk thresholds from
 out-of-fold development predictions, and evaluates the selected frozen pipeline
-once on the held-out 20% final test set. Generated versioned files are written to
-`backend/app/ml/artifacts/dropout-risk-v1/` and remain ignored by Git.
+once on the held-out 20% final test set. The binary model is written to the ignored
+`backend/app/ml/artifacts/dropout-risk-v1/model.joblib`. Exact metadata, evaluation,
+split, and report records are written to the tracked
+`backend/app/ml/model_registry/dropout-risk-v1/` directory.
 
 ## Frontend development
 

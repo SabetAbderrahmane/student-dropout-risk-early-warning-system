@@ -1,0 +1,379 @@
+{
+  "development_model_selection": [
+    {
+      "best_hyperparameters": {
+        "model__C": 0.5,
+        "model__penalty": "l2"
+      },
+      "confusion_matrix_at_0_5": {
+        "fn": 237,
+        "fp": 316,
+        "tn": 2086,
+        "tp": 900
+      },
+      "cv_metric_std": {
+        "accuracy": 0.010360584189894027,
+        "f1": 0.01104225090669806,
+        "pr_auc": 0.008221229850923056,
+        "precision": 0.025396863815254748,
+        "recall": 0.016579271577814934,
+        "roc_auc": 0.005919599611859121
+      },
+      "cv_metrics": {
+        "accuracy": 0.8437413596081157,
+        "f1": 0.7651528210688241,
+        "pr_auc": 0.859045592773359,
+        "precision": 0.7413152361616089,
+        "recall": 0.7915758559394079,
+        "roc_auc": 0.9047152142701209
+      },
+      "name": "Logistic Regression",
+      "search_space": {
+        "model__C": [
+          0.01,
+          0.1,
+          0.5,
+          1.0,
+          5.0,
+          10.0,
+          100.0
+        ],
+        "model__penalty": [
+          "l1",
+          "l2"
+        ]
+      },
+      "selection_score": 0.8017646530340334
+    },
+    {
+      "best_hyperparameters": {
+        "model__max_depth": null,
+        "model__max_features": "sqrt",
+        "model__min_samples_leaf": 2,
+        "model__min_samples_split": 2,
+        "model__n_estimators": 200
+      },
+      "confusion_matrix_at_0_5": {
+        "fn": 323,
+        "fp": 222,
+        "tn": 2180,
+        "tp": 814
+      },
+      "cv_metric_std": {
+        "accuracy": 0.01005140003987819,
+        "f1": 0.013302710663059894,
+        "pr_auc": 0.009619792129999213,
+        "precision": 0.02937954954474242,
+        "recall": 0.016214241258725948,
+        "roc_auc": 0.008879095368010301
+      },
+      "cv_metrics": {
+        "accuracy": 0.8460056417264002,
+        "f1": 0.7493166572359874,
+        "pr_auc": 0.8447252735550913,
+        "precision": 0.7869961170980821,
+        "recall": 0.7159247237035319,
+        "roc_auc": 0.8956472917666549
+      },
+      "name": "Random Forest",
+      "search_space": {
+        "model__max_depth": [
+          null,
+          8,
+          14,
+          20
+        ],
+        "model__max_features": [
+          "sqrt",
+          0.5,
+          0.8
+        ],
+        "model__min_samples_leaf": [
+          1,
+          2,
+          4
+        ],
+        "model__min_samples_split": [
+          2,
+          5,
+          10
+        ],
+        "model__n_estimators": [
+          200,
+          350,
+          500
+        ]
+      },
+      "selection_score": 0.7687791673379097
+    },
+    {
+      "best_hyperparameters": {
+        "model__colsample_bytree": 0.7,
+        "model__learning_rate": 0.05,
+        "model__max_depth": 5,
+        "model__min_child_weight": 1,
+        "model__n_estimators": 250,
+        "model__reg_lambda": 5.0,
+        "model__subsample": 0.85
+      },
+      "confusion_matrix_at_0_5": {
+        "fn": 268,
+        "fp": 279,
+        "tn": 2123,
+        "tp": 869
+      },
+      "cv_metric_std": {
+        "accuracy": 0.0071282835026012644,
+        "f1": 0.00902311899601271,
+        "pr_auc": 0.00853130922909178,
+        "precision": 0.02011992999188654,
+        "recall": 0.018548600645316805,
+        "roc_auc": 0.007378350593345079
+      },
+      "cv_metrics": {
+        "accuracy": 0.8454390717522114,
+        "f1": 0.7606443747693948,
+        "pr_auc": 0.8557179478849853,
+        "precision": 0.7577639121793306,
+        "recall": 0.7643249091892728,
+        "roc_auc": 0.9029393962451724
+      },
+      "name": "XGBoost",
+      "search_space": {
+        "model__colsample_bytree": [
+          0.7,
+          0.85,
+          1.0
+        ],
+        "model__learning_rate": [
+          0.02,
+          0.05,
+          0.1,
+          0.2
+        ],
+        "model__max_depth": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "model__min_child_weight": [
+          1,
+          3,
+          5
+        ],
+        "model__n_estimators": [
+          150,
+          250,
+          400,
+          550
+        ],
+        "model__reg_lambda": [
+          1.0,
+          5.0,
+          10.0
+        ],
+        "model__subsample": [
+          0.7,
+          0.85,
+          1.0
+        ]
+      },
+      "selection_score": 0.7904306213959981
+    }
+  ],
+  "final_test": {
+    "accuracy": 0.8598870056497175,
+    "binary_decision_threshold": 0.5,
+    "brier_score": 0.10721154052187289,
+    "class_distribution": {
+      "dropout": 284,
+      "non_dropout": 601
+    },
+    "confusion_matrix": {
+      "fn": 54,
+      "fp": 70,
+      "tn": 531,
+      "tp": 230
+    },
+    "evaluation_scope": "FINAL_TEST_SET",
+    "f1": 0.7876712328767124,
+    "pr_auc": 0.8738265009166963,
+    "precision": 0.7666666666666667,
+    "probability_max": 0.9999592594244672,
+    "probability_min": 0.003307315635385881,
+    "recall": 0.8098591549295775,
+    "roc_auc": 0.9132314686789623,
+    "sample_size": 885
+  },
+  "global_feature_importance": [
+    {
+      "feature": "first_semester_approved_units",
+      "importance": 0.6185714449216075,
+      "label": "Curricular units 1st sem (approved)"
+    },
+    {
+      "feature": "first_semester_enrolled_units",
+      "importance": 0.0982684063177526,
+      "label": "Curricular units 1st sem (enrolled)"
+    },
+    {
+      "feature": "tuition_fees_up_to_date",
+      "importance": 0.0944275072407421,
+      "label": "Tuition fees up to date"
+    },
+    {
+      "feature": "first_semester_credited_units",
+      "importance": 0.03469000161789173,
+      "label": "Curricular units 1st sem (credited)"
+    },
+    {
+      "feature": "course_code",
+      "importance": 0.03333737573292319,
+      "label": "Course"
+    },
+    {
+      "feature": "unemployment_rate",
+      "importance": 0.01566968064928235,
+      "label": "Unemployment rate"
+    },
+    {
+      "feature": "age_at_enrollment",
+      "importance": 0.013355536078265994,
+      "label": "Age at enrollment"
+    },
+    {
+      "feature": "mother_qualification_code",
+      "importance": 0.013264476371611208,
+      "label": "Mother's qualification"
+    },
+    {
+      "feature": "mother_occupation_code",
+      "importance": 0.013213093106601797,
+      "label": "Mother's occupation"
+    },
+    {
+      "feature": "application_mode_code",
+      "importance": 0.012663895938467697,
+      "label": "Application mode"
+    },
+    {
+      "feature": "father_occupation_code",
+      "importance": 0.012213680724904691,
+      "label": "Father's occupation"
+    },
+    {
+      "feature": "gender_code",
+      "importance": 0.006040665236443174,
+      "label": "Gender"
+    },
+    {
+      "feature": "debtor",
+      "importance": 0.00567308595640201,
+      "label": "Debtor"
+    },
+    {
+      "feature": "father_qualification_code",
+      "importance": 0.0053932460279182155,
+      "label": "Father's qualification"
+    },
+    {
+      "feature": "scholarship_holder",
+      "importance": 0.005084145499946529,
+      "label": "Scholarship holder"
+    },
+    {
+      "feature": "previous_qualification_code",
+      "importance": 0.0029582103694049907,
+      "label": "Previous qualification"
+    },
+    {
+      "feature": "displaced",
+      "importance": 0.002914542280729664,
+      "label": "Displaced"
+    },
+    {
+      "feature": "first_semester_without_evaluations",
+      "importance": 0.0021827988613613565,
+      "label": "Curricular units 1st sem (without evaluations)"
+    },
+    {
+      "feature": "marital_status_code",
+      "importance": 0.0020779914223300697,
+      "label": "Marital Status"
+    },
+    {
+      "feature": "first_semester_evaluations",
+      "importance": 0.0017552034776354528,
+      "label": "Curricular units 1st sem (evaluations)"
+    },
+    {
+      "feature": "first_semester_average_grade",
+      "importance": 0.0012986047780995543,
+      "label": "Curricular units 1st sem (grade)"
+    },
+    {
+      "feature": "nationality_code",
+      "importance": 0.0012333104883445606,
+      "label": "Nacionality"
+    },
+    {
+      "feature": "previous_qualification_grade",
+      "importance": 0.0011229204994590055,
+      "label": "Previous qualification (grade)"
+    },
+    {
+      "feature": "admission_grade",
+      "importance": 0.0010535082389521206,
+      "label": "Admission grade"
+    },
+    {
+      "feature": "application_order",
+      "importance": 0.0010238230422280677,
+      "label": "Application order"
+    },
+    {
+      "feature": "daytime_evening_attendance",
+      "importance": 0.0002119290306735852,
+      "label": "Daytime/evening attendance"
+    },
+    {
+      "feature": "gdp",
+      "importance": 0.00011272993376423535,
+      "label": "GDP"
+    },
+    {
+      "feature": "educational_special_needs",
+      "importance": 0.00010305082337594072,
+      "label": "Educational special needs"
+    },
+    {
+      "feature": "inflation_rate",
+      "importance": 8.513533288029596e-05,
+      "label": "Inflation rate"
+    },
+    {
+      "feature": "international_student",
+      "importance": 0.0,
+      "label": "International"
+    }
+  ],
+  "global_feature_importance_source": "Permutation importance scored by PR-AUC on development data only; negative sampling noise is clipped to zero and values are normalized.",
+  "model_name": "Logistic Regression",
+  "model_version": "dropout-logistic-regression-v1",
+  "selection": {
+    "cv_folds": 5,
+    "method": "0.50 recall + 0.30 PR-AUC + 0.20 precision",
+    "reason": "Highest recall-weighted selection score across the three locked candidate families, with PR-AUC and precision as guardrails.",
+    "refit_metric": "PR-AUC",
+    "score": 0.8017646530340334
+  },
+  "threshold_calibration": {
+    "calibration_source": "development 5-fold out-of-fold probabilities",
+    "high_target_recall": 0.7,
+    "high_threshold": 0.6753008749027472,
+    "low_target_recall": 0.9,
+    "low_threshold": 0.26949540599472155,
+    "method": "Development-set 5-fold out-of-fold predictions: low is the largest threshold retaining >=90% dropout recall; high maximizes precision while retaining >=70% dropout recall."
+  }
+}

@@ -1,5 +1,6 @@
 """Metadata construction, validation, and JSON serialization."""
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -21,6 +22,7 @@ REQUIRED_METADATA_KEYS = {
     "class_distribution",
     "preprocessing",
     "selected_hyperparameters",
+    "split_manifest",
     "thresholds",
     "final_test_metrics",
     "explanation_method",
@@ -67,6 +69,72 @@ def validate_metadata(metadata: dict[str, Any]) -> None:
         raise ValueError("Final-test confusion matrix does not match sample size")
     if final["sample_size"] != counts["final_test"]:
         raise ValueError("Final-test metrics and split counts disagree")
+    split_fingerprints = metadata["split_manifest"]
+    if not split_fingerprints.get("development_index_sha256") or not split_fingerprints.get(
+        "final_test_index_sha256"
+    ):
+        raise ValueError("Metadata split fingerprints are missing")
+
+
+def split_index_hash(indices: list[int] | tuple[int, ...]) -> str:
+    payload = ",".join(str(index) for index in indices).encode()
+    return hashlib.sha256(payload).hexdigest()
+
+
+def validate_registry_consistency(
+    metadata: dict[str, Any],
+    evaluation: dict[str, Any],
+    split_manifest: dict[str, Any],
+) -> None:
+    """Verify that all tracked records describe one internally consistent run."""
+    validate_metadata(metadata)
+    if evaluation.get("model_name") != metadata["model_name"]:
+        raise ValueError("Registry model names disagree")
+    if evaluation.get("model_version") != metadata["model_version"]:
+        raise ValueError("Registry model versions disagree")
+    if evaluation.get("threshold_calibration") != metadata["thresholds"]:
+        raise ValueError("Registry thresholds disagree")
+    if evaluation.get("final_test") != metadata["final_test_metrics"]:
+        raise ValueError("Registry final-test metrics disagree")
+
+    development_indices = split_manifest.get("development_indices", [])
+    final_test_indices = split_manifest.get("final_test_indices", [])
+    if split_manifest.get("random_seed") != metadata["random_seed"]:
+        raise ValueError("Split manifest random seed disagrees with metadata")
+    if split_manifest.get("stratified") is not True:
+        raise ValueError("Split manifest must record a stratified split")
+    if len(set(development_indices)) != len(development_indices):
+        raise ValueError("Development split contains duplicate indices")
+    if len(set(final_test_indices)) != len(final_test_indices):
+        raise ValueError("Final-test split contains duplicate indices")
+    if set(development_indices) & set(final_test_indices):
+        raise ValueError("Development and final-test indices overlap")
+    if len(development_indices) != metadata["counts"]["development"]:
+        raise ValueError("Development split count disagrees with metadata")
+    if len(final_test_indices) != metadata["counts"]["final_test"]:
+        raise ValueError("Final-test split count disagrees with metadata")
+    fingerprints = metadata["split_manifest"]
+    if split_index_hash(development_indices) != fingerprints[
+        "development_index_sha256"
+    ]:
+        raise ValueError("Development split fingerprint disagrees")
+    if split_index_hash(final_test_indices) != fingerprints["final_test_index_sha256"]:
+        raise ValueError("Final-test split fingerprint disagrees")
+
+
+def validate_artifact_consistency(bundle: Any, metadata: dict[str, Any]) -> None:
+    """Verify the ignored binary and tracked metadata describe the same model."""
+    if bundle.model_name != metadata["model_name"]:
+        raise ValueError("Artifact and metadata model names disagree")
+    if bundle.model_version != metadata["model_version"]:
+        raise ValueError("Artifact and metadata model versions disagree")
+    if list(bundle.feature_names) != metadata["features"]:
+        raise ValueError("Artifact and metadata feature lists disagree")
+    thresholds = metadata["thresholds"]
+    if bundle.low_threshold != thresholds["low_threshold"]:
+        raise ValueError("Artifact and metadata low thresholds disagree")
+    if bundle.high_threshold != thresholds["high_threshold"]:
+        raise ValueError("Artifact and metadata high thresholds disagree")
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:

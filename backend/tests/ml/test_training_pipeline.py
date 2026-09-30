@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import joblib
@@ -23,9 +24,19 @@ from app.ml.training.data import (
     map_uci_features,
     validate_uci_schema,
 )
-from app.ml.training.metadata import FEATURE_SCHEMA_VERSION, validate_metadata
+from app.ml.training.metadata import (
+    FEATURE_SCHEMA_VERSION,
+    split_index_hash,
+    validate_artifact_consistency,
+    validate_metadata,
+    validate_registry_consistency,
+)
 from app.ml.training.modeling import candidate_definitions, make_preprocessor
 from app.ml.training.thresholds import calibrate_thresholds, risk_level
+from app.ml.training.train import (
+    DEFAULT_ARTIFACT_DIRECTORY,
+    DEFAULT_REGISTRY_DIRECTORY,
+)
 
 
 def _synthetic_features(rows: int = 100) -> pd.DataFrame:
@@ -71,6 +82,44 @@ def _fitted_bundle() -> tuple[object, pd.DataFrame]:
         ),
         X,
     )
+
+
+def _valid_metadata() -> dict[str, object]:
+    development_indices = list(range(80))
+    final_test_indices = list(range(80, 100))
+    return {
+        "model_name": "Logistic Regression",
+        "model_version": "test-v1",
+        "trained_at": "2026-09-30T00:00:00+00:00",
+        "dataset": {"dataset_id": 697},
+        "target_mapping": dict(BINARY_TARGET_ENCODING),
+        "feature_schema_version": FEATURE_SCHEMA_VERSION,
+        "features": list(CANONICAL_FEATURE_NAMES),
+        "random_seed": 42,
+        "counts": {
+            "total": 100,
+            "training": 80,
+            "development": 80,
+            "final_test": 20,
+        },
+        "class_distribution": {},
+        "preprocessing": "test",
+        "selected_hyperparameters": {},
+        "split_manifest": {
+            "path": "split_manifest.json",
+            "development_index_sha256": split_index_hash(development_indices),
+            "final_test_index_sha256": split_index_hash(final_test_indices),
+        },
+        "thresholds": {"low_threshold": 0.3, "high_threshold": 0.7},
+        "final_test_metrics": {
+            "evaluation_scope": "FINAL_TEST_SET",
+            "sample_size": 20,
+            "confusion_matrix": {"tp": 5, "fp": 5, "tn": 5, "fn": 5},
+        },
+        "explanation_method": "test",
+        "artifact_path": "app/ml/artifacts/dropout-risk-v1/model.joblib",
+        "library_versions": {},
+    }
 
 
 def test_official_uci_columns_map_to_exact_canonical_order() -> None:
@@ -185,35 +234,54 @@ def test_candidate_families_and_algorithm_level_weighting() -> None:
 
 
 def test_metadata_validation_accepts_complete_consistent_document() -> None:
-    metadata = {
-        "model_name": "Logistic Regression",
-        "model_version": "test-v1",
-        "trained_at": "2026-09-30T00:00:00+00:00",
-        "dataset": {"dataset_id": 697},
-        "target_mapping": dict(BINARY_TARGET_ENCODING),
-        "feature_schema_version": FEATURE_SCHEMA_VERSION,
-        "features": list(CANONICAL_FEATURE_NAMES),
-        "random_seed": 42,
-        "counts": {
-            "total": 100,
-            "training": 80,
-            "development": 80,
-            "final_test": 20,
-        },
-        "class_distribution": {},
-        "preprocessing": "test",
-        "selected_hyperparameters": {},
-        "thresholds": {"low_threshold": 0.3, "high_threshold": 0.7},
-        "final_test_metrics": {
-            "evaluation_scope": "FINAL_TEST_SET",
-            "sample_size": 20,
-            "confusion_matrix": {"tp": 5, "fp": 5, "tn": 5, "fn": 5},
-        },
-        "explanation_method": "test",
-        "artifact_path": "model.joblib",
-        "library_versions": {},
+    validate_metadata(_valid_metadata())
+
+
+def test_registry_and_artifact_records_agree_without_training() -> None:
+    metadata = _valid_metadata()
+    bundle, _ = _fitted_bundle()
+    evaluation = {
+        "model_name": metadata["model_name"],
+        "model_version": metadata["model_version"],
+        "threshold_calibration": metadata["thresholds"],
+        "final_test": metadata["final_test_metrics"],
     }
-    validate_metadata(metadata)
+    split_manifest = {
+        "random_seed": 42,
+        "stratified": True,
+        "development_indices": list(range(80)),
+        "final_test_indices": list(range(80, 100)),
+    }
+
+    validate_registry_consistency(metadata, evaluation, split_manifest)
+    validate_artifact_consistency(bundle, metadata)
+
+
+def test_default_binary_and_registry_destinations_are_separate() -> None:
+    assert DEFAULT_ARTIFACT_DIRECTORY.name == "dropout-risk-v1"
+    assert DEFAULT_ARTIFACT_DIRECTORY.parent.name == "artifacts"
+    assert DEFAULT_REGISTRY_DIRECTORY.name == "dropout-risk-v1"
+    assert DEFAULT_REGISTRY_DIRECTORY.parent.name == "model_registry"
+    assert DEFAULT_ARTIFACT_DIRECTORY != DEFAULT_REGISTRY_DIRECTORY
+
+
+def test_tracked_registry_snapshot_is_complete_and_consistent() -> None:
+    metadata = json.loads(
+        (DEFAULT_REGISTRY_DIRECTORY / "metadata.json").read_text(encoding="utf-8")
+    )
+    evaluation = json.loads(
+        (DEFAULT_REGISTRY_DIRECTORY / "evaluation.json").read_text(encoding="utf-8")
+    )
+    split_manifest = json.loads(
+        (DEFAULT_REGISTRY_DIRECTORY / "split_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    validate_registry_consistency(metadata, evaluation, split_manifest)
+    assert metadata["dataset"]["dataset_id"] == 697
+    assert tuple(metadata["features"]) == CANONICAL_FEATURE_NAMES
+    assert (DEFAULT_REGISTRY_DIRECTORY / "training_report.md").is_file()
 
 
 def test_metadata_validation_rejects_noncanonical_features() -> None:
@@ -237,6 +305,11 @@ def test_metadata_validation_rejects_noncanonical_features() -> None:
             "class_distribution": {},
             "preprocessing": "x",
             "selected_hyperparameters": {},
+            "split_manifest": {
+                "path": "split_manifest.json",
+                "development_index_sha256": "present",
+                "final_test_index_sha256": "present",
+            },
             "thresholds": {"low_threshold": 0.3, "high_threshold": 0.7},
             "final_test_metrics": {
                 "evaluation_scope": "FINAL_TEST_SET",

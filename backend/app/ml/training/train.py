@@ -6,7 +6,6 @@ From ``backend``:
 """
 
 import argparse
-import hashlib
 import importlib.metadata
 import json
 import platform
@@ -27,14 +26,21 @@ from app.ml.training.data import (
     make_final_split,
 )
 from app.ml.training.evaluation import evaluate_final_test, global_feature_importance
-from app.ml.training.metadata import FEATURE_SCHEMA_VERSION, validate_metadata, write_json
+from app.ml.training.metadata import (
+    FEATURE_SCHEMA_VERSION,
+    split_index_hash,
+    validate_artifact_consistency,
+    validate_metadata,
+    validate_registry_consistency,
+    write_json,
+)
 from app.ml.training.modeling import CandidateResult, select_winner, train_candidates
 from app.ml.training.report import render_report
 from app.ml.training.thresholds import calibrate_thresholds
 
-DEFAULT_OUTPUT_DIRECTORY = (
-    Path(__file__).resolve().parents[1] / "artifacts" / "dropout-risk-v1"
-)
+ML_DIRECTORY = Path(__file__).resolve().parents[1]
+DEFAULT_ARTIFACT_DIRECTORY = ML_DIRECTORY / "artifacts" / "dropout-risk-v1"
+DEFAULT_REGISTRY_DIRECTORY = ML_DIRECTORY / "model_registry" / "dropout-risk-v1"
 
 
 def _serialize_candidate(candidate: CandidateResult) -> dict[str, Any]:
@@ -49,11 +55,6 @@ def _serialize_candidate(candidate: CandidateResult) -> dict[str, Any]:
     }
 
 
-def _split_hash(indices: tuple[int, ...]) -> str:
-    payload = ",".join(str(index) for index in indices).encode()
-    return hashlib.sha256(payload).hexdigest()
-
-
 def _library_versions() -> dict[str, str]:
     packages = ("joblib", "numpy", "pandas", "scikit-learn", "ucimlrepo", "xgboost")
     return {
@@ -62,8 +63,12 @@ def _library_versions() -> dict[str, str]:
     }
 
 
-def run_training(output_directory: Path = DEFAULT_OUTPUT_DIRECTORY) -> dict[str, Any]:
-    output_directory.mkdir(parents=True, exist_ok=True)
+def run_training(
+    artifact_directory: Path = DEFAULT_ARTIFACT_DIRECTORY,
+    registry_directory: Path = DEFAULT_REGISTRY_DIRECTORY,
+) -> dict[str, Any]:
+    artifact_directory.mkdir(parents=True, exist_ok=True)
+    registry_directory.mkdir(parents=True, exist_ok=True)
 
     X, y, dataset_source = load_uci_dataset()
     split = make_final_split(X, y)
@@ -100,7 +105,7 @@ def run_training(output_directory: Path = DEFAULT_OUTPUT_DIRECTORY) -> dict[str,
         high_threshold=thresholds.high_threshold,
         X_development=split.X_development,
     )
-    artifact_path = output_directory / "model.joblib"
+    artifact_path = artifact_directory / "model.joblib"
     joblib.dump(bundle, artifact_path)
 
     # Reload verification uses development rows, never another final-test scoring pass.
@@ -132,8 +137,8 @@ def run_training(output_directory: Path = DEFAULT_OUTPUT_DIRECTORY) -> dict[str,
         },
         "split_manifest": {
             "path": "split_manifest.json",
-            "development_index_sha256": _split_hash(split.development_indices),
-            "final_test_index_sha256": _split_hash(split.final_test_indices),
+            "development_index_sha256": split_index_hash(split.development_indices),
+            "final_test_index_sha256": split_index_hash(split.final_test_indices),
             "stratified_final_test_fraction": 0.20,
         },
         "preprocessing": (
@@ -169,6 +174,8 @@ def run_training(output_directory: Path = DEFAULT_OUTPUT_DIRECTORY) -> dict[str,
     validate_metadata(metadata)
 
     evaluation = {
+        "model_name": winner.name,
+        "model_version": model_version,
         "development_model_selection": [
             _serialize_candidate(candidate) for candidate in candidates
         ],
@@ -188,10 +195,10 @@ def run_training(output_directory: Path = DEFAULT_OUTPUT_DIRECTORY) -> dict[str,
         "final_test_indices": list(split.final_test_indices),
     }
 
-    metadata_path = output_directory / "metadata.json"
-    evaluation_path = output_directory / "evaluation.json"
-    manifest_path = output_directory / "split_manifest.json"
-    report_path = output_directory / "training_report.md"
+    metadata_path = registry_directory / "metadata.json"
+    evaluation_path = registry_directory / "evaluation.json"
+    manifest_path = registry_directory / "split_manifest.json"
+    report_path = registry_directory / "training_report.md"
     write_json(metadata_path, metadata)
     write_json(evaluation_path, evaluation)
     write_json(manifest_path, split_manifest)
@@ -199,9 +206,11 @@ def run_training(output_directory: Path = DEFAULT_OUTPUT_DIRECTORY) -> dict[str,
 
     persisted_metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     persisted_evaluation = json.loads(evaluation_path.read_text(encoding="utf-8"))
-    validate_metadata(persisted_metadata)
-    if persisted_metadata["final_test_metrics"] != persisted_evaluation["final_test"]:
-        raise ValueError("Metadata and evaluation final-test metrics disagree")
+    persisted_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    validate_registry_consistency(
+        persisted_metadata, persisted_evaluation, persisted_manifest
+    )
+    validate_artifact_consistency(reloaded, persisted_metadata)
 
     return {
         "metadata": metadata,
@@ -219,13 +228,19 @@ def run_training(output_directory: Path = DEFAULT_OUTPUT_DIRECTORY) -> dict[str,
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--output-dir",
+        "--artifact-dir",
         type=Path,
-        default=DEFAULT_OUTPUT_DIRECTORY,
-        help="Versioned output directory (default: %(default)s)",
+        default=DEFAULT_ARTIFACT_DIRECTORY,
+        help="Ignored binary artifact directory (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--registry-dir",
+        type=Path,
+        default=DEFAULT_REGISTRY_DIRECTORY,
+        help="Tracked auditable registry directory (default: %(default)s)",
     )
     args = parser.parse_args()
-    result = run_training(args.output_dir.resolve())
+    result = run_training(args.artifact_dir.resolve(), args.registry_dir.resolve())
     summary = {
         "model_name": result["metadata"]["model_name"],
         "model_version": result["metadata"]["model_version"],
