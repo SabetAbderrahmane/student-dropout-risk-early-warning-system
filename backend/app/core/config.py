@@ -15,8 +15,9 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = Field(default=30, ge=1, le=1440)
 
     cors_origins: str = "http://localhost:3000"
-    ml_model_path: str = "app/ml/artifacts/dropout_model.joblib"
-    ml_metadata_path: str = "app/ml/artifacts/metadata.json"
+    ml_model_path: str = "app/ml/artifacts/dropout-risk-v1/model.joblib"
+    ml_metadata_path: str = "app/ml/model_registry/dropout-risk-v1/metadata.json"
+    ml_evaluation_path: str = "app/ml/model_registry/dropout-risk-v1/evaluation.json"
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -33,4 +34,3 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-

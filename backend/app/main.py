@@ -1,9 +1,11 @@
-from contextlib import asynccontextmanager
+import logging
 from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.v1.router import api_router
 from app.core.config import get_settings
@@ -14,13 +16,24 @@ from app.core.exceptions import (
     validation_exception_handler,
 )
 from app.core.logging import configure_logging
+from app.db.session import SessionLocal
+from app.ml.runtime import initialize_model_runtime
+from app.services.prediction_service import PredictionService
 
 settings = get_settings()
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     configure_logging()
+    runtime = initialize_model_runtime()
+    if runtime is not None:
+        try:
+            with SessionLocal() as db:
+                PredictionService(db).synchronize_registry(runtime)
+        except (ApplicationError, SQLAlchemyError):
+            logger.warning("Model registry startup synchronization was deferred.")
     yield
 
 
