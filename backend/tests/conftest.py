@@ -4,6 +4,13 @@ from collections.abc import Generator
 os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key-that-is-at-least-32-characters-long")
 os.environ.setdefault("DATABASE_URL", "sqlite+pysqlite:///:memory:")
 os.environ.setdefault("APP_ENV", "test")
+os.environ.setdefault("ML_MODEL_PATH", "app/ml/artifacts/dropout-risk-v1/model.joblib")
+os.environ.setdefault(
+    "ML_METADATA_PATH", "app/ml/model_registry/dropout-risk-v1/metadata.json"
+)
+os.environ.setdefault(
+    "ML_EVALUATION_PATH", "app/ml/model_registry/dropout-risk-v1/evaluation.json"
+)
 
 import pytest
 from fastapi.testclient import TestClient
