@@ -1,6 +1,16 @@
 from fastapi import APIRouter
 
-from app.api.v1 import auth, health, imports, models, predictions, students, warnings
+from app.api.v1 import (
+    auth,
+    follow_ups,
+    health,
+    imports,
+    interventions,
+    models,
+    predictions,
+    students,
+    warnings,
+)
 
 api_router = APIRouter()
 api_router.include_router(health.router)
@@ -10,3 +20,5 @@ api_router.include_router(students.router)
 api_router.include_router(predictions.router)
 api_router.include_router(models.router)
 api_router.include_router(warnings.router)
+api_router.include_router(interventions.router)
+api_router.include_router(follow_ups.router)
