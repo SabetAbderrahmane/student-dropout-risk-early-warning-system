@@ -15,6 +15,7 @@ from sqlalchemy import (
     ForeignKey,
     Index,
     String,
+    UniqueConstraint,
     func,
     text,
 )
@@ -80,6 +81,12 @@ class PredictionResult(Base):
     __table_args__ = (
         CheckConstraint(
             "probability >= 0 AND probability <= 1", name="probability_range"
+        ),
+        UniqueConstraint(
+            "id",
+            "student_id",
+            "risk_level",
+            name="uq_prediction_results_warning_identity",
         ),
     )
 

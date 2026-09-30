@@ -4,6 +4,13 @@ from app.models.prediction import ModelVersion, PredictionResult, RiskLevel
 from app.models.semester_one import FirstSemesterRecord
 from app.models.student import Student
 from app.models.user import User, UserRole
+from app.models.warning import (
+    ReviewDecision,
+    Warning,
+    WarningPriority,
+    WarningReview,
+    WarningReviewState,
+)
 
 __all__ = [
     "AdmissionRecord",
@@ -17,4 +24,9 @@ __all__ = [
     "Student",
     "User",
     "UserRole",
+    "Warning",
+    "WarningReview",
+    "WarningPriority",
+    "WarningReviewState",
+    "ReviewDecision",
 ]
