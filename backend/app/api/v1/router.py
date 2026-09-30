@@ -8,6 +8,7 @@ from app.api.v1 import (
     interventions,
     models,
     predictions,
+    read_models,
     students,
     warnings,
 )
@@ -22,3 +23,4 @@ api_router.include_router(models.router)
 api_router.include_router(warnings.router)
 api_router.include_router(interventions.router)
 api_router.include_router(follow_ups.router)
+api_router.include_router(read_models.router)
