@@ -1,0 +1,132 @@
+{
+  "artifact_path": "app/ml/artifacts/dropout-risk-v1/model.joblib",
+  "class_distribution": {
+    "development": {
+      "dropout": 1137,
+      "non_dropout": 2402
+    },
+    "final_test": {
+      "dropout": 284,
+      "non_dropout": 601
+    },
+    "total": {
+      "dropout": 1421,
+      "non_dropout": 3003
+    }
+  },
+  "counts": {
+    "development": 3539,
+    "final_test": 885,
+    "total": 4424,
+    "training": 3539
+  },
+  "dataset": {
+    "dataset_id": 697,
+    "homepage": "https://archive.ics.uci.edu/dataset/697/",
+    "name": "Predict Students' Dropout and Academic Success",
+    "repository": "UCI Machine Learning Repository",
+    "retrieval_library": "ucimlrepo"
+  },
+  "explanation_method": "Model-agnostic single-feature reference perturbation: contribution is the change in dropout probability when one observed feature is replaced by its development-set median (numeric) or mode (categorical).",
+  "feature_schema_version": "uci697-first-semester-v1",
+  "features": [
+    "marital_status_code",
+    "application_mode_code",
+    "application_order",
+    "course_code",
+    "daytime_evening_attendance",
+    "previous_qualification_code",
+    "previous_qualification_grade",
+    "nationality_code",
+    "mother_qualification_code",
+    "father_qualification_code",
+    "mother_occupation_code",
+    "father_occupation_code",
+    "admission_grade",
+    "displaced",
+    "educational_special_needs",
+    "debtor",
+    "tuition_fees_up_to_date",
+    "gender_code",
+    "scholarship_holder",
+    "age_at_enrollment",
+    "international_student",
+    "first_semester_credited_units",
+    "first_semester_enrolled_units",
+    "first_semester_evaluations",
+    "first_semester_approved_units",
+    "first_semester_average_grade",
+    "first_semester_without_evaluations",
+    "unemployment_rate",
+    "inflation_rate",
+    "gdp"
+  ],
+  "final_test_metrics": {
+    "accuracy": 0.8598870056497175,
+    "binary_decision_threshold": 0.5,
+    "brier_score": 0.10721154052187289,
+    "class_distribution": {
+      "dropout": 284,
+      "non_dropout": 601
+    },
+    "confusion_matrix": {
+      "fn": 54,
+      "fp": 70,
+      "tn": 531,
+      "tp": 230
+    },
+    "evaluation_scope": "FINAL_TEST_SET",
+    "f1": 0.7876712328767124,
+    "pr_auc": 0.8738265009166963,
+    "precision": 0.7666666666666667,
+    "probability_max": 0.9999592594244672,
+    "probability_min": 0.003307315635385881,
+    "recall": 0.8098591549295775,
+    "roc_auc": 0.9132314686789623,
+    "sample_size": 885
+  },
+  "library_versions": {
+    "joblib": "1.6.0",
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "python": "3.11.9",
+    "scikit-learn": "1.7.2",
+    "ucimlrepo": "0.0.7",
+    "xgboost": "3.2.0"
+  },
+  "model_name": "Logistic Regression",
+  "model_version": "dropout-logistic-regression-v1",
+  "preprocessing": "ColumnTransformer inside every CV/model pipeline: numeric features use median imputation plus StandardScaler; categorical and binary codes use most-frequent imputation plus one-hot encoding with unknown-category handling. Input is checked against the canonical ordered 30 features.",
+  "random_seed": 42,
+  "selected_hyperparameters": {
+    "model__C": 0.5,
+    "model__penalty": "l2"
+  },
+  "selection": {
+    "cv_folds": 5,
+    "method": "0.50 recall + 0.30 PR-AUC + 0.20 precision",
+    "reason": "Highest recall-weighted selection score across the three locked candidate families, with PR-AUC and precision as guardrails.",
+    "refit_metric": "PR-AUC",
+    "score": 0.8017646530340334
+  },
+  "split_manifest": {
+    "development_index_sha256": "ac4c9447f3a286888574c4700d433d3811b1fe87873f81e844c622ab68fb99c6",
+    "final_test_index_sha256": "fd08a2da466a5a9195844dcfefe830daefde7673afebdea236be7aea64dd54e3",
+    "path": "split_manifest.json",
+    "stratified_final_test_fraction": 0.2
+  },
+  "target_mapping": {
+    "Dropout": 1,
+    "Enrolled": 0,
+    "Graduate": 0
+  },
+  "thresholds": {
+    "calibration_source": "development 5-fold out-of-fold probabilities",
+    "high_target_recall": 0.7,
+    "high_threshold": 0.6753008749027472,
+    "low_target_recall": 0.9,
+    "low_threshold": 0.26949540599472155,
+    "method": "Development-set 5-fold out-of-fold predictions: low is the largest threshold retaining >=90% dropout recall; high maximizes precision while retaining >=70% dropout recall."
+  },
+  "trained_at": "2026-09-30T20:11:46.795527+00:00"
+}
