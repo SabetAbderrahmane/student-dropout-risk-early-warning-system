@@ -68,7 +68,7 @@ class BatchPredictionResponse(BaseModel):
     assessed: int
     skipped_not_ready: int
     created_predictions: int
-    created_warnings: Literal[0] = 0
+    created_warnings: int
     model_version: str
     completed_at: datetime
 

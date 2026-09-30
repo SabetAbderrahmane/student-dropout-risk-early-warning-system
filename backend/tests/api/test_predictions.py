@@ -179,7 +179,8 @@ def test_batch_skips_not_ready_and_repeated_runs_append(
     assert first.json()["assessed"] == 1
     assert first.json()["skipped_not_ready"] == 1
     assert first.json()["created_predictions"] == 1
-    assert first.json()["created_warnings"] == 0
+    assert first.json()["created_warnings"] in (0, 1)
+    assert second.json()["created_warnings"] == first.json()["created_warnings"]
     assert db_session.scalar(select(func.count(PredictionResult.id))) == 2
 
 

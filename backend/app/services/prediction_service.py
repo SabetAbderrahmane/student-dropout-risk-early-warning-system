@@ -10,6 +10,7 @@ from app.ml.inference_features import FeatureAssembly, assemble_prediction_featu
 from app.ml.runtime import ModelRuntime, get_model_runtime
 from app.models.prediction import ModelVersion, PredictionResult, RiskLevel
 from app.models.student import Student
+from app.models.warning import Warning, WarningPriority
 from app.repositories.prediction_repository import PredictionRepository
 from app.schemas.prediction import (
     BatchPredictionResponse,
@@ -116,6 +117,27 @@ class PredictionService:
             created_by=created_by,
         )
 
+    def _add_warning_for_prediction(self, prediction: PredictionResult) -> bool:
+        """Use the flushed prediction row as the sole source of warning facts."""
+        if prediction.risk_level == RiskLevel.LOW:
+            return False
+        priority = (
+            WarningPriority.P1_URGENT
+            if prediction.risk_level == RiskLevel.HIGH
+            else WarningPriority.P2_ELEVATED
+        )
+        self.db.add(
+            Warning(
+                prediction_id=prediction.id,
+                student_id=prediction.student_id,
+                risk_level=prediction.risk_level,
+                priority=priority,
+                created_at=datetime.now(timezone.utc),
+            )
+        )
+        self.db.flush()
+        return True
+
     @staticmethod
     def _summary(prediction: PredictionResult) -> PredictionResponse:
         return PredictionResponse(
@@ -153,7 +175,12 @@ class PredictionService:
             created_by=created_by,
         )
         self.repository.add_prediction(prediction)
-        self.db.commit()
+        try:
+            self._add_warning_for_prediction(prediction)
+            self.db.commit()
+        except Exception:
+            self.db.rollback()
+            raise
         return self.get_prediction(prediction.id)
 
     def predict_batch(self, *, created_by: UUID) -> BatchPredictionResponse:
@@ -161,28 +188,34 @@ class PredictionService:
         model = self.synchronize_registry(runtime)
         students = self.repository.list_student_graphs()
         created = 0
+        warnings = 0
         skipped = 0
-        for student in students:
-            assembly = assemble_prediction_features(student)
-            if not assembly.ready:
-                skipped += 1
-                continue
-            self.repository.add_prediction(
-                self._build_prediction(
-                    student=student,
-                    assembly=assembly,
-                    runtime=runtime,
-                    model=model,
-                    created_by=created_by,
+        try:
+            for student in students:
+                assembly = assemble_prediction_features(student)
+                if not assembly.ready:
+                    skipped += 1
+                    continue
+                prediction = self.repository.add_prediction(
+                    self._build_prediction(
+                        student=student,
+                        assembly=assembly,
+                        runtime=runtime,
+                        model=model,
+                        created_by=created_by,
+                    )
                 )
-            )
-            created += 1
-        self.db.commit()
+                warnings += self._add_warning_for_prediction(prediction)
+                created += 1
+            self.db.commit()
+        except Exception:
+            self.db.rollback()
+            raise
         return BatchPredictionResponse(
             assessed=created,
             skipped_not_ready=skipped,
             created_predictions=created,
-            created_warnings=0,
+            created_warnings=warnings,
             model_version=model.model_version,
             completed_at=datetime.now(timezone.utc),
         )
