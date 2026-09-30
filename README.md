@@ -1,16 +1,17 @@
 # Student Dropout Risk Early Warning System
 
-Phase 1 through Phase 3 implementation for the locked modular-monolith architecture:
+Phase 1 through Phase 5A implementation for the locked modular-monolith architecture:
 
 - Next.js frontend
 - FastAPI backend
 - PostgreSQL with SQLAlchemy 2.x and Alembic
 - Argon2 password hashing, JWT access tokens, and backend RBAC
 - Student, admission, and first-semester academic record management
+- Reproducible offline dropout-model training and selection
 - Database-backed student search and pagination
 - Docker Compose development environment
 
-Import, prediction, warning, intervention, follow-up, audit, and dashboard domains are intentionally not implemented yet.
+Runtime prediction, warning, intervention, follow-up, audit, and dashboard domains are intentionally not implemented yet.
 
 ## Run with Docker Compose
 
@@ -57,6 +58,22 @@ python -m app.db.init_db
 uvicorn app.main:app --reload
 pytest
 ```
+
+## Offline ML training
+
+Install the backend development dependencies, then retrieve UCI dataset 697 and run
+the full leakage-safe model-selection pipeline:
+
+```bash
+cd backend
+python -m app.ml.training.train
+```
+
+The command evaluates Logistic Regression, Random Forest, and XGBoost with a
+stratified five-fold development search, calibrates risk thresholds from
+out-of-fold development predictions, and evaluates the selected frozen pipeline
+once on the held-out 20% final test set. Generated versioned files are written to
+`backend/app/ml/artifacts/dropout-risk-v1/` and remain ignored by Git.
 
 ## Frontend development
 
