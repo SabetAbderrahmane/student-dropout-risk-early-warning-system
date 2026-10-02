@@ -1,4 +1,12 @@
 import { API_BASE_URL } from "@/lib/constants";
+import type {
+  DashboardOverview,
+  ReviewWarningInput,
+  WarningReviewReceipt,
+  InterventionInput,
+  InterventionReceipt,
+  BatchPredictionResponse,
+} from "@/types/dashboard";
 import type { ApiErrorBody, TokenResponse, User } from "@/types/auth";
 import type { ImportErrorPage, ImportJob, ImportJobPage } from "@/types/import";
 import type {
@@ -34,9 +42,9 @@ async function parseResponse<T>(response: Response): Promise<T> {
     // A controlled fallback is used if a proxy returns a non-JSON error.
   }
   throw new ApiError(
-    body?.error.message ?? "The request could not be completed.",
+    body?.error?.message ?? "The request could not be completed.",
     response.status,
-    body?.error.code ?? "REQUEST_FAILED",
+    body?.error?.code ?? "REQUEST_FAILED",
   );
 }
 
@@ -64,6 +72,58 @@ function bearerHeaders(token: string, includeJson = false): HeadersInit {
     Authorization: `Bearer ${token}`,
     ...(includeJson ? { "Content-Type": "application/json" } : {}),
   };
+}
+
+export async function fetchDashboardOverview(
+  token: string,
+): Promise<DashboardOverview> {
+  return parseResponse<DashboardOverview>(
+    await fetch(`${API_BASE_URL}/dashboard/overview`, {
+      headers: bearerHeaders(token),
+      cache: "no-store",
+    }),
+  );
+}
+
+export async function reviewWarning(
+  token: string,
+  warningId: string,
+  payload: ReviewWarningInput,
+): Promise<WarningReviewReceipt> {
+  return parseResponse<WarningReviewReceipt>(
+    await fetch(
+      `${API_BASE_URL}/warnings/${encodeURIComponent(warningId)}/reviews`,
+      {
+        method: "POST",
+        headers: bearerHeaders(token, true),
+        body: JSON.stringify(payload),
+      },
+    ),
+  );
+}
+
+export async function createIntervention(
+  token: string,
+  payload: InterventionInput,
+): Promise<InterventionReceipt> {
+  return parseResponse<InterventionReceipt>(
+    await fetch(`${API_BASE_URL}/interventions`, {
+      method: "POST",
+      headers: bearerHeaders(token, true),
+      body: JSON.stringify(payload),
+    }),
+  );
+}
+
+export async function runBatchPrediction(
+  token: string,
+): Promise<BatchPredictionResponse> {
+  return parseResponse<BatchPredictionResponse>(
+    await fetch(`${API_BASE_URL}/predictions/batch`, {
+      method: "POST",
+      headers: bearerHeaders(token),
+    }),
+  );
 }
 
 export async function fetchStudents(
