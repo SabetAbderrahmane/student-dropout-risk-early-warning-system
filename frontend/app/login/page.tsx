@@ -1,16 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 import { ApiError, fetchCurrentUser, login } from "@/lib/api";
 import { clearAccessToken, saveAccessToken } from "@/lib/auth";
-import type { User } from "@/types/auth";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -23,52 +23,19 @@ export default function LoginPage() {
     try {
       const token = await login(identifier, password);
       saveAccessToken(token.access_token);
-      setUser(await fetchCurrentUser(token.access_token));
+      await fetchCurrentUser(token.access_token);
       setPassword("");
+      router.replace("/dashboard");
     } catch (caught) {
       clearAccessToken();
-      setUser(null);
-      setError(caught instanceof ApiError ? caught.message : "Unable to sign in right now.");
+      setError(
+        caught instanceof ApiError
+          ? caught.message
+          : "Unable to sign in right now.",
+      );
     } finally {
       setLoading(false);
     }
-  }
-
-  if (user) {
-    return (
-      <main className="page-shell">
-        <section className="auth-card" aria-live="polite">
-          <div className="eyebrow">Authenticated</div>
-          <h1>Welcome, {user.full_name}</h1>
-          <dl className="account-details">
-            <div>
-              <dt>Username</dt>
-              <dd>{user.username}</dd>
-            </div>
-            <div>
-              <dt>Role</dt>
-              <dd>{user.role.replaceAll("_", " ")}</dd>
-            </div>
-          </dl>
-          <p className="muted">
-            Student records are available according to your backend-enforced role permissions.
-          </p>
-          <Link className="primary-link" href="/students">
-            Open students
-          </Link>
-          <button
-            className="secondary-button"
-            type="button"
-            onClick={() => {
-              clearAccessToken();
-              setUser(null);
-            }}
-          >
-            Sign out locally
-          </button>
-        </section>
-      </main>
-    );
   }
 
   return (
@@ -79,7 +46,9 @@ export default function LoginPage() {
         </Link>
         <div className="eyebrow">Secure access</div>
         <h1>Sign in</h1>
-        <p className="muted">Use your username or institutional email address.</p>
+        <p className="muted">
+          Use your username or institutional email address.
+        </p>
         <form onSubmit={handleSubmit}>
           <label htmlFor="identifier">Username or email</label>
           <input
