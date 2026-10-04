@@ -1,4 +1,7 @@
-import { StudentDetail } from "@/components/students/student-detail";
+import { StudentDossier } from "@/components/dossier/student-dossier";
+import "../../dashboard/dashboard.css";
+import "../../warnings/warnings.css";
+import "../dossier.css";
 
 export default async function StudentDetailPage({
   params,
@@ -6,5 +9,5 @@ export default async function StudentDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <StudentDetail studentId={id} />;
+  return <StudentDossier key={id} studentId={id} />;
 }

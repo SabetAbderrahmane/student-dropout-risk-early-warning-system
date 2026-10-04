@@ -1,5 +1,14 @@
 import { API_BASE_URL } from "@/lib/constants";
 import type {
+  InterventionDetail,
+  InterventionUpdate,
+  InterventionNote,
+  InterventionOutcome,
+  FollowUpDetail,
+  FollowUpInput,
+  FollowUpCompletion,
+} from "@/types/casework";
+import type {
   WarningParams,
   WarningPage,
   WarningDetail,
@@ -77,6 +86,142 @@ async function parseResponse<T>(response: Response): Promise<T> {
     body?.error?.details,
   );
 }
+
+async function dossierRequest<T>(
+  token: string,
+  path: string,
+  method = "GET",
+  payload?: object,
+  signal?: AbortSignal,
+): Promise<T> {
+  return parseResponse<T>(
+    await fetch(`${API_BASE_URL}${path}`, {
+      method,
+      headers: bearerHeaders(token, payload !== undefined),
+      ...(payload !== undefined ? { body: JSON.stringify(payload) } : {}),
+      cache: "no-store",
+      signal,
+    }),
+  );
+}
+export const predictStudent = (token: string, id: string) =>
+  dossierRequest<PredictionDetail>(
+    token,
+    `/students/${encodeURIComponent(id)}/predictions`,
+    "POST",
+  );
+export const assignStudentWarning = (
+  token: string,
+  id: string,
+  assigned_to: string | null,
+) =>
+  dossierRequest<WarningDetail>(
+    token,
+    `/warnings/${encodeURIComponent(id)}/assignment`,
+    "PATCH",
+    { assigned_to },
+  );
+export const fetchInterventionDetail = (
+  token: string,
+  id: string,
+  signal?: AbortSignal,
+) =>
+  dossierRequest<InterventionDetail>(
+    token,
+    `/interventions/${encodeURIComponent(id)}`,
+    "GET",
+    undefined,
+    signal,
+  );
+export const updateIntervention = (
+  token: string,
+  id: string,
+  payload: InterventionUpdate,
+) =>
+  dossierRequest<InterventionDetail>(
+    token,
+    `/interventions/${encodeURIComponent(id)}`,
+    "PATCH",
+    payload,
+  );
+export const addInterventionNote = (token: string, id: string, note: string) =>
+  dossierRequest<InterventionNote>(
+    token,
+    `/interventions/${encodeURIComponent(id)}/notes`,
+    "POST",
+    { note },
+  );
+export const completeIntervention = (
+  token: string,
+  id: string,
+  outcome: InterventionOutcome,
+  completion_notes: string,
+) =>
+  dossierRequest<InterventionDetail>(
+    token,
+    `/interventions/${encodeURIComponent(id)}/complete`,
+    "POST",
+    { outcome, completion_notes },
+  );
+export const cancelIntervention = (token: string, id: string, reason: string) =>
+  dossierRequest<InterventionDetail>(
+    token,
+    `/interventions/${encodeURIComponent(id)}/cancel`,
+    "POST",
+    { reason },
+  );
+export const createCaseFollowUp = (
+  token: string,
+  id: string,
+  payload: FollowUpInput,
+) =>
+  dossierRequest<FollowUpDetail>(
+    token,
+    `/interventions/${encodeURIComponent(id)}/follow-ups`,
+    "POST",
+    payload,
+  );
+export const fetchFollowUpDetail = (
+  token: string,
+  id: string,
+  signal?: AbortSignal,
+) =>
+  dossierRequest<FollowUpDetail>(
+    token,
+    `/follow-ups/${encodeURIComponent(id)}`,
+    "GET",
+    undefined,
+    signal,
+  );
+export const updateCaseFollowUp = (
+  token: string,
+  id: string,
+  payload: Partial<FollowUpInput>,
+) =>
+  dossierRequest<FollowUpDetail>(
+    token,
+    `/follow-ups/${encodeURIComponent(id)}`,
+    "PATCH",
+    payload,
+  );
+export const completeCaseFollowUp = (
+  token: string,
+  id: string,
+  payload: FollowUpCompletion,
+) =>
+  dossierRequest<FollowUpDetail>(
+    token,
+    `/follow-ups/${encodeURIComponent(id)}/complete`,
+    "POST",
+    payload,
+  );
+export const cancelCaseFollowUp = (token: string, id: string, reason: string) =>
+  dossierRequest<FollowUpDetail>(
+    token,
+    `/follow-ups/${encodeURIComponent(id)}/cancel`,
+    "POST",
+    { reason },
+  );
 
 export async function login(
   username: string,
