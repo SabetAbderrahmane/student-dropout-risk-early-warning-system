@@ -82,23 +82,27 @@ export function AppSidebar({
             "Interventions",
             "Follow-Ups",
           ].map((label) =>
-            label === "Early Warnings" ? (
+            label === "Early Warnings" || label === "Risk Predictions" ? (
               <Link
                 key={label}
-                href="/warnings"
+                href={label === "Early Warnings" ? "/warnings" : "/predictions"}
                 aria-current={
-                  pathname.startsWith("/warnings") ? "page" : undefined
+                  pathname.startsWith(
+                    label === "Early Warnings" ? "/warnings" : "/predictions",
+                  )
+                    ? "page"
+                    : undefined
                 }
                 onClick={onClose}
               >
-                <Icon name="warning" />
-                Early Warnings
-              </Link>
-            ) : (
-              <span key={label} className="dash-future" aria-disabled="true">
                 <Icon
                   name={label === "Early Warnings" ? "warning" : "activity"}
                 />
+                {label}
+              </Link>
+            ) : (
+              <span key={label} className="dash-future" aria-disabled="true">
+                <Icon name="activity" />
                 {label}
                 <small>Later</small>
               </span>
