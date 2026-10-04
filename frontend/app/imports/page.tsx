@@ -1,5 +1,8 @@
-import { ImportManager } from "@/components/imports/import-manager";
+import { StagedImportWorkspace } from "@/components/imports/staged-import-workspace";
+import "../dashboard/dashboard.css";
+import "../warnings/warnings.css";
+import "./imports.css";
 
 export default function ImportsPage() {
-  return <ImportManager />;
+  return <StagedImportWorkspace />;
 }
