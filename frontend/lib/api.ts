@@ -1,5 +1,11 @@
 import { API_BASE_URL } from "@/lib/constants";
 import type {
+  RegistryPage,
+  StudentRegistryParams,
+  StudentProfile,
+  ModelPerformance,
+} from "@/types/registry";
+import type {
   DashboardOverview,
   ReviewWarningInput,
   WarningReviewReceipt,
@@ -72,6 +78,53 @@ function bearerHeaders(token: string, includeJson = false): HeadersInit {
     Authorization: `Bearer ${token}`,
     ...(includeJson ? { "Content-Type": "application/json" } : {}),
   };
+}
+
+export async function fetchStudentRegistry(
+  token: string,
+  params: StudentRegistryParams,
+  signal?: AbortSignal,
+): Promise<RegistryPage> {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && String(value).trim() !== "")
+      query.set(key, String(value).trim());
+  }
+  return parseResponse<RegistryPage>(
+    await fetch(`${API_BASE_URL}/student-registry?${query}`, {
+      headers: bearerHeaders(token),
+      cache: "no-store",
+      signal,
+    }),
+  );
+}
+
+export async function fetchStudentProfile(
+  token: string,
+  studentId: string,
+  signal?: AbortSignal,
+): Promise<StudentProfile> {
+  return parseResponse<StudentProfile>(
+    await fetch(
+      `${API_BASE_URL}/students/${encodeURIComponent(studentId)}/profile`,
+      {
+        headers: bearerHeaders(token),
+        cache: "no-store",
+        signal,
+      },
+    ),
+  );
+}
+
+export async function fetchCurrentModelPerformance(
+  token: string,
+): Promise<ModelPerformance> {
+  return parseResponse<ModelPerformance>(
+    await fetch(`${API_BASE_URL}/models/current/performance`, {
+      headers: bearerHeaders(token),
+      cache: "no-store",
+    }),
+  );
 }
 
 export async function fetchDashboardOverview(
