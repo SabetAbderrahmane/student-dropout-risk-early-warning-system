@@ -13,6 +13,12 @@ from app.models.casework import (
 from app.models.import_job import ImportJob, ImportStatus, ImportValidationError
 from app.models.prediction import ModelVersion, PredictionResult, RiskLevel
 from app.models.semester_one import FirstSemesterRecord
+from app.models.staged_import import (
+    StagedImportAction,
+    StagedImportBatch,
+    StagedImportRow,
+    StagedImportStatus,
+)
 from app.models.student import Student
 from app.models.user import User, UserRole
 from app.models.warning import (
@@ -24,6 +30,10 @@ from app.models.warning import (
 )
 
 __all__ = [
+    "StagedImportAction",
+    "StagedImportBatch",
+    "StagedImportRow",
+    "StagedImportStatus",
     "AdmissionRecord",
     "Intervention",
     "InterventionNote",
