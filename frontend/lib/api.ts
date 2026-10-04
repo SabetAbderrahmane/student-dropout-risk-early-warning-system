@@ -27,6 +27,17 @@ import type {
 import type { ApiErrorBody, TokenResponse, User } from "@/types/auth";
 import type { ImportErrorPage, ImportJob, ImportJobPage } from "@/types/import";
 import type {
+  StagedBatch,
+  StagedBatchPage,
+  StagedBatchParams,
+  StagedRowPage,
+  StagedRowParams,
+  StagedCorrectionRequest,
+  StagedCorrectionResponse,
+  StagedVersionRequest,
+  StagedActionPage,
+} from "@/types/staged-import";
+import type {
   AdmissionInput,
   AdmissionRecord,
   FirstSemesterInput,
@@ -41,6 +52,7 @@ export class ApiError extends Error {
     message: string,
     public readonly status: number,
     public readonly code: string,
+    public readonly details?: unknown,
   ) {
     super(message);
     this.name = "ApiError";
@@ -62,6 +74,7 @@ async function parseResponse<T>(response: Response): Promise<T> {
     body?.error?.message ?? "The request could not be completed.",
     response.status,
     body?.error?.code ?? "REQUEST_FAILED",
+    body?.error?.details,
   );
 }
 
@@ -414,10 +427,148 @@ export async function saveFirstSemester(
   return parseResponse<FirstSemesterRecord>(response);
 }
 
+function stagedQuery(params: object): string {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params))
+    if (value !== undefined) query.set(key, String(value));
+  return query.toString();
+}
+export async function fetchStagedImports(
+  token: string,
+  params: StagedBatchParams,
+  signal?: AbortSignal,
+): Promise<StagedBatchPage> {
+  return parseResponse<StagedBatchPage>(
+    await fetch(`${API_BASE_URL}/imports/staged?${stagedQuery(params)}`, {
+      headers: bearerHeaders(token),
+      cache: "no-store",
+      signal,
+    }),
+  );
+}
+export async function fetchStagedImport(
+  token: string,
+  batchId: string,
+  signal?: AbortSignal,
+): Promise<StagedBatch> {
+  return parseResponse<StagedBatch>(
+    await fetch(
+      `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}`,
+      { headers: bearerHeaders(token), cache: "no-store", signal },
+    ),
+  );
+}
+export async function fetchStagedRows(
+  token: string,
+  batchId: string,
+  params: StagedRowParams,
+  signal?: AbortSignal,
+): Promise<StagedRowPage> {
+  return parseResponse<StagedRowPage>(
+    await fetch(
+      `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}/rows?${stagedQuery(params)}`,
+      { headers: bearerHeaders(token), cache: "no-store", signal },
+    ),
+  );
+}
+export async function uploadStagedCsv(
+  token: string,
+  file: File,
+): Promise<StagedBatch> {
+  const body = new FormData();
+  body.append("file", file);
+  return parseResponse<StagedBatch>(
+    await fetch(`${API_BASE_URL}/imports/staged/csv`, {
+      method: "POST",
+      headers: bearerHeaders(token),
+      body,
+    }),
+  );
+}
+export async function correctStagedRow(
+  token: string,
+  batchId: string,
+  rowId: string,
+  request: StagedCorrectionRequest,
+): Promise<StagedCorrectionResponse> {
+  return parseResponse<StagedCorrectionResponse>(
+    await fetch(
+      `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}/rows/${encodeURIComponent(rowId)}`,
+      {
+        method: "PATCH",
+        headers: bearerHeaders(token, true),
+        body: JSON.stringify(request),
+      },
+    ),
+  );
+}
+async function stagedBatchAction(
+  token: string,
+  batchId: string,
+  action: "commit" | "cancel",
+  request: StagedVersionRequest,
+): Promise<StagedBatch> {
+  return parseResponse<StagedBatch>(
+    await fetch(
+      `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}/${action}`,
+      {
+        method: "POST",
+        headers: bearerHeaders(token, true),
+        body: JSON.stringify(request),
+      },
+    ),
+  );
+}
+export function commitStagedImport(
+  token: string,
+  batchId: string,
+  request: StagedVersionRequest,
+) {
+  return stagedBatchAction(token, batchId, "commit", request);
+}
+export function cancelStagedImport(
+  token: string,
+  batchId: string,
+  request: StagedVersionRequest,
+) {
+  return stagedBatchAction(token, batchId, "cancel", request);
+}
+export async function fetchStagedActions(
+  token: string,
+  batchId: string,
+  page: number,
+  pageSize: number,
+  signal?: AbortSignal,
+): Promise<StagedActionPage> {
+  return parseResponse<StagedActionPage>(
+    await fetch(
+      `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}/actions?page=${page}&page_size=${pageSize}`,
+      { headers: bearerHeaders(token), cache: "no-store", signal },
+    ),
+  );
+}
+export async function exportStagedCsv(
+  token: string,
+  batchId: string,
+): Promise<void> {
+  const response = await fetch(
+    `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}/export`,
+    { headers: bearerHeaders(token), cache: "no-store" },
+  );
+  if (!response.ok) await parseResponse<never>(response);
+  const url = URL.createObjectURL(await response.blob());
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `staged-import-${batchId}.csv`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 export async function fetchImports(
   token: string,
   page: number,
   pageSize: number,
+  signal?: AbortSignal,
 ): Promise<ImportJobPage> {
   const params = new URLSearchParams({
     page: String(page),
@@ -425,6 +576,8 @@ export async function fetchImports(
   });
   const response = await fetch(`${API_BASE_URL}/imports?${params}`, {
     headers: bearerHeaders(token),
+    cache: "no-store",
+    signal,
   });
   return parseResponse<ImportJobPage>(response);
 }
@@ -434,6 +587,7 @@ export async function fetchImportErrors(
   importId: string,
   page: number,
   pageSize: number,
+  signal?: AbortSignal,
 ): Promise<ImportErrorPage> {
   const params = new URLSearchParams({
     page: String(page),
@@ -443,6 +597,8 @@ export async function fetchImportErrors(
     `${API_BASE_URL}/imports/${importId}/errors?${params}`,
     {
       headers: bearerHeaders(token),
+      cache: "no-store",
+      signal,
     },
   );
   return parseResponse<ImportErrorPage>(response);
