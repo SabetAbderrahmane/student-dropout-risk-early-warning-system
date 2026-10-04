@@ -7,11 +7,13 @@ export function AppHeader({
   menuOpen,
   onMenu,
   onSignOut,
+  title = "Overview",
 }: {
   user: User | null;
   menuOpen: boolean;
   onMenu: () => void;
   onSignOut: () => void;
+  title?: string;
 }) {
   return (
     <header className="dash-header">
@@ -27,7 +29,7 @@ export function AppHeader({
         </button>
         <span>
           Workspace <span className="dash-breadcrumb">/</span>{" "}
-          <strong>Overview</strong>
+          <strong>{title}</strong>
         </span>
       </div>
       <div className="dash-account">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { Icon } from "@/components/dashboard/icon";
 
@@ -9,6 +10,7 @@ export function AppSidebar({
   open: boolean;
   onClose: () => void;
 }) {
+  const pathname = usePathname();
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     if (!open) return;
@@ -50,15 +52,27 @@ export function AppSidebar({
         </button>
         <nav aria-label="Main navigation">
           <p className="dash-nav-label">Core system</p>
-          <Link href="/dashboard" aria-current="page" onClick={onClose}>
+          <Link
+            href="/dashboard"
+            aria-current={pathname === "/dashboard" ? "page" : undefined}
+            onClick={onClose}
+          >
             <Icon name="grid" />
             Overview / Dashboard
           </Link>
-          <Link href="/students" onClick={onClose}>
+          <Link
+            href="/students"
+            aria-current={pathname.startsWith("/students") ? "page" : undefined}
+            onClick={onClose}
+          >
             <Icon name="students" />
             Students
           </Link>
-          <Link href="/imports" onClick={onClose}>
+          <Link
+            href="/imports"
+            aria-current={pathname.startsWith("/imports") ? "page" : undefined}
+            onClick={onClose}
+          >
             <Icon name="import" />
             Data Import
           </Link>
