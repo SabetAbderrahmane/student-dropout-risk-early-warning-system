@@ -9,8 +9,14 @@ import type {
   RegistryPage,
   StudentRegistryParams,
   StudentProfile,
-  ModelPerformance,
 } from "@/types/registry";
+import type {
+  PredictionParams,
+  PredictionPage,
+  PredictionDetail,
+  CurrentModel,
+  ModelPerformance,
+} from "@/types/prediction";
 import type {
   DashboardOverview,
   ReviewWarningInput,
@@ -123,12 +129,57 @@ export async function fetchStudentProfile(
 
 export async function fetchCurrentModelPerformance(
   token: string,
+  signal?: AbortSignal,
 ): Promise<ModelPerformance> {
   return parseResponse<ModelPerformance>(
     await fetch(`${API_BASE_URL}/models/current/performance`, {
       headers: bearerHeaders(token),
       cache: "no-store",
+      signal,
     }),
+  );
+}
+
+export async function fetchCurrentModel(
+  token: string,
+  signal?: AbortSignal,
+): Promise<CurrentModel> {
+  return parseResponse<CurrentModel>(
+    await fetch(`${API_BASE_URL}/models/current`, {
+      headers: bearerHeaders(token),
+      cache: "no-store",
+      signal,
+    }),
+  );
+}
+export async function fetchPredictions(
+  token: string,
+  params: PredictionParams,
+  signal?: AbortSignal,
+): Promise<PredictionPage> {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && String(value).trim())
+      query.set(key, String(value).trim());
+  }
+  return parseResponse<PredictionPage>(
+    await fetch(`${API_BASE_URL}/predictions?${query}`, {
+      headers: bearerHeaders(token),
+      cache: "no-store",
+      signal,
+    }),
+  );
+}
+export async function fetchPrediction(
+  token: string,
+  predictionId: string,
+  signal?: AbortSignal,
+): Promise<PredictionDetail> {
+  return parseResponse<PredictionDetail>(
+    await fetch(
+      `${API_BASE_URL}/predictions/${encodeURIComponent(predictionId)}`,
+      { headers: bearerHeaders(token), cache: "no-store", signal },
+    ),
   );
 }
 

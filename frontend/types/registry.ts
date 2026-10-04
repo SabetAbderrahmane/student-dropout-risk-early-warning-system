@@ -165,16 +165,4 @@ export interface StudentProfile {
     entity_id: string;
   }>;
 }
-export interface ModelPerformance {
-  evaluation_scope: "FINAL_TEST_SET";
-  sample_size: number;
-  accuracy: number;
-  precision: number;
-  recall: number;
-  f1: number;
-  roc_auc: number;
-  pr_auc: number;
-  brier_score: number;
-  confusion_matrix: { tp: number; fp: number; tn: number; fn: number };
-  global_feature_importance: Array<Record<string, unknown>>;
-}
+export type { ModelPerformance } from "./prediction";
