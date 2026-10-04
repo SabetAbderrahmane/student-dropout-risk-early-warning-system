@@ -1,5 +1,11 @@
 import { API_BASE_URL } from "@/lib/constants";
 import type {
+  WarningParams,
+  WarningPage,
+  WarningDetail,
+  StudentPredictionPage,
+} from "@/types/warning";
+import type {
   RegistryPage,
   StudentRegistryParams,
   StudentProfile,
@@ -8,7 +14,6 @@ import type {
 import type {
   DashboardOverview,
   ReviewWarningInput,
-  WarningReviewReceipt,
   InterventionInput,
   InterventionReceipt,
   BatchPredictionResponse,
@@ -129,11 +134,13 @@ export async function fetchCurrentModelPerformance(
 
 export async function fetchDashboardOverview(
   token: string,
+  signal?: AbortSignal,
 ): Promise<DashboardOverview> {
   return parseResponse<DashboardOverview>(
     await fetch(`${API_BASE_URL}/dashboard/overview`, {
       headers: bearerHeaders(token),
       cache: "no-store",
+      signal,
     }),
   );
 }
@@ -142,14 +149,70 @@ export async function reviewWarning(
   token: string,
   warningId: string,
   payload: ReviewWarningInput,
-): Promise<WarningReviewReceipt> {
-  return parseResponse<WarningReviewReceipt>(
+): Promise<WarningDetail> {
+  return parseResponse<WarningDetail>(
     await fetch(
       `${API_BASE_URL}/warnings/${encodeURIComponent(warningId)}/reviews`,
       {
         method: "POST",
         headers: bearerHeaders(token, true),
         body: JSON.stringify(payload),
+      },
+    ),
+  );
+}
+
+export async function fetchWarnings(
+  token: string,
+  params: WarningParams,
+  signal?: AbortSignal,
+): Promise<WarningPage> {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && String(value).trim())
+      query.set(key, String(value).trim());
+  }
+  return parseResponse<WarningPage>(
+    await fetch(`${API_BASE_URL}/warnings?${query}`, {
+      headers: bearerHeaders(token),
+      cache: "no-store",
+      signal,
+    }),
+  );
+}
+
+export async function fetchWarning(
+  token: string,
+  warningId: string,
+  signal?: AbortSignal,
+): Promise<WarningDetail> {
+  return parseResponse<WarningDetail>(
+    await fetch(`${API_BASE_URL}/warnings/${encodeURIComponent(warningId)}`, {
+      headers: bearerHeaders(token),
+      cache: "no-store",
+      signal,
+    }),
+  );
+}
+
+export async function fetchStudentPredictions(
+  token: string,
+  studentId: string,
+  page: number,
+  pageSize: number,
+  signal?: AbortSignal,
+): Promise<StudentPredictionPage> {
+  const query = new URLSearchParams({
+    page: String(page),
+    page_size: String(pageSize),
+  });
+  return parseResponse<StudentPredictionPage>(
+    await fetch(
+      `${API_BASE_URL}/students/${encodeURIComponent(studentId)}/predictions?${query}`,
+      {
+        headers: bearerHeaders(token),
+        cache: "no-store",
+        signal,
       },
     ),
   );

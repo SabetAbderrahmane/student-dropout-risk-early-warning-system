@@ -6,11 +6,13 @@ export function ActionModal({
   busy,
   onClose,
   children,
+  className = "",
 }: {
   title: string;
   busy: boolean;
   onClose: () => void;
   children: ReactNode;
+  className?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -29,7 +31,7 @@ export function ActionModal({
   return (
     <dialog
       ref={ref}
-      className="dash-modal"
+      className={`dash-modal ${className}`}
       aria-labelledby={titleId}
       aria-busy={busy}
       onCancel={(event) => {

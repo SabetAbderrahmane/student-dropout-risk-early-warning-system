@@ -81,15 +81,29 @@ export function AppSidebar({
             "Early Warnings",
             "Interventions",
             "Follow-Ups",
-          ].map((label) => (
-            <span key={label} className="dash-future" aria-disabled="true">
-              <Icon
-                name={label === "Early Warnings" ? "warning" : "activity"}
-              />
-              {label}
-              <small>Later</small>
-            </span>
-          ))}
+          ].map((label) =>
+            label === "Early Warnings" ? (
+              <Link
+                key={label}
+                href="/warnings"
+                aria-current={
+                  pathname.startsWith("/warnings") ? "page" : undefined
+                }
+                onClick={onClose}
+              >
+                <Icon name="warning" />
+                Early Warnings
+              </Link>
+            ) : (
+              <span key={label} className="dash-future" aria-disabled="true">
+                <Icon
+                  name={label === "Early Warnings" ? "warning" : "activity"}
+                />
+                {label}
+                <small>Later</small>
+              </span>
+            ),
+          )}
           <p className="dash-nav-label dash-nav-divider">Administration</p>
           {[
             "Users",

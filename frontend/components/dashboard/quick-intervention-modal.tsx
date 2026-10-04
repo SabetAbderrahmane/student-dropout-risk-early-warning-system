@@ -23,8 +23,18 @@ export function QuickInterventionModal({
   student,
   onClose,
   onSubmit,
+  title: modalTitle = "Quick Intervention",
 }: {
-  student: AttentionStudent;
+  student: Pick<
+    AttentionStudent,
+    | "student_id"
+    | "warning_id"
+    | "name"
+    | "student_number"
+    | "priority"
+    | "assigned_advisor"
+  >;
+  title?: string;
   onClose: () => void;
   onSubmit: (payload: InterventionInput) => Promise<string | null>;
 }) {
@@ -69,7 +79,7 @@ export function QuickInterventionModal({
     }
   }
   return (
-    <ActionModal title="Quick Intervention" busy={busy} onClose={onClose}>
+    <ActionModal title={modalTitle} busy={busy} onClose={onClose}>
       <div className="dash-case-context">
         <strong>{student.name}</strong>
         <span>{student.student_number} · Confirmed warning</span>
