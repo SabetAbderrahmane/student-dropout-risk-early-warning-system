@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, File, Query, UploadFile
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
+from app.api.v1.staged_imports import router as staged_router
 from app.core.permissions import require_roles
 from app.db.session import get_db
 from app.models.user import User, UserRole
@@ -44,6 +45,9 @@ def list_imports(
     db: Session = Depends(get_db),
 ) -> ImportJobPage:
     return ImportService(db).list_jobs(page=page, page_size=page_size)
+
+
+router.include_router(staged_router)
 
 
 @router.get("/{import_id}", response_model=ImportJobResponse)

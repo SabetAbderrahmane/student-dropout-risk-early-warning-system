@@ -13,6 +13,7 @@ from app.repositories.import_repository import ImportRepository
 from app.schemas.import_job import ImportErrorPage, ImportJobPage
 from app.utils.csv_import import (
     MAX_UPLOAD_BYTES,
+    CsvDataRow,
     CsvStructureError,
     RowValidationIssue,
     csv_template_bytes,
@@ -30,7 +31,8 @@ class ImportService:
     def template() -> bytes:
         return csv_template_bytes()
 
-    async def import_csv(self, upload: UploadFile, uploaded_by: User) -> ImportJob:
+    @staticmethod
+    async def parse_upload(upload: UploadFile) -> tuple[str, list[CsvDataRow]]:
         filename = Path(upload.filename or "").name
         if not filename.lower().endswith(".csv"):
             raise ApplicationError(
@@ -53,6 +55,10 @@ class ImportService:
             rows = parse_csv(content)
         except CsvStructureError as exc:
             raise ApplicationError(400, exc.code, exc.message, exc.details) from exc
+        return filename, rows
+
+    async def import_csv(self, upload: UploadFile, uploaded_by: User) -> ImportJob:
+        filename, rows = await self.parse_upload(upload)
 
         job = self.repository.add_job(
             ImportJob(
