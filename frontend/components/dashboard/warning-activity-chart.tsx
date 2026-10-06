@@ -92,7 +92,7 @@ export function WarningActivityChart({ data }: { data: DashboardOverview }) {
                   x2={width}
                   y1={bottom - ratio * 130}
                   y2={bottom - ratio * 130}
-                  stroke="#e7eaf0"
+                  stroke="var(--chart-grid)"
                   strokeDasharray="4 4"
                 />
                 <text
@@ -119,7 +119,7 @@ export function WarningActivityChart({ data }: { data: DashboardOverview }) {
                     width={Math.min(step * 0.54, 32)}
                     height={barHeight}
                     rx="3"
-                    fill="#adc8f5"
+                    fill="var(--chart-created)"
                   />
                   <text x={x} y={181} textAnchor="middle">
                     {index % Math.max(1, Math.ceil(activity.length / 7)) ===
@@ -138,7 +138,7 @@ export function WarningActivityChart({ data }: { data: DashboardOverview }) {
                 )
                 .join(" ")}
               fill="none"
-              stroke="#2d6197"
+              stroke="var(--chart-line)"
               strokeWidth="2.5"
             />
             {activity.map((day, index) => (
@@ -147,7 +147,7 @@ export function WarningActivityChart({ data }: { data: DashboardOverview }) {
                 cx={left + step * index + step / 2}
                 cy={bottom - ((day.confirmed + day.dismissed) / maximum) * 130}
                 r="3"
-                fill="#2d6197"
+                fill="var(--chart-line)"
               />
             ))}
           </svg>

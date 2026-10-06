@@ -102,7 +102,7 @@ export function PredictionHistoryChart({
           >
             <path
               d="M32 24H488 M32 82H488 M32 140H488"
-              stroke="#e0e3ec"
+              stroke="var(--chart-grid)"
               fill="none"
             />
             <text x="0" y="28">
@@ -114,11 +114,17 @@ export function PredictionHistoryChart({
             <polyline
               points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
               fill="none"
-              stroke="#2d6197"
+              stroke="var(--chart-line)"
               strokeWidth="2.5"
             />
             {points.map(({ item, x, y }) => (
-              <circle key={item.id} cx={x} cy={y} r="3.5" fill="#2d6197">
+              <circle
+                key={item.id}
+                cx={x}
+                cy={y}
+                r="3.5"
+                fill="var(--chart-line)"
+              >
                 <title>
                   {timestamp(item.predicted_at)} · {percent(item.probability)}
                 </title>

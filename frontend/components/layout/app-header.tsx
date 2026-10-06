@@ -1,6 +1,7 @@
 import type { User } from "@/types/auth";
 import { readable } from "@/lib/dashboard";
 import { Icon } from "@/components/dashboard/icon";
+import { ThemeControl } from "@/components/theme/theme-control";
 
 export function AppHeader({
   user,
@@ -33,6 +34,7 @@ export function AppHeader({
         </span>
       </div>
       <div className="dash-account">
+        <ThemeControl />
         {user && (
           <>
             <div className="dash-avatar" aria-hidden="true">

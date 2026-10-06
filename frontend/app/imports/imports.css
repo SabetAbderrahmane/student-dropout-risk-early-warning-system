@@ -1,9 +1,9 @@
 .import-root {
-  --import-green: #337b69;
-  --import-red: #ae4b59;
+  --import-green: var(--success);
+  --import-red: var(--danger);
 }
 .import-muted {
-  color: #7b869b;
+  color: var(--text-muted);
   font-size: 12px;
   line-height: 1.6;
 }
@@ -14,11 +14,11 @@
 }
 .import-card {
   min-width: 0;
-  background: #fff;
-  border: 1px solid #e3e7f0;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 5px #102b4703;
+  box-shadow: var(--shadow-soft);
 }
 .import-steps {
   display: grid;
@@ -32,35 +32,35 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #8892a6;
+  color: var(--text-muted);
   font-size: 12px;
   padding-bottom: 14px;
-  border-bottom: 2px solid #e8eaf2;
+  border-bottom: 2px solid var(--border-subtle);
 }
 .import-steps li > span {
   width: 27px;
   height: 27px;
   border-radius: 50%;
-  background: #e9ecf5;
+  background: var(--surface-muted);
   display: grid;
   place-items: center;
   font-size: 11px;
   flex-shrink: 0;
 }
 .import-steps li.is-complete {
-  border-color: #92b9ac;
-  color: #4f8779;
+  border-color: var(--success-border);
+  color: var(--success);
 }
 .import-steps li.is-complete > span {
-  background: #e6f1ec;
+  background: var(--success-bg);
 }
 .import-steps li.is-current {
   border-color: var(--dash-primary);
   color: var(--dash-primary);
 }
 .import-steps li.is-current > span {
-  background: var(--dash-primary);
-  color: #fff;
+  background: var(--accent-solid);
+  color: var(--text-on-accent);
 }
 .import-steps svg {
   width: 14px;
@@ -70,23 +70,23 @@
   display: flex;
   gap: 18px;
   align-items: center;
-  border: 1px dashed #c3cddd;
+  border: 1px dashed var(--border);
   padding: 22px;
-  background: #fff;
+  background: var(--surface);
   border-radius: 12px;
   margin-bottom: 20px;
 }
 .import-uploader.is-dragging {
-  background: #f1f4fc;
-  border-color: #3d668f;
+  background: var(--surface-muted);
+  border-color: var(--accent-link);
 }
 .import-upload-icon {
   width: 46px;
   height: 46px;
   display: grid;
   place-items: center;
-  color: #41678b;
-  background: #ecf0fa;
+  color: var(--accent-link);
+  background: var(--surface-muted);
   border-radius: 10px;
   flex-shrink: 0;
 }
@@ -99,7 +99,7 @@
 }
 .import-upload-copy > p {
   font-size: 11px;
-  color: #76849a;
+  color: var(--text-muted);
   line-height: 1.7;
 }
 .import-uploader form {
@@ -114,7 +114,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  color: #465b78;
+  color: var(--text-secondary);
   font-size: 11px;
   min-width: 0;
   max-width: 260px;
@@ -123,7 +123,7 @@
   overflow-wrap: anywhere;
 }
 .import-file-label span {
-  color: #8290a6;
+  color: var(--text-muted);
   font-size: 10px;
 }
 .import-file-label input {
@@ -138,7 +138,7 @@
 .import-batches summary {
   cursor: pointer;
   padding: 17px 20px;
-  color: #3c4c65;
+  color: var(--text-secondary);
   font-weight: 650;
   font-size: 13px;
 }
@@ -155,22 +155,22 @@
   gap: 12px;
   padding: 17px 20px;
   flex-wrap: wrap;
-  border-bottom: 1px solid #edf0f5;
+  border-bottom: 1px solid var(--border-subtle);
 }
 .import-select-label {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #7d899e;
+  color: var(--text-muted);
   font-size: 11px;
 }
 .import-select-label select,
 .import-pagination select {
-  border: 1px solid #e1e6ef;
-  background: #f8f9fc;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-muted);
   border-radius: 6px;
   padding: 6px;
-  color: #4f5c74;
+  color: var(--text-secondary);
 }
 .import-batch-identity {
   display: flex;
@@ -190,7 +190,7 @@
 .import-batch-identity small {
   display: block;
   margin-top: 6px;
-  color: #8a94a7;
+  color: var(--text-muted);
 }
 .import-status {
   display: inline-flex;
@@ -204,24 +204,24 @@
   white-space: nowrap;
 }
 .state-review_required {
-  color: #a57435;
-  background: #fff5e4;
-  border-color: #f0e1c4;
+  color: var(--warning);
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
 }
 .state-ready_to_commit {
-  color: #3a7d68;
-  background: #eaf4ee;
-  border-color: #cde5d8;
+  color: var(--success);
+  background: var(--success-bg);
+  border-color: var(--success-border);
 }
 .state-committed {
-  color: #4f629e;
-  background: #edf1fd;
-  border-color: #d6dff7;
+  color: var(--text-muted);
+  background: var(--info-bg);
+  border-color: var(--info-border);
 }
 .state-cancelled {
-  color: #7b8494;
-  background: #f2f3f6;
-  border-color: #e1e4ec;
+  color: var(--text-muted);
+  background: var(--neutral-bg);
+  border-color: var(--border-subtle);
 }
 .import-summary-cards {
   display: grid;
@@ -231,7 +231,7 @@
 }
 .import-summary-cards h3 {
   margin: 0;
-  color: #6d7a91;
+  color: var(--text-muted);
   font-size: 11px;
   font-weight: 600;
 }
@@ -239,12 +239,12 @@
   display: block;
   font-size: 33px;
   letter-spacing: -1px;
-  color: #253c5b;
+  color: var(--text-secondary);
   margin: 12px 0 8px;
 }
 .import-summary-cards p {
   font-size: 11px;
-  color: #8390a4;
+  color: var(--text-muted);
 }
 .metric-valid .import-metric {
   color: var(--import-green);
@@ -259,7 +259,7 @@
   display: flex;
   gap: 14px;
   padding: 26px 0;
-  color: #6b819b;
+  color: var(--text-muted);
 }
 .import-start-note h2 {
   margin-bottom: 7px;
@@ -294,38 +294,38 @@
   text-align: left;
   font-size: 10px;
   font-weight: 600;
-  background: #f7f9fd;
-  color: #7e8ba2;
+  background: var(--surface-elevated);
+  color: var(--text-muted);
   padding: 13px 16px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
 .import-root .import-table td {
   padding: 16px;
-  color: #6b7990;
-  border-top: 1px solid #edf0f5;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-subtle);
   vertical-align: top;
   font-size: 12px;
 }
 .import-table td strong {
-  color: #3d4b64;
+  color: var(--text-secondary);
   font-weight: 550;
 }
 .import-table td small {
   display: block;
-  color: #8b94a6;
+  color: var(--text-muted);
   font-size: 10px;
   margin-top: 6px;
   overflow-wrap: anywhere;
 }
 .import-root .import-table .row-invalid {
-  background: #fff8f8;
+  background: var(--danger-bg);
 }
 .import-root .import-table .row-excluded {
-  background: #f7f8fb;
+  background: var(--surface-muted);
 }
 .import-root .import-table .row-invalid:hover {
-  background: #fff4f4;
+  background: var(--danger-hover-bg);
 }
 .import-cell-value {
   display: block;
@@ -337,18 +337,18 @@
 .import-inclusion {
   display: inline-flex;
   padding: 4px 8px;
-  color: #8894a6;
-  background: #edf0f5;
+  color: var(--text-muted);
+  background: var(--surface-muted);
   border-radius: 4px;
   font-size: 10px;
   white-space: nowrap;
 }
 .import-inclusion.is-included {
-  background: #edf3f8;
-  color: #527396;
+  background: var(--info-bg);
+  color: var(--accent-link);
 }
 .import-valid {
-  color: #529180;
+  color: var(--success);
   font-size: 11px;
 }
 .import-diagnostics {
@@ -360,7 +360,7 @@
   min-width: 260px;
   max-width: 390px;
   font-size: 11px;
-  color: #a45e67;
+  color: var(--danger);
 }
 .import-diagnostics li {
   line-height: 1.6;
@@ -368,7 +368,7 @@
 .import-diagnostics small {
   font-size: 9px;
   letter-spacing: 0.1px;
-  color: #b08388 !important;
+  color: var(--danger) !important;
 }
 .import-row-actions {
   display: flex;
@@ -379,7 +379,7 @@
 }
 .import-text-button {
   font-size: 11px;
-  color: #667b97;
+  color: var(--accent-link);
   border: 0;
   background: transparent;
   padding: 0;
@@ -391,8 +391,8 @@
   gap: 14px;
   padding: 16px 20px;
   font-size: 11px;
-  color: #8692a6;
-  border-top: 1px solid #edf0f5;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-subtle);
 }
 .import-pagination > div {
   display: flex;
@@ -406,7 +406,7 @@
   align-items: center;
 }
 .import-pagination strong {
-  color: #536480;
+  color: var(--text-muted);
 }
 .import-pagination .dash-button {
   padding: 6px 10px;
@@ -414,7 +414,7 @@
 }
 .import-empty {
   padding: 24px 20px;
-  color: #8290a5;
+  color: var(--text-muted);
   font-size: 12px;
 }
 .import-commit-panel {
@@ -428,10 +428,10 @@
   gap: 18px;
   padding: 20px;
   margin-top: 24px;
-  background: var(--dash-primary);
-  color: #fff;
+  background: var(--accent-solid);
+  color: var(--text-on-accent);
   border-radius: 12px;
-  box-shadow: 0 8px 25px #18305218;
+  box-shadow: var(--shadow-raised);
 }
 .import-commit-context {
   display: flex;
@@ -447,11 +447,11 @@
 }
 .import-commit-context p {
   font-size: 11px;
-  color: #b8cbe3;
+  color: var(--text-on-accent);
   margin-top: 5px;
 }
 .import-commit-context small {
-  color: #c7d9ef;
+  color: var(--text-on-accent);
   font-size: 10px;
 }
 .import-commit-icon {
@@ -459,8 +459,8 @@
   place-items: center;
   width: 38px;
   height: 38px;
-  background: #1e3a5f;
-  color: #b5cde7;
+  background: var(--accent-solid);
+  color: var(--text-on-accent);
   border-radius: 8px;
   flex-shrink: 0;
 }
@@ -470,24 +470,24 @@
   gap: 8px;
 }
 .import-commit-panel .dash-button {
-  background: #24415f;
-  border-color: #436181;
-  color: #e2eaf6;
+  background: var(--accent-solid);
+  border-color: var(--border);
+  color: var(--text-on-accent);
   font-size: 11px;
 }
 .import-commit-panel .import-commit-button {
-  background: #fff;
-  border-color: #fff;
-  color: #203852;
+  background: var(--surface);
+  border-color: var(--surface);
+  color: var(--text-primary);
   font-weight: 650;
 }
 .import-receipt {
-  border: 1px solid #cde5dc;
+  border: 1px solid var(--success-border);
   border-radius: 10px;
-  background: #f2faf7;
+  background: var(--success-bg);
   padding: 20px;
   margin: 20px 0;
-  color: #386c5d;
+  color: var(--success);
 }
 .import-receipt h3 {
   font-size: 15px;
@@ -504,7 +504,7 @@
   margin: 16px 0;
 }
 .import-receipt dt {
-  color: #6b9688;
+  color: var(--success);
 }
 .import-receipt dd {
   margin: 0;
@@ -513,8 +513,8 @@
 .import-terminal-note {
   padding: 14px 18px;
   border-radius: 8px;
-  background: #edf0f9;
-  color: #6b7791;
+  background: var(--surface-muted);
+  color: var(--text-muted);
   font-size: 12px;
   margin: 14px 0 !important;
 }
@@ -529,9 +529,9 @@
 .import-history-modal .dash-modal-heading {
   position: sticky;
   top: 0;
-  background: #f2f3ff;
+  background: var(--surface-elevated);
   padding: 20px 24px;
-  border-bottom: 1px solid #e3e7f0;
+  border-bottom: 1px solid var(--border-subtle);
   z-index: 2;
   margin: 0;
 }
@@ -544,7 +544,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #4c617e;
+  color: var(--text-muted);
   font-size: 12px;
   margin: 16px 0;
 }
@@ -565,35 +565,35 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 20px;
   padding: 16px;
-  border: 1px solid #e8ecf3;
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
 }
 .import-edit-fields .field-has-issues {
-  border-color: #edd6db;
-  background: #fffafb;
+  border-color: var(--danger-border);
+  background: var(--danger-bg);
 }
 .import-edit-fields label {
   display: block;
   font-size: 12px;
   font-weight: 550;
-  color: #4e5e79;
+  color: var(--text-secondary);
 }
 .import-edit-fields small {
   display: block;
   margin-top: 4px;
-  color: #8995a7;
+  color: var(--text-muted);
   font-size: 10px;
 }
 .import-edit-fields section > div > p {
   font-size: 10px;
-  color: #8893a6;
+  color: var(--text-muted);
   margin-top: 12px;
 }
 .import-source-value {
   display: block;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  color: #5e6c85;
+  color: var(--text-muted);
   padding-top: 4px;
   font-size: 12px;
 }
@@ -601,22 +601,22 @@
   width: 100%;
   margin-top: 8px;
   padding: 9px 11px;
-  color: #384964;
-  border: 1px solid #d7dfec;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  background: #fff;
+  background: var(--surface);
   font-size: 12px;
 }
 .import-edit-fields .import-field-issue,
 .import-field-issue {
-  color: #a65b68;
+  color: var(--danger);
   font-size: 11px;
   line-height: 1.6;
   margin-top: 8px;
 }
 .import-field-issue small {
   display: block;
-  color: #b0848c;
+  color: var(--danger);
   font-size: 9px;
 }
 .import-dialog-actions {
@@ -628,24 +628,24 @@
   gap: 10px;
   padding: 16px 0;
   margin-top: 18px;
-  background: #fff;
-  border-top: 1px solid #e9edf4;
+  background: var(--surface);
+  border-top: 1px solid var(--border-subtle);
 }
 .import-draft-notice {
-  color: #956a39;
-  background: #fff5e7;
+  color: var(--warning);
+  background: var(--warning-bg);
   padding: 12px;
   border-radius: 6px;
   font-size: 12px;
   line-height: 1.6;
 }
 .import-confirm-copy {
-  color: #6c7b94;
+  color: var(--text-muted);
   line-height: 1.7;
   margin: 14px 0 !important;
 }
 .import-audit-item {
-  border: 1px solid #e5e9f2;
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
   padding: 16px;
 }
@@ -658,28 +658,28 @@
 .import-audit-item strong,
 .import-history-item strong {
   font-size: 13px;
-  color: #3b506e;
+  color: var(--text-secondary);
 }
 .import-audit-item span,
 .import-history-item span {
   font-size: 11px;
-  color: #8190a5;
+  color: var(--text-muted);
 }
 .import-audit-item p {
   margin: 10px 0;
-  color: #8b95a6;
+  color: var(--text-muted);
 }
 .import-audit-item summary {
   font-size: 11px;
   cursor: pointer;
-  color: #657f9e;
+  color: var(--accent-link);
 }
 .import-audit-item pre {
   font-size: 11px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  color: #6c7b94;
-  background: #f7f9fd;
+  color: var(--text-muted);
+  background: var(--surface-muted);
   border-radius: 6px;
   padding: 12px;
 }
@@ -689,15 +689,15 @@
   justify-content: space-between;
   gap: 14px;
   padding: 16px;
-  border: 1px solid #e5e9f2;
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
 }
 .import-history-item p {
-  color: #78879d;
+  color: var(--text-muted);
   font-size: 11px;
 }
 .import-history-errors {
-  border-top: 1px solid #e5e9f2;
+  border-top: 1px solid var(--border-subtle);
   padding-top: 20px;
 }
 @media (max-width: 1200px) {

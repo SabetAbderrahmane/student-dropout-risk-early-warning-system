@@ -3,14 +3,22 @@ import type { DashboardOverview } from "@/types/dashboard";
 export function InterventionSummary({ data }: { data: DashboardOverview }) {
   const { interventions: counts, follow_ups: followUps } = data;
   const stages = [
-    { label: "Planned", value: counts.planned, color: "#c4c6cf" },
-    { label: "In progress", value: counts.in_progress, color: "#022448" },
+    { label: "Planned", value: counts.planned, color: "var(--chart-neutral)" },
+    {
+      label: "In progress",
+      value: counts.in_progress,
+      color: "var(--chart-in-progress)",
+    },
     {
       label: "Action required",
       value: counts.action_required,
-      color: "#ba1a1a",
+      color: "var(--chart-danger)",
     },
-    { label: "Completed", value: counts.completed, color: "#2d6197" },
+    {
+      label: "Completed",
+      value: counts.completed,
+      color: "var(--chart-completed)",
+    },
   ];
   const total = stages.reduce((sum, stage) => sum + stage.value, 0);
   let offset = 0;
@@ -33,7 +41,7 @@ export function InterventionSummary({ data }: { data: DashboardOverview }) {
               cy="60"
               r="49"
               fill="none"
-              stroke="#e7eaf0"
+              stroke="var(--chart-grid)"
               strokeWidth="9"
             />
             {stages.map((stage) => {

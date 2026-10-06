@@ -6,6 +6,7 @@ import { FormEvent, useState } from "react";
 
 import { ApiError, fetchCurrentUser, login } from "@/lib/api";
 import { clearAccessToken, saveAccessToken } from "@/lib/auth";
+import { ThemeControl } from "@/components/theme/theme-control";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,9 +42,12 @@ export default function LoginPage() {
   return (
     <main className="page-shell">
       <section className="auth-card">
-        <Link className="back-link" href="/">
-          ← Back
-        </Link>
+        <div className="auth-theme-row">
+          <Link className="back-link" href="/">
+            ← Back
+          </Link>
+          <ThemeControl />
+        </div>
         <div className="eyebrow">Secure access</div>
         <h1>Sign in</h1>
         <p className="muted">

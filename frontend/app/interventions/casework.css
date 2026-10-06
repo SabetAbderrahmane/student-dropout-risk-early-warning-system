@@ -1,8 +1,8 @@
 .casework-root {
-  color: #14314f;
+  color: var(--text-primary);
 }
 .casework-context {
-  color: #61728a;
+  color: var(--text-muted);
   font-size: 12px;
 }
 .casework-metrics {
@@ -12,9 +12,9 @@
   margin: 16px 0 28px;
 }
 .casework-metrics article {
-  background: white;
-  border: 1px solid #e1e7ef;
-  border-top: 3px solid #315e89;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-top: 3px solid var(--accent-link);
   padding: 22px;
   border-radius: 10px;
 }
@@ -34,18 +34,18 @@
 }
 .casework-metrics small {
   font-size: 11px;
-  color: #61728a;
+  color: var(--text-muted);
 }
 .casework-follow-panel,
 .casework-table-panel {
-  background: white;
-  border: 1px solid #dce4ee;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 24px;
 }
 .casework-follow-panel {
-  border-top: 3px solid #ab4545;
+  border-top: 3px solid var(--danger);
 }
 .casework-section-heading {
   display: flex;
@@ -53,8 +53,8 @@
   gap: 20px;
   align-items: center;
   padding: 20px 24px;
-  background: #f5f7fc;
-  border-bottom: 1px solid #e1e7ef;
+  background: var(--surface-elevated);
+  border-bottom: 1px solid var(--border-subtle);
   flex-wrap: wrap;
 }
 .casework-section-heading h2 {
@@ -63,12 +63,12 @@
 }
 .casework-section-heading p {
   font-size: 12px;
-  color: #61728a;
+  color: var(--text-muted);
   margin-bottom: 0;
 }
 .casework-section-heading span {
   font-size: 12px;
-  color: #61728a;
+  color: var(--text-muted);
 }
 .casework-tabs {
   display: flex;
@@ -77,16 +77,16 @@
 }
 .casework-tabs button {
   padding: 8px 12px;
-  border: 1px solid #d8e0eb;
+  border: 1px solid var(--border);
   border-radius: 6px;
-  background: white;
-  color: #355675;
+  background: var(--surface);
+  color: var(--accent-link);
   cursor: pointer;
 }
 .casework-tabs button[aria-pressed="true"] {
-  background: #123a60;
-  color: white;
-  border-color: #123a60;
+  background: var(--accent-solid);
+  color: var(--text-on-accent);
+  border-color: var(--border-strong);
 }
 .casework-follow-grid {
   display: grid;
@@ -98,8 +98,8 @@
   display: none;
 }
 .casework-follow-grid article {
-  border: 1px solid #e0e5ee;
-  background: #fcfcff;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-muted);
   border-radius: 8px;
   padding: 18px;
   display: flex;
@@ -113,7 +113,7 @@
 }
 .casework-card-heading a,
 .casework-table-panel a {
-  color: #163d66;
+  color: var(--text-secondary);
   text-decoration: none;
 }
 .casework-card-heading a:hover,
@@ -124,7 +124,7 @@
 .casework-table-panel small {
   display: block;
   margin-top: 5px;
-  color: #61728a;
+  color: var(--text-muted);
   font-size: 11px;
 }
 .casework-follow-grid article > p {
@@ -141,7 +141,7 @@
   font-size: 12px;
 }
 .casework-follow-grid dt {
-  color: #61728a;
+  color: var(--text-muted);
 }
 .casework-follow-grid dd {
   margin: 0;
@@ -158,8 +158,8 @@
   align-items: end;
   gap: 14px;
   padding: 20px;
-  background: #eef2f8;
-  border: 1px solid #dde5ef;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
   border-radius: 10px;
   margin-bottom: 20px;
 }
@@ -170,16 +170,16 @@
   gap: 7px;
   font-size: 11px;
   font-weight: 600;
-  color: #546a83;
+  color: var(--text-muted);
 }
 .casework-filters input,
 .casework-filters select,
 .casework-search input {
   padding: 10px 12px;
-  border: 1px solid #ccd7e4;
+  border: 1px solid var(--border);
   border-radius: 6px;
-  background: white;
-  color: #163d66;
+  background: var(--surface);
+  color: var(--text-secondary);
   min-height: 40px;
 }
 .casework-filters .casework-search {
@@ -195,7 +195,7 @@
 }
 .casework-table-panel th {
   text-align: left;
-  background: #f5f7fc;
+  background: var(--surface-elevated);
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.045em;
@@ -204,7 +204,7 @@
 }
 .casework-table-panel td {
   padding: 18px 15px;
-  border-top: 1px solid #e9edf3;
+  border-top: 1px solid var(--border-subtle);
   vertical-align: middle;
 }
 .casework-table-panel td:nth-child(3) {
@@ -213,11 +213,11 @@
   overflow-wrap: anywhere;
 }
 .casework-table-panel tbody tr:hover {
-  background: #f8faff;
+  background: var(--surface-hover);
 }
 .casework-empty {
   padding: 30px 24px;
-  color: #61728a;
+  color: var(--text-muted);
 }
 .casework-drawer {
   margin: 0 0 0 auto;
@@ -238,24 +238,24 @@
   gap: 6px;
   text-align: left;
   padding: 15px;
-  border: 1px solid #dce4ee;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: #f8faff;
-  color: #14314f;
+  background: var(--surface-muted);
+  color: var(--text-primary);
   cursor: pointer;
 }
 .casework-warning-option:hover {
-  border-color: #315e89;
+  border-color: var(--accent-link);
 }
 .casework-warning-option span,
 .casework-warning-option small {
-  color: #61728a;
+  color: var(--text-muted);
 }
 .casework-root button:focus-visible,
 .casework-root a:focus-visible,
 .casework-root input:focus-visible,
 .casework-root select:focus-visible {
-  outline: 3px solid #5595c8;
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
 @media (max-width: 1200px) {

@@ -6,10 +6,10 @@
 }
 .registry-toolbar,
 .registry-table-card {
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--dash-line);
   border-radius: 12px;
-  box-shadow: 0 2px 6px #17213a03;
+  box-shadow: var(--shadow-soft);
 }
 .registry-toolbar {
   padding: 18px;
@@ -45,7 +45,7 @@
   font-size: 12px;
 }
 .registry-root .registry-filter-grid input:focus {
-  background: white;
+  background: var(--surface);
   border-color: var(--dash-secondary);
 }
 .registry-filter-meta {
@@ -55,7 +55,7 @@
   align-items: center;
   margin-top: 18px;
   padding-top: 14px;
-  border-top: 1px solid #eff0f6;
+  border-top: 1px solid var(--border-subtle);
 }
 .registry-chips {
   display: flex;
@@ -68,10 +68,10 @@
   max-width: 100%;
   overflow-wrap: anywhere;
   border: 0;
-  background: #eaedff;
+  background: var(--info-bg);
   border-radius: 20px;
   padding: 4px 10px;
-  color: #2d486d;
+  color: var(--accent-link);
   font-size: 11px !important;
 }
 .registry-clear {
@@ -101,8 +101,8 @@
 }
 .registry-density button[aria-pressed="true"] {
   color: var(--dash-primary);
-  background: white;
-  box-shadow: 0 1px 3px #02244816;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
   font-weight: 650;
 }
 .registry-table-heading {
@@ -125,17 +125,17 @@
   width: auto;
   padding: 5px 8px;
   border: 1px solid var(--dash-line);
-  background: white;
+  background: var(--surface);
   border-radius: 5px;
   color: var(--dash-primary);
 }
 .registry-count {
-  background: #eaedff;
+  background: var(--info-bg);
   padding: 3px 8px;
   border-radius: 5px;
   font-size: 11px;
   margin-left: 6px;
-  color: #2d486d;
+  color: var(--accent-link);
 }
 .registry-table-scroll {
   width: 100%;
@@ -154,10 +154,10 @@
   top: 0;
   z-index: 1;
   text-align: left;
-  background: #f2f3ff;
+  background: var(--surface-elevated);
   padding: 12px 14px;
   font-size: 10px;
-  color: #59616f;
+  color: var(--text-secondary);
   letter-spacing: 0.02em;
   white-space: nowrap;
   border-bottom: 1px solid var(--dash-line);
@@ -176,7 +176,7 @@
 }
 .registry-root .registry-table td {
   padding: 16px 14px;
-  border-bottom: 1px solid #edf0f7;
+  border-bottom: 1px solid var(--border-subtle);
   vertical-align: middle;
   white-space: nowrap;
 }
@@ -186,7 +186,7 @@
   white-space: normal;
 }
 .registry-table tr:hover td {
-  background: #fafaff;
+  background: var(--surface-hover);
 }
 .registry-table td strong {
   font-weight: 600;
@@ -200,7 +200,7 @@
 .registry-mono {
   font-family: var(--font-geist-mono), monospace;
   font-size: 11px;
-  color: #455f87;
+  color: var(--accent-link);
 }
 .registry-student {
   display: flex;
@@ -226,8 +226,8 @@
   height: 30px;
   border-radius: 8px;
   flex-shrink: 0;
-  background: #eaedff;
-  color: #455f87;
+  background: var(--info-bg);
+  color: var(--accent-link);
   font-size: 10px;
   font-weight: 650;
 }
@@ -235,39 +235,39 @@
   display: inline-flex;
   align-items: center;
   padding: 3px 7px;
-  border: 1px solid #e0e3ec;
+  border: 1px solid var(--border-subtle);
   border-radius: 5px;
   font-size: 10px;
   font-weight: 600;
-  background: #f5f6fa;
-  color: #59616f;
+  background: var(--neutral-bg);
+  color: var(--text-secondary);
 }
 .registry-badge.state-high,
 .registry-badge.state-action_required {
-  color: #a12d34;
-  background: #fff0ee;
-  border-color: #f6d6d4;
+  color: var(--danger);
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
 }
 .registry-badge.state-medium,
 .registry-badge.state-pending_review,
 .registry-badge.state-not_ready {
-  color: #875620;
-  background: #fff8e7;
-  border-color: #f2e2bb;
+  color: var(--warning);
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
 }
 .registry-badge.state-low,
 .registry-badge.state-ready,
 .registry-badge.state-completed {
-  color: #236650;
-  background: #edf8f2;
-  border-color: #cfe8db;
+  color: var(--success);
+  background: var(--success-bg);
+  border-color: var(--success-border);
 }
 .registry-badge.state-confirmed,
 .registry-badge.state-in_progress,
 .registry-badge.state-planned {
-  color: #2d6197;
-  background: #eff5ff;
-  border-color: #d5e3f7;
+  color: var(--accent-link);
+  background: var(--info-bg);
+  border-color: var(--info-border);
 }
 .registry-risk {
   display: flex;
@@ -281,22 +281,22 @@
   margin-top: 6px;
 }
 .registry-table meter::-webkit-meter-bar {
-  background: #eaedff;
+  background: var(--info-bg);
   border: 0;
 }
 .registry-table meter::-webkit-meter-optimum-value {
-  background: #455f87;
+  background: var(--chart-line);
 }
 .registry-profile-button {
-  border: 1px solid #e0e3ec;
+  border: 1px solid var(--border-subtle);
   border-radius: 6px;
-  background: #f7f8ff;
-  color: #2d6197;
+  background: var(--surface-muted);
+  color: var(--accent-link);
   padding: 6px 9px;
   font-size: 11px !important;
 }
 .registry-profile-button:hover {
-  background: #eaedff;
+  background: var(--info-bg);
 }
 .registry-root .is-compact .registry-table td {
   padding-top: 8px;
@@ -319,7 +319,7 @@
 }
 .registry-pagination select {
   width: auto;
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--dash-line);
   border-radius: 5px;
   padding: 5px;
@@ -367,22 +367,22 @@
   border: 0;
   border-left: 1px solid var(--dash-line);
   color: var(--dash-ink);
-  background: white;
-  box-shadow: -15px 0 60px #02244820;
+  background: var(--surface);
+  box-shadow: var(--shadow-overlay);
 }
 .registry-drawer[open] {
   display: flex;
   flex-direction: column;
 }
 .registry-drawer::backdrop {
-  background: #02244860;
+  background: var(--backdrop);
 }
 .registry-drawer-heading {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   padding: 24px;
-  background: #f7f8ff;
+  background: var(--surface-elevated);
   border-bottom: 1px solid var(--dash-line);
 }
 .registry-root .registry-drawer-heading h2 {
@@ -450,7 +450,7 @@
   color: var(--dash-primary);
 }
 .registry-history-item {
-  background: #f7f8ff;
+  background: var(--surface-muted);
   border-radius: 8px;
   padding: 12px;
   margin-top: 10px;
@@ -464,7 +464,7 @@
   list-style: none;
   margin: 0;
   padding: 0 0 0 14px;
-  border-left: 2px solid #dae2fd;
+  border-left: 2px solid var(--info-border);
 }
 .registry-timeline li {
   margin-bottom: 20px;

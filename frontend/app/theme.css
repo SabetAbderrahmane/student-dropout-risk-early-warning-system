@@ -1,0 +1,271 @@
+/* Semantic palette shared by every route, including native controls and SVG charts. */
+:root {
+  color-scheme: light;
+  --background: #faf8ff;
+  --auth-background: #f4f7fb;
+  --surface: #ffffff;
+  --surface-elevated: #f7f8fc;
+  --surface-muted: #f2f3fa;
+  --surface-hover: #f7faff;
+  --surface-selected: #eff5fc;
+  --sidebar: #ffffff;
+  --header: #ffffffee;
+  --border: #dce3ed;
+  --border-subtle: #e8ecf3;
+  --border-strong: #899cb5;
+  --text-primary: #172b45;
+  --text-secondary: #405674;
+  --text-muted: #586982;
+  --text-on-accent: #ffffff;
+  --accent: #163d66;
+  --accent-link: #2d6197;
+  --accent-solid: #022448;
+  --accent-hover: #1e3a5f;
+  --auth-accent-solid: #2355d8;
+  --auth-accent-hover: #173da5;
+  --nav-active-bg: #1e3a5f;
+  --nav-active-text: #ffffff;
+  --focus: #397cae;
+  --focus-halo: #2355d821;
+  --success: #236650;
+  --success-bg: #edf8f2;
+  --success-border: #cfe8db;
+  --warning: #875620;
+  --warning-bg: #fff5e4;
+  --warning-border: #ead8b3;
+  --danger: #a12d34;
+  --danger-bg: #fff0ee;
+  --danger-hover-bg: #ffe8e5;
+  --danger-border: #efccd1;
+  --danger-solid: #a13939;
+  --info: #2d6197;
+  --info-bg: #eff5ff;
+  --info-border: #d5e3f7;
+  --neutral: #59616f;
+  --neutral-bg: #f2f3f6;
+  --neutral-border: #e1e4ec;
+  --analysis: #65529c;
+  --analysis-bg: #eee9fa;
+  --analysis-border: #d7cfeb;
+  --chart-grid: #dce3ed;
+  --chart-created: #adc8f5;
+  --chart-line: #2d6197;
+  --chart-neutral: #a6aebf;
+  --chart-in-progress: #022448;
+  --chart-completed: #2d6197;
+  --chart-success: #63bca0;
+  --chart-warning: #d6a54b;
+  --chart-danger: #ca6473;
+  --chart-analysis: #7769d9;
+  --chart-analysis-end: #b2a7f0;
+  --backdrop: #02244866;
+  --shadow-soft: 0 2px 6px #17213a0a;
+  --shadow-raised: 0 12px 40px #14234612;
+  --shadow-overlay: 0 24px 80px #02244833;
+  --auth-glow-blue: #639aff33;
+  --auth-glow-green: #31c9a124;
+  --ink: var(--text-primary);
+  --muted: var(--text-muted);
+  --line: var(--border);
+  --brand: var(--accent-link);
+  --brand-dark: var(--auth-accent-hover);
+  --shadow: var(--shadow-overlay);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #101722;
+  --auth-background: #101722;
+  --surface: #172130;
+  --surface-elevated: #202c3d;
+  --surface-muted: #1b2738;
+  --surface-hover: #24334a;
+  --surface-selected: #243b54;
+  --sidebar: #141e2c;
+  --header: #172130f5;
+  --border: #35465e;
+  --border-subtle: #2c3a50;
+  --border-strong: #667d99;
+  --text-primary: #e5ebf4;
+  --text-secondary: #c0ccdc;
+  --text-muted: #a4b4ca;
+  --text-on-accent: #f5f8fd;
+  --accent: #b8d2ef;
+  --accent-link: #a9ccef;
+  --accent-solid: #28527a;
+  --accent-hover: #33638e;
+  --auth-accent-solid: #315f9d;
+  --auth-accent-hover: #3c71b3;
+  --nav-active-bg: #2a405e;
+  --nav-active-text: #e9f1fc;
+  --focus: #99c9f2;
+  --focus-halo: #99c9f22e;
+  --success: #99d7bd;
+  --success-bg: #19392f;
+  --success-border: #3b6b57;
+  --warning: #e9c78e;
+  --warning-bg: #3c3021;
+  --warning-border: #78623e;
+  --danger: #f0adb6;
+  --danger-bg: #3d252d;
+  --danger-hover-bg: #4a2b34;
+  --danger-border: #7c4955;
+  --danger-solid: #9e3748;
+  --info: #b8d2f3;
+  --info-bg: #24374f;
+  --info-border: #4b6687;
+  --neutral: #bac7d8;
+  --neutral-bg: #263142;
+  --neutral-border: #495b73;
+  --analysis: #d0c3f1;
+  --analysis-bg: #342c4b;
+  --analysis-border: #6b5b88;
+  --chart-grid: #465873;
+  --chart-created: #7b9fce;
+  --chart-line: #b4d6f7;
+  --chart-neutral: #8c9db5;
+  --chart-in-progress: #b8cfed;
+  --chart-completed: #77aee0;
+  --chart-success: #82c9aa;
+  --chart-warning: #e2bb6d;
+  --chart-danger: #e396a4;
+  --chart-analysis: #9b8edc;
+  --chart-analysis-end: #cabeea;
+  --backdrop: #070d17b8;
+  --shadow-soft: 0 2px 6px #080c152e;
+  --shadow-raised: 0 12px 40px #080c1545;
+  --shadow-overlay: 0 24px 80px #080c1580;
+  --auth-glow-blue: #3858851f;
+  --auth-glow-green: #2b574c1a;
+}
+
+.theme-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.theme-control select {
+  width: auto;
+  min-height: 34px;
+  padding: 5px 7px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font: inherit;
+}
+.theme-control select:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.auth-theme-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.auth-theme-row .back-link {
+  margin-bottom: 0;
+}
+.home-theme-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+:is(input, select, textarea) {
+  accent-color: var(--accent-link);
+}
+::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+::selection {
+  background: var(--info-border);
+  color: var(--text-primary);
+}
+html {
+  scrollbar-color: var(--border-strong) var(--background);
+}
+@media (max-width: 650px) {
+  .dash-header .dash-identity {
+    display: none;
+  }
+  .theme-control {
+    gap: 5px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --background: #101722;
+    --auth-background: #101722;
+    --surface: #172130;
+    --surface-elevated: #202c3d;
+    --surface-muted: #1b2738;
+    --surface-hover: #24334a;
+    --surface-selected: #243b54;
+    --sidebar: #141e2c;
+    --header: #172130f5;
+    --border: #35465e;
+    --border-subtle: #2c3a50;
+    --border-strong: #667d99;
+    --text-primary: #e5ebf4;
+    --text-secondary: #c0ccdc;
+    --text-muted: #a4b4ca;
+    --text-on-accent: #f5f8fd;
+    --accent: #b8d2ef;
+    --accent-link: #a9ccef;
+    --accent-solid: #28527a;
+    --accent-hover: #33638e;
+    --auth-accent-solid: #315f9d;
+    --auth-accent-hover: #3c71b3;
+    --nav-active-bg: #2a405e;
+    --nav-active-text: #e9f1fc;
+    --focus: #99c9f2;
+    --focus-halo: #99c9f22e;
+    --success: #99d7bd;
+    --success-bg: #19392f;
+    --success-border: #3b6b57;
+    --warning: #e9c78e;
+    --warning-bg: #3c3021;
+    --warning-border: #78623e;
+    --danger: #f0adb6;
+    --danger-bg: #3d252d;
+    --danger-hover-bg: #4a2b34;
+    --danger-border: #7c4955;
+    --danger-solid: #9e3748;
+    --info: #b8d2f3;
+    --info-bg: #24374f;
+    --info-border: #4b6687;
+    --neutral: #bac7d8;
+    --neutral-bg: #263142;
+    --neutral-border: #495b73;
+    --analysis: #d0c3f1;
+    --analysis-bg: #342c4b;
+    --analysis-border: #6b5b88;
+    --chart-grid: #465873;
+    --chart-created: #7b9fce;
+    --chart-line: #b4d6f7;
+    --chart-neutral: #8c9db5;
+    --chart-in-progress: #b8cfed;
+    --chart-completed: #77aee0;
+    --chart-success: #82c9aa;
+    --chart-warning: #e2bb6d;
+    --chart-danger: #e396a4;
+    --chart-analysis: #9b8edc;
+    --chart-analysis-end: #cabeea;
+    --backdrop: #070d17b8;
+    --shadow-soft: 0 2px 6px #080c152e;
+    --shadow-raised: 0 12px 40px #080c1545;
+    --shadow-overlay: 0 24px 80px #080c1580;
+    --auth-glow-blue: #3858851f;
+    --auth-glow-green: #2b574c1a;
+  }
+}
