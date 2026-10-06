@@ -20,6 +20,10 @@ out/
 npm-debug.log*
 *.tsbuildinfo
 
+# Local browser QA artifacts
+.playwright-cli/
+output/playwright/
+
 # IDE / OS
 .idea/
 .vscode/

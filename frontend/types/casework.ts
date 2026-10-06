@@ -89,3 +89,48 @@ export interface FollowUpCompletion {
   notes: string;
   next_follow_up_at?: string | null;
 }
+
+export type InterventionRow = Omit<InterventionDetail, "notes" | "follow_ups">;
+export interface CaseworkPage<T> {
+  items: T[];
+  page: number;
+  page_size: number;
+  total: number;
+  total_pages: number;
+}
+export type InterventionPage = CaseworkPage<InterventionRow>;
+export type FollowUpPage = CaseworkPage<FollowUpDetail>;
+export interface InterventionParams {
+  page: number;
+  page_size: number;
+  search?: string;
+  status?: InterventionState;
+  priority?: WarningPriority;
+  type?: InterventionType;
+  assigned_to?: string;
+  student_id?: string;
+  warning_id?: string;
+  sort?:
+    | "urgency"
+    | "status"
+    | "priority"
+    | "updated_at"
+    | "created_at"
+    | "start_date"
+    | "target_date"
+    | "student_number";
+  order?: "asc" | "desc";
+}
+export interface FollowUpParams {
+  page: number;
+  page_size: number;
+  status?: FollowUpDetail["effective_status"];
+  assigned_to?: string;
+  student_id?: string;
+  intervention_id?: string;
+  search?: string;
+  from?: string;
+  to?: string;
+  sort?: "scheduled_for" | "created_at" | "updated_at" | "student_number";
+  order?: "asc" | "desc";
+}

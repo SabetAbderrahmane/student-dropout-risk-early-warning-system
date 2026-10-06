@@ -44,6 +44,7 @@ export function CaseDetail({
   mutate,
   report,
   onClose,
+  onFollowUp,
 }: {
   id: string;
   token: string;
@@ -54,6 +55,7 @@ export function CaseDetail({
   mutate: (work: () => Promise<unknown>) => Promise<string | null>;
   report: (error: unknown) => void;
   onClose: () => void;
+  onFollowUp?: (id: string) => void;
 }) {
   const [detail, setDetail] = useState<InterventionDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -348,6 +350,15 @@ export function CaseDetail({
                   {timestamp(item.scheduled_for)} ·{" "}
                   {item.assigned_advisor.full_name}
                 </small>
+                {onFollowUp && (
+                  <button
+                    className="dash-button"
+                    disabled={busy}
+                    onClick={() => onFollowUp(item.id)}
+                  >
+                    Open Follow-Up
+                  </button>
+                )}
               </article>
             ))
           )}
