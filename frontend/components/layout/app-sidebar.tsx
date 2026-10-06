@@ -94,17 +94,18 @@ export function AppSidebar({
                     : label === "Risk Predictions"
                       ? "/predictions"
                       : label === "Follow-Ups"
-                        ? "/interventions#follow-ups"
+                        ? "/follow-ups"
                         : "/interventions"
                 }
                 aria-current={
-                  label !== "Follow-Ups" &&
                   pathname.startsWith(
                     label === "Early Warnings"
                       ? "/warnings"
                       : label === "Risk Predictions"
                         ? "/predictions"
-                        : "/interventions",
+                        : label === "Follow-Ups"
+                          ? "/follow-ups"
+                          : "/interventions",
                   )
                     ? "page"
                     : undefined

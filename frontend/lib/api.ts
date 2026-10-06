@@ -161,6 +161,20 @@ export const fetchFollowUps = (
     undefined,
     signal,
   );
+export const fetchInterventionFollowUps = (
+  token: string,
+  id: string,
+  page: number,
+  pageSize: number,
+  signal?: AbortSignal,
+) =>
+  dossierRequest<FollowUpPage>(
+    token,
+    `/interventions/${encodeURIComponent(id)}/follow-ups?${stagedQuery({ page, page_size: pageSize })}`,
+    "GET",
+    undefined,
+    signal,
+  );
 export const updateIntervention = (
   token: string,
   id: string,

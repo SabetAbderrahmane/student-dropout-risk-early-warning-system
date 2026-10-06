@@ -10,6 +10,8 @@ export type InterventionOutcome =
   | "OTHER";
 export type FollowUpMethod =
   "IN_PERSON" | "PHONE" | "EMAIL" | "ONLINE_MEETING" | "OTHER";
+export type FollowUpStatus = "SCHEDULED" | "COMPLETED" | "CANCELLED";
+export type FollowUpEffectiveStatus = FollowUpStatus | "DUE" | "OVERDUE";
 export type FollowUpOutcome =
   | "COMPLETED"
   | "PROGRESS_OBSERVED"
@@ -35,8 +37,8 @@ export interface FollowUpDetail {
   scheduled_for: string;
   method: FollowUpMethod;
   purpose: string;
-  stored_status: "SCHEDULED" | "COMPLETED" | "CANCELLED";
-  status: "SCHEDULED" | "DUE" | "OVERDUE" | "COMPLETED" | "CANCELLED";
+  stored_status: FollowUpStatus;
+  status: FollowUpEffectiveStatus;
   effective_status: FollowUpDetail["status"];
   outcome: FollowUpOutcome | null;
   notes: string | null;
