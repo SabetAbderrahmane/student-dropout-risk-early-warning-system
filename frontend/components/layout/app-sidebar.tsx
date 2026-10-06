@@ -82,13 +82,29 @@ export function AppSidebar({
             "Interventions",
             "Follow-Ups",
           ].map((label) =>
-            label === "Early Warnings" || label === "Risk Predictions" ? (
+            label === "Early Warnings" ||
+            label === "Risk Predictions" ||
+            label === "Interventions" ||
+            label === "Follow-Ups" ? (
               <Link
                 key={label}
-                href={label === "Early Warnings" ? "/warnings" : "/predictions"}
+                href={
+                  label === "Early Warnings"
+                    ? "/warnings"
+                    : label === "Risk Predictions"
+                      ? "/predictions"
+                      : label === "Follow-Ups"
+                        ? "/interventions#follow-ups"
+                        : "/interventions"
+                }
                 aria-current={
+                  label !== "Follow-Ups" &&
                   pathname.startsWith(
-                    label === "Early Warnings" ? "/warnings" : "/predictions",
+                    label === "Early Warnings"
+                      ? "/warnings"
+                      : label === "Risk Predictions"
+                        ? "/predictions"
+                        : "/interventions",
                   )
                     ? "page"
                     : undefined

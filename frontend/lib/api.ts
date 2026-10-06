@@ -7,6 +7,10 @@ import type {
   FollowUpDetail,
   FollowUpInput,
   FollowUpCompletion,
+  InterventionPage,
+  InterventionParams,
+  FollowUpPage,
+  FollowUpParams,
 } from "@/types/casework";
 import type {
   WarningParams,
@@ -129,6 +133,30 @@ export const fetchInterventionDetail = (
   dossierRequest<InterventionDetail>(
     token,
     `/interventions/${encodeURIComponent(id)}`,
+    "GET",
+    undefined,
+    signal,
+  );
+export const fetchInterventions = (
+  token: string,
+  params: InterventionParams,
+  signal?: AbortSignal,
+) =>
+  dossierRequest<InterventionPage>(
+    token,
+    `/interventions?${stagedQuery(params)}`,
+    "GET",
+    undefined,
+    signal,
+  );
+export const fetchFollowUps = (
+  token: string,
+  params: FollowUpParams,
+  signal?: AbortSignal,
+) =>
+  dossierRequest<FollowUpPage>(
+    token,
+    `/follow-ups?${stagedQuery(params)}`,
     "GET",
     undefined,
     signal,
