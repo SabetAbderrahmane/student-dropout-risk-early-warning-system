@@ -22,6 +22,7 @@ import type {
 } from "@/types/dashboard";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { AppHeader } from "@/components/layout/app-header";
+import { NextActions } from "./next-actions";
 import { OverviewView } from "./overview-view";
 import { ReviewWarningModal } from "./review-warning-modal";
 import { QuickInterventionModal } from "./quick-intervention-modal";
@@ -236,6 +237,7 @@ export function DashboardShell() {
               )}
             </div>
           </div>
+          {data && <NextActions data={data} />}
           {feedback && (
             <div className="dash-banner dash-success" role="status">
               <div>

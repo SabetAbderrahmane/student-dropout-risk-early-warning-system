@@ -38,7 +38,7 @@ export function FollowUpsWorkspace() {
           <div className="dash-title-row">
             <div>
               <p className="dash-eyebrow">
-                <Icon name="activity" /> Academic support / Follow through
+                <Icon name="calendar" /> Academic support / Follow through
               </p>
               <h1>Follow-Ups & Outcomes</h1>
               <p className="dash-description">

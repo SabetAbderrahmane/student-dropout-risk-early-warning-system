@@ -1,7 +1,11 @@
+"use client";
+
 import type { User } from "@/types/auth";
 import { readable } from "@/lib/dashboard";
 import { Icon } from "@/components/dashboard/icon";
 import { ThemeControl } from "@/components/theme/theme-control";
+import { useEffect } from "react";
+import { useGuide } from "@/components/guide/guide-provider";
 
 export function AppHeader({
   user,
@@ -16,6 +20,10 @@ export function AppHeader({
   onSignOut: () => void;
   title?: string;
 }) {
+  const { registerUser, openHelp } = useGuide();
+  useEffect(() => {
+    registerUser(user);
+  }, [user, registerUser]);
   return (
     <header className="dash-header">
       <div className="dash-header-context">
@@ -34,6 +42,16 @@ export function AppHeader({
         </span>
       </div>
       <div className="dash-account">
+        <button
+          className="dash-help-button"
+          onClick={openHelp}
+          disabled={!user}
+          aria-label="Help and guided tour"
+          title="Help & tour"
+        >
+          <Icon name="help" />
+          <span>Help & tour</span>
+        </button>
         <ThemeControl />
         {user && (
           <>

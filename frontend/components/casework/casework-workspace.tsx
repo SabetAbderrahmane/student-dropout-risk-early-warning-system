@@ -330,7 +330,7 @@ export function CaseworkWorkspace() {
           <div className="dash-title-row">
             <div>
               <p className="dash-eyebrow">
-                <Icon name="activity" /> Academic support
+                <Icon name="casework" /> Academic support
               </p>
               <h1>Interventions & Casework</h1>
               <p className="dash-description">
