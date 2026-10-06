@@ -165,6 +165,8 @@ export function CaseworkWorkspace() {
         }
       });
     const context = new URLSearchParams(window.location.search);
+    const interventionId = context.get("intervention_id");
+    if (interventionId) setCaseId(interventionId);
     const student_id = context.get("student_id"),
       warning_id = context.get("warning_id");
     if (student_id || warning_id)
