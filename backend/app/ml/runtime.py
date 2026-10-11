@@ -1,18 +1,17 @@
 """Validated, process-wide loading of the frozen Phase 5A inference bundle."""
 
-import json
+import logging
 import threading
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import joblib
 import pandas as pd
 
 from app.core.config import get_settings
 from app.core.exceptions import ApplicationError
+from app.ml.deployment import load_verified_model
 from app.ml.training.artifact import ModelBundle
-from app.ml.training.metadata import validate_artifact_consistency, validate_metadata
 
 
 @dataclass(frozen=True, slots=True)
@@ -38,48 +37,18 @@ class ModelRuntime:
 _lock = threading.Lock()
 _runtime: ModelRuntime | None = None
 _load_error: ApplicationError | None = None
-
-
-def _unavailable(message: str) -> ApplicationError:
-    return ApplicationError(503, "MODEL_ARTIFACT_UNAVAILABLE", message)
-
-
-def _mismatch(message: str) -> ApplicationError:
-    return ApplicationError(503, "MODEL_REGISTRY_MISMATCH", message)
+logger = logging.getLogger(__name__)
 
 
 def _load_runtime() -> ModelRuntime:
     settings = get_settings()
-    paths = [
+    bundle, metadata, evaluation = load_verified_model(
         Path(settings.ml_model_path),
         Path(settings.ml_metadata_path),
         Path(settings.ml_evaluation_path),
-    ]
-    if any(not path.is_file() for path in paths):
-        raise _unavailable("The configured prediction model is not available.")
-    try:
-        metadata = json.loads(paths[1].read_text(encoding="utf-8"))
-        evaluation = json.loads(paths[2].read_text(encoding="utf-8"))
-        validate_metadata(metadata)
-        bundle = joblib.load(paths[0])
-        if not isinstance(bundle, ModelBundle):
-            raise TypeError("Unexpected model artifact type")
-        validate_artifact_consistency(bundle, metadata)
-        if evaluation.get("model_name") != metadata["model_name"]:
-            raise ValueError("Evaluation model name differs from metadata")
-        if evaluation.get("model_version") != metadata["model_version"]:
-            raise ValueError("Evaluation model version differs from metadata")
-        if evaluation.get("threshold_calibration") != metadata["thresholds"]:
-            raise ValueError("Evaluation thresholds differ from metadata")
-        if evaluation.get("final_test") != metadata["final_test_metrics"]:
-            raise ValueError("Evaluation metrics differ from metadata")
-        return ModelRuntime(bundle=bundle, metadata=metadata, evaluation=evaluation)
-    except ApplicationError:
-        raise
-    except Exception as exc:
-        raise _mismatch(
-            "The prediction artifact does not match its registry record."
-        ) from exc
+        Path(settings.ml_manifest_path),
+    )
+    return ModelRuntime(bundle=bundle, metadata=metadata, evaluation=evaluation)
 
 
 def initialize_model_runtime() -> ModelRuntime | None:
@@ -89,11 +58,21 @@ def initialize_model_runtime() -> ModelRuntime | None:
         if _runtime is not None:
             return _runtime
         if _load_error is not None:
+            if (
+                get_settings().ml_model_required
+                or get_settings().app_env == "production"
+            ):
+                raise _load_error
             return None
         try:
             _runtime = _load_runtime()
         except ApplicationError as exc:
             _load_error = exc
+            logger.error("Prediction model startup failed: %s", exc.code)
+        if _load_error is not None and (
+            get_settings().ml_model_required or get_settings().app_env == "production"
+        ):
+            raise _load_error
         return _runtime
 
 

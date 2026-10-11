@@ -1,0 +1,19 @@
+{
+  "artifact_sha256": "0cdc1e57f145626bba9f46c729685d4ae0968fc39b96564c09c548f7577f1bd8",
+  "format_version": 1,
+  "model_version": "dropout-logistic-regression-v1",
+  "registry_sha256": {
+    "evaluation.json": "179e2781f434c5b8231d82467c2dd8bb800058a3238148ca6d40325332b22b23",
+    "metadata.json": "c4670471723cf3f6b5c56fc177798a31bd40a15d37734a4e6ee9f20247c2fab8",
+    "split_manifest.json": "8f555842145eef3c19a5fa32811bee012f79515acd25d06b8ff30861eb975464"
+  },
+  "runtime_versions": {
+    "joblib": "1.6.0",
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "python": "3.11.9",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.17.1",
+    "xgboost": "3.2.0"
+  }
+}

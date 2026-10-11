@@ -1,8 +1,8 @@
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"
+markers = ["model_integration: explicitly enabled real trained artifact checks (RUN_MODEL_INTEGRATION=1)"]
 
 [tool.coverage.run]
 source = ["app"]
 branch = true
-

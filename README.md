@@ -1,6 +1,6 @@
 # Student Dropout Risk Early Warning System
 
-Phase 1 through Phase 5A implementation for the locked modular-monolith architecture:
+Student academic early-warning system using a modular-monolith architecture:
 
 - Next.js frontend
 - FastAPI backend
@@ -11,26 +11,31 @@ Phase 1 through Phase 5A implementation for the locked modular-monolith architec
 - Database-backed student search and pagination
 - Docker Compose development environment
 
-Runtime prediction, warning, intervention, follow-up, audit, and dashboard domains are intentionally not implemented yet.
+Includes runtime predictions, persisted warnings, intervention and follow-up
+casework, audit history, and dashboard read models.
 
 ## Run with Docker Compose
 
 1. Copy `.env.example` to `.env`.
 2. Replace the database password and JWT secret. The JWT secret must contain at least 32 characters.
 3. To create the first system administrator, temporarily fill the four `BOOTSTRAP_ADMIN_*` values.
-4. Start the stack:
+4. Prepare the verified model using the instructions below. The default backend
+   build fails if its model is missing, corrupted, or incompatible.
+5. Start the stack:
 
    ```bash
    docker compose up --build
    ```
 
-5. After the account is created, remove `BOOTSTRAP_ADMIN_PASSWORD` from `.env` and restart the backend. The bootstrap command is idempotent and never overwrites an existing account.
+6. After the account is created, remove `BOOTSTRAP_ADMIN_PASSWORD` from `.env` and restart the backend. The bootstrap command is idempotent and never overwrites an existing account.
 
 Services:
 
 - Frontend: http://localhost:3000
 - Backend API docs: http://localhost:8000/docs
 - Health: http://localhost:8000/api/v1/health
+- Process liveness: http://localhost:8000/api/v1/health/live
+- Database and ML readiness: http://localhost:8000/api/v1/health/ready
 
 ## API authentication
 
@@ -59,23 +64,36 @@ uvicorn app.main:app --reload
 pytest
 ```
 
-## Offline ML training
+## Prepare the deployment model
 
-Install the backend development dependencies, then retrieve UCI dataset 697 and run
-the full leakage-safe model-selection pipeline:
+Prerequisites: Python **3.11.9**, the pinned backend dependencies, and network
+access to UCI dataset 697 for offline reproduction. No external model host is
+assumed. From a fresh clone, create/activate a Python 3.11.9 virtual environment:
 
 ```bash
 cd backend
-python -m app.ml.training.train
+python -m pip install -r requirements-dev.txt
+python -m app.ml.deployment reproduce
+python -m app.ml.deployment verify
 ```
 
-The command evaluates Logistic Regression, Random Forest, and XGBoost with a
-stratified five-fold development search, calibrates risk thresholds from
-out-of-fold development predictions, and evaluates the selected frozen pipeline
-once on the held-out 20% final test set. The binary model is written to the ignored
-`backend/app/ml/artifacts/dropout-risk-v1/model.joblib`. Exact metadata, evaluation,
-split, and report records are written to the tracked
-`backend/app/ml/model_registry/dropout-risk-v1/` directory.
+Reproduction runs the unchanged five-fold candidate selection, development-only
+threshold calibration, and held-out evaluation in a temporary directory. It
+installs `app/ml/artifacts/dropout-risk-v1/model.joblib` only when the resulting
+binary SHA-256 and training records match the tracked registry. It does not
+replace the approved registry or silently accept a different model. Training
+never runs during API startup or requests.
+
+Then, from the repository root:
+
+```bash
+docker compose build backend
+docker compose up -d
+```
+
+See [model deployment and troubleshooting](docs/ml-model-deployment.md) for exact
+dependency versions, trusted-artifact installation, intentional degraded
+development, readiness responses, and real PostgreSQL integration verification.
 
 ## Frontend development
 

@@ -14,7 +14,7 @@ from app.ml.feature_schema import (
     FeatureKind,
     PREDICTION_FEATURES,
 )
-from app.ml.training.artifact import build_bundle
+from app.ml.training.artifact import EXPLANATION_METHOD, build_bundle
 from app.ml.training.data import (
     CANONICAL_FEATURE_NAMES,
     EXPECTED_UCI_FEATURE_COLUMNS,
@@ -116,7 +116,7 @@ def _valid_metadata() -> dict[str, object]:
             "sample_size": 20,
             "confusion_matrix": {"tp": 5, "fp": 5, "tn": 5, "fn": 5},
         },
-        "explanation_method": "test",
+        "explanation_method": EXPLANATION_METHOD,
         "artifact_path": "app/ml/artifacts/dropout-risk-v1/model.joblib",
         "library_versions": {},
     }

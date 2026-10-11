@@ -135,6 +135,18 @@ def validate_artifact_consistency(bundle: Any, metadata: dict[str, Any]) -> None
         raise ValueError("Artifact and metadata low thresholds disagree")
     if bundle.high_threshold != thresholds["high_threshold"]:
         raise ValueError("Artifact and metadata high thresholds disagree")
+    if bundle.explanation_method != metadata["explanation_method"]:
+        raise ValueError("Artifact explanation method disagrees")
+    if set(bundle.explanation_reference) != set(metadata["features"]):
+        raise ValueError("Artifact explanation reference schema disagrees")
+    if tuple(bundle.pipeline.feature_names_in_) != tuple(metadata["features"]):
+        raise ValueError("Pipeline feature schema disagrees")
+    params = bundle.pipeline.get_params()
+    for name, value in metadata["selected_hyperparameters"].items():
+        if params.get(name) != value:
+            raise ValueError("Artifact hyperparameters disagree")
+    if list(bundle.pipeline.classes_) != [0, 1]:
+        raise ValueError("Artifact binary target encoding disagrees")
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:

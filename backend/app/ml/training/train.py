@@ -16,6 +16,7 @@ from typing import Any
 import joblib
 from sklearn.base import clone
 
+from app.ml.deployment import write_manifest
 from app.ml.feature_schema import BINARY_TARGET_ENCODING
 from app.ml.training.artifact import EXPLANATION_METHOD, build_bundle
 from app.ml.training.data import (
@@ -66,7 +67,17 @@ def _library_versions() -> dict[str, str]:
 def run_training(
     artifact_directory: Path = DEFAULT_ARTIFACT_DIRECTORY,
     registry_directory: Path = DEFAULT_REGISTRY_DIRECTORY,
+    *,
+    model_version: str | None = None,
 ) -> dict[str, Any]:
+    existing_metadata = registry_directory / "metadata.json"
+    if existing_metadata.exists():
+        existing_version = json.loads(existing_metadata.read_bytes())["model_version"]
+        if model_version is None or model_version == existing_version:
+            raise ValueError(
+                "An existing registry requires a distinct --model-version. "
+                "To reproduce the approved model, use app.ml.deployment reproduce."
+            )
     artifact_directory.mkdir(parents=True, exist_ok=True)
     registry_directory.mkdir(parents=True, exist_ok=True)
 
@@ -96,7 +107,7 @@ def run_training(
     )
 
     slug = winner.name.lower().replace(" ", "-")
-    model_version = f"dropout-{slug}-v1"
+    model_version = model_version or f"dropout-{slug}-v1"
     bundle = build_bundle(
         final_pipeline,
         model_name=winner.name,
@@ -114,7 +125,6 @@ def run_training(
     if not ((reload_probabilities >= 0) & (reload_probabilities <= 1)).all():
         raise ValueError("Reloaded artifact produced an out-of-range probability")
 
-    relative_artifact_path = artifact_path.relative_to(Path(__file__).resolve().parents[3])
     metadata = {
         "model_name": winner.name,
         "model_version": model_version,
@@ -168,7 +178,7 @@ def run_training(
         },
         "final_test_metrics": final_test_metrics,
         "explanation_method": EXPLANATION_METHOD,
-        "artifact_path": str(relative_artifact_path).replace("\\", "/"),
+        "artifact_path": "app/ml/artifacts/dropout-risk-v1/model.joblib",
         "library_versions": _library_versions(),
     }
     validate_metadata(metadata)
@@ -211,6 +221,7 @@ def run_training(
         persisted_metadata, persisted_evaluation, persisted_manifest
     )
     validate_artifact_consistency(reloaded, persisted_metadata)
+    write_manifest(artifact_path, registry_directory)
 
     return {
         "metadata": metadata,
@@ -228,6 +239,9 @@ def run_training(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
+        "--model-version", help="Explicit new version for a newly approved training run"
+    )
+    parser.add_argument(
         "--artifact-dir",
         type=Path,
         default=DEFAULT_ARTIFACT_DIRECTORY,
@@ -240,7 +254,11 @@ def main() -> None:
         help="Tracked auditable registry directory (default: %(default)s)",
     )
     args = parser.parse_args()
-    result = run_training(args.artifact_dir.resolve(), args.registry_dir.resolve())
+    result = run_training(
+        args.artifact_dir.resolve(),
+        args.registry_dir.resolve(),
+        model_version=args.model_version,
+    )
     summary = {
         "model_name": result["metadata"]["model_name"],
         "model_version": result["metadata"]["model_version"],

@@ -4,4 +4,12 @@ __pycache__
 .venv
 tests
 .env
-
+.env.*
+!.env.example
+app/ml/artifacts/**
+!app/ml/artifacts/dropout-risk-v1/
+!app/ml/artifacts/dropout-risk-v1/model.joblib
+ml_artifacts
+checkpoints
+*.pkl
+*.pickle

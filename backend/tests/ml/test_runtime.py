@@ -6,6 +6,7 @@ import pytest
 from app.core.config import get_settings
 from app.core.exceptions import ApplicationError
 from app.ml import runtime
+from app.ml import deployment
 
 
 @pytest.fixture(autouse=True)
@@ -17,14 +18,14 @@ def clean_runtime_cache():
 
 def test_runtime_loads_once_and_matches_registry(monkeypatch) -> None:
     calls = 0
-    original_load = runtime.joblib.load
+    original_load = deployment.joblib.load
 
     def counted_load(path):
         nonlocal calls
         calls += 1
         return original_load(path)
 
-    monkeypatch.setattr(runtime.joblib, "load", counted_load)
+    monkeypatch.setattr(deployment.joblib, "load", counted_load)
     first = runtime.get_model_runtime()
     second = runtime.get_model_runtime()
     assert first is second
@@ -50,6 +51,9 @@ def test_mismatched_metadata_is_controlled(monkeypatch, tmp_path: Path) -> None:
     metadata["thresholds"]["low_threshold"] = 0.1
     mismatched = tmp_path / "metadata.json"
     mismatched.write_text(json.dumps(metadata), encoding="utf-8")
+    (tmp_path / "split_manifest.json").write_bytes(
+        (Path(settings.ml_metadata_path).parent / "split_manifest.json").read_bytes()
+    )
     monkeypatch.setattr(settings, "ml_metadata_path", str(mismatched))
     with pytest.raises(ApplicationError) as raised:
         runtime.get_model_runtime()

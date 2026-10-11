@@ -21,6 +21,7 @@ services:
   backend:
     build:
       context: ./backend
+      target: ${BACKEND_BUILD_TARGET:-runtime}
     environment:
       APP_ENV: development
       APP_NAME: student-dropout-warning-system
@@ -32,6 +33,7 @@ services:
       ML_MODEL_PATH: app/ml/artifacts/dropout-risk-v1/model.joblib
       ML_METADATA_PATH: app/ml/model_registry/dropout-risk-v1/metadata.json
       ML_EVALUATION_PATH: app/ml/model_registry/dropout-risk-v1/evaluation.json
+      ML_MANIFEST_PATH: app/ml/model_registry/dropout-risk-v1/artifact_manifest.json
       BOOTSTRAP_ADMIN_USERNAME: ${BOOTSTRAP_ADMIN_USERNAME:-}
       BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-}
       BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-}
@@ -47,7 +49,7 @@ services:
           "CMD",
           "python",
           "-c",
-          "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health', timeout=3)",
+          "import os, urllib.request; endpoint = 'ready' if os.environ.get('ML_MODEL_REQUIRED', '').lower() == 'true' or os.environ.get('APP_ENV') == 'production' else 'live'; urllib.request.urlopen('http://localhost:8000/api/v1/health/' + endpoint, timeout=3)",
         ]
       interval: 10s
       timeout: 5s

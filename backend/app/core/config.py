@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     ml_model_path: str = "app/ml/artifacts/dropout-risk-v1/model.joblib"
     ml_metadata_path: str = "app/ml/model_registry/dropout-risk-v1/metadata.json"
     ml_evaluation_path: str = "app/ml/model_registry/dropout-risk-v1/evaluation.json"
+    ml_manifest_path: str = "app/ml/model_registry/dropout-risk-v1/artifact_manifest.json"
+    ml_model_required: bool = False
 
     model_config = SettingsConfigDict(
         env_file=".env",
