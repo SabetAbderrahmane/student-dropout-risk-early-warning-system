@@ -2,6 +2,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { Icon } from "@/components/dashboard/icon";
+import { useAuthSession } from "@/components/auth/auth-session";
 
 export function AppSidebar({
   open,
@@ -11,6 +12,7 @@ export function AppSidebar({
   onClose: () => void;
 }) {
   const pathname = usePathname();
+  const { user } = useAuthSession();
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     if (!open) return;
@@ -126,18 +128,27 @@ export function AppSidebar({
             ),
           )}
           <p className="dash-nav-label dash-nav-divider">Administration</p>
-          {[
-            "Users",
-            "Roles & Permissions",
-            "System Configuration",
-            "Audit Logs",
-          ].map((label) => (
-            <span key={label} className="dash-future" aria-disabled="true">
-              <Icon name="settings" />
-              {label}
-              <small>Later</small>
-            </span>
-          ))}
+          {user?.role === "SYSTEM_ADMIN" && (
+            <Link
+              href="/admin/users"
+              aria-current={
+                pathname.startsWith("/admin/users") ? "page" : undefined
+              }
+              onClick={onClose}
+            >
+              <Icon name="students" />
+              Users
+            </Link>
+          )}
+          {["Roles & Permissions", "System Configuration", "Audit Logs"].map(
+            (label) => (
+              <span key={label} className="dash-future" aria-disabled="true">
+                <Icon name="settings" />
+                {label}
+                <small>Later</small>
+              </span>
+            ),
+          )}
         </nav>
         <div className="dash-sidebar-footer">
           <Icon name="shield" />

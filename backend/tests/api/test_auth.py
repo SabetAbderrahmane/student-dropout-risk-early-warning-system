@@ -1,6 +1,5 @@
-from fastapi.testclient import TestClient
-
 from app.models import UserRole
+from fastapi.testclient import TestClient
 
 
 def test_login_succeeds_with_username(client: TestClient, create_user) -> None:
@@ -18,7 +17,9 @@ def test_login_succeeds_with_username(client: TestClient, create_user) -> None:
     assert payload["expires_in"] == 1800
 
 
-def test_login_succeeds_with_email_case_insensitively(client: TestClient, create_user) -> None:
+def test_login_succeeds_with_email_case_insensitively(
+    client: TestClient, create_user
+) -> None:
     create_user(username="advisor", role=UserRole.ACADEMIC_ADVISOR)
 
     response = client.post(
@@ -44,7 +45,9 @@ def test_login_rejects_incorrect_password(client: TestClient, create_user) -> No
     assert response.json()["error"]["code"] == "INVALID_CREDENTIALS"
 
 
-def test_login_does_not_reveal_inactive_account(client: TestClient, create_user) -> None:
+def test_login_does_not_reveal_inactive_account(
+    client: TestClient, create_user
+) -> None:
     create_user(username="inactive", role=UserRole.ACADEMIC_ADMIN, is_active=False)
 
     response = client.post(
@@ -56,7 +59,9 @@ def test_login_does_not_reveal_inactive_account(client: TestClient, create_user)
     assert response.json()["error"]["code"] == "INVALID_CREDENTIALS"
 
 
-def test_me_returns_authenticated_user(client: TestClient, create_user, auth_headers) -> None:
+def test_me_returns_authenticated_user(
+    client: TestClient, create_user, auth_headers
+) -> None:
     user = create_user(username="advisor", role=UserRole.ACADEMIC_ADVISOR)
 
     response = client.get("/api/v1/auth/me", headers=auth_headers("advisor"))
@@ -69,6 +74,7 @@ def test_me_returns_authenticated_user(client: TestClient, create_user, auth_hea
         "full_name": "Advisor User",
         "role": "ACADEMIC_ADVISOR",
         "is_active": True,
+        "must_change_password": False,
         "created_at": user.created_at.isoformat().replace("+00:00", "Z"),
         "updated_at": user.updated_at.isoformat().replace("+00:00", "Z"),
     }
@@ -96,4 +102,3 @@ def test_login_validation_uses_standard_error_shape(client: TestClient) -> None:
 
     assert response.status_code == 422
     assert response.json()["error"]["code"] == "VALIDATION_ERROR"
-

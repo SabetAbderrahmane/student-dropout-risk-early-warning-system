@@ -4,6 +4,7 @@ export interface TokenResponse {
   access_token: string;
   token_type: "bearer";
   expires_in: number;
+  must_change_password: boolean;
 }
 
 export interface User {
@@ -13,6 +14,7 @@ export interface User {
   full_name: string;
   role: UserRole;
   is_active: boolean;
+  must_change_password: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -24,4 +26,3 @@ export interface ApiErrorBody {
     details?: unknown;
   };
 }
-

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { AuthSession } from "@/components/auth/auth-session";
 import { THEME_INITIALIZATION } from "@/lib/theme";
 
 import "./theme.css";
@@ -26,7 +27,9 @@ export default function RootLayout({
         />
       </head>
       <body className={geist.variable}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <AuthSession>{children}</AuthSession>
+        </ThemeProvider>
       </body>
     </html>
   );

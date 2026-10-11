@@ -118,7 +118,7 @@ export function CaseDetail({
       },
       {
         key: "assigned_to",
-        label: "Assigned advisor ID",
+        label: "Assigned advisor",
         readOnly: user.role !== "ACADEMIC_ADMIN",
       },
     ];
@@ -140,7 +140,7 @@ export function CaseDetail({
         optional: true,
       },
       ...(user.role === "ACADEMIC_ADMIN"
-        ? [{ key: "assigned_to", label: "Assigned advisor ID" }]
+        ? [{ key: "assigned_to", label: "Assigned advisor" }]
         : []),
     ];
     initial = {

@@ -20,7 +20,7 @@ from app.models.staged_import import (
     StagedImportStatus,
 )
 from app.models.student import Student
-from app.models.user import User, UserRole
+from app.models.user import User, UserAdministrationAudit, UserLoginIdentifier, UserRole
 from app.models.warning import (
     ReviewDecision,
     Warning,
@@ -54,6 +54,8 @@ __all__ = [
     "Student",
     "User",
     "UserRole",
+    "UserLoginIdentifier",
+    "UserAdministrationAudit",
     "Warning",
     "WarningReview",
     "WarningPriority",

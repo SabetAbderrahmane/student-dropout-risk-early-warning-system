@@ -24,9 +24,11 @@ export default function LoginPage() {
     try {
       const token = await login(identifier, password);
       saveAccessToken(token.access_token);
-      await fetchCurrentUser(token.access_token);
+      const user = await fetchCurrentUser(token.access_token);
       setPassword("");
-      router.replace("/dashboard");
+      router.replace(
+        user.must_change_password ? "/change-password" : "/dashboard",
+      );
     } catch (caught) {
       clearAccessToken();
       setError(

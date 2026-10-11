@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/lib/constants";
+import { getAccessToken } from "@/lib/auth";
 import type {
   InterventionDetail,
   InterventionUpdate,
@@ -38,6 +39,12 @@ import type {
   BatchPredictionResponse,
 } from "@/types/dashboard";
 import type { ApiErrorBody, TokenResponse, User } from "@/types/auth";
+import type {
+  UserPage,
+  UserInput,
+  UserParams,
+  AdvisorPage,
+} from "@/types/user-administration";
 import type { ImportErrorPage, ImportJob, ImportJobPage } from "@/types/import";
 import type {
   StagedBatch,
@@ -72,6 +79,19 @@ export class ApiError extends Error {
   }
 }
 
+const requestTokens = new WeakMap<Response, string>();
+
+async function apiFetch(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+): Promise<Response> {
+  const response = await fetch(input, init);
+  const authorization = new Headers(init?.headers).get("Authorization");
+  if (authorization?.startsWith("Bearer "))
+    requestTokens.set(response, authorization.slice(7));
+  return response;
+}
+
 async function parseResponse<T>(response: Response): Promise<T> {
   if (response.ok) {
     return (await response.json()) as T;
@@ -82,6 +102,22 @@ async function parseResponse<T>(response: Response): Promise<T> {
     body = (await response.json()) as ApiErrorBody;
   } catch {
     // A controlled fallback is used if a proxy returns a non-JSON error.
+  }
+  // Delayed failures from an older session must not clear a replacement token.
+  if (
+    typeof window !== "undefined" &&
+    requestTokens.get(response) === getAccessToken() &&
+    window.location.pathname !== "/login"
+  ) {
+    if (response.status === 401 || body?.error?.code === "USER_INACTIVE") {
+      window.dispatchEvent(
+        new CustomEvent("academic-auth-error", { detail: "sign-in" }),
+      );
+    } else if (body?.error?.code === "PASSWORD_CHANGE_REQUIRED") {
+      window.dispatchEvent(
+        new CustomEvent("academic-auth-error", { detail: "change-password" }),
+      );
+    }
   }
   throw new ApiError(
     body?.error?.message ?? "The request could not be completed.",
@@ -99,7 +135,7 @@ async function dossierRequest<T>(
   signal?: AbortSignal,
 ): Promise<T> {
   return parseResponse<T>(
-    await fetch(`${API_BASE_URL}${path}`, {
+    await apiFetch(`${API_BASE_URL}${path}`, {
       method,
       headers: bearerHeaders(token, payload !== undefined),
       ...(payload !== undefined ? { body: JSON.stringify(payload) } : {}),
@@ -107,6 +143,92 @@ async function dossierRequest<T>(
       signal,
     }),
   );
+}
+export const fetchUsers = (
+  token: string,
+  params: UserParams,
+  signal?: AbortSignal,
+) =>
+  dossierRequest<UserPage>(
+    token,
+    `/users?${stagedQuery(params)}`,
+    "GET",
+    undefined,
+    signal,
+  );
+export const createUser = (token: string, payload: UserInput) =>
+  dossierRequest<User>(token, "/users", "POST", payload);
+export const updateUser = (
+  token: string,
+  id: string,
+  payload: Partial<Omit<UserInput, "initial_password">>,
+) =>
+  dossierRequest<User>(
+    token,
+    `/users/${encodeURIComponent(id)}`,
+    "PATCH",
+    payload,
+  );
+export const setUserActive = (token: string, id: string, active: boolean) =>
+  dossierRequest<User>(
+    token,
+    `/users/${encodeURIComponent(id)}/${active ? "activate" : "deactivate"}`,
+    "POST",
+  );
+export const resetUserPassword = (
+  token: string,
+  id: string,
+  temporary_password: string,
+) =>
+  dossierRequest<User>(
+    token,
+    `/users/${encodeURIComponent(id)}/reset-password`,
+    "POST",
+    { temporary_password },
+  );
+export const changePassword = (
+  token: string,
+  current_password: string,
+  new_password: string,
+) =>
+  dossierRequest<TokenResponse>(token, "/auth/change-password", "POST", {
+    current_password,
+    new_password,
+  });
+export const fetchAdvisors = (
+  token: string,
+  page: number,
+  search: string,
+  signal?: AbortSignal,
+) =>
+  dossierRequest<AdvisorPage>(
+    token,
+    `/users/advisors?${stagedQuery({ page, page_size: 100, search })}`,
+    "GET",
+    undefined,
+    signal,
+  );
+
+export function accountError(caught: unknown): string {
+  if (!(caught instanceof ApiError))
+    return "Unable to reach the service. Please try again.";
+  if (Array.isArray(caught.details))
+    return [
+      caught.message,
+      ...caught.details.map(
+        (item: { field?: string; message?: string }) =>
+          `${item.field ?? "Field"}: ${item.message ?? "Invalid value"}`,
+      ),
+    ].join(" ");
+  if (
+    caught.code === "ADVISOR_HAS_ACTIVE_ASSIGNMENTS" &&
+    caught.details &&
+    typeof caught.details === "object"
+  )
+    return `${caught.message} ${Object.entries(caught.details)
+      .map(([key, count]) => `${key.replaceAll("_", " ")}: ${count}`)
+      .join(", ")}.`;
+  return caught.message;
 }
 export const predictStudent = (token: string, id: string) =>
   dossierRequest<PredictionDetail>(
@@ -269,7 +391,7 @@ export async function login(
   username: string,
   password: string,
 ): Promise<TokenResponse> {
-  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+  const response = await apiFetch(`${API_BASE_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
@@ -278,8 +400,9 @@ export async function login(
 }
 
 export async function fetchCurrentUser(token: string): Promise<User> {
-  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+  const response = await apiFetch(`${API_BASE_URL}/auth/me`, {
     headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
   });
   return parseResponse<User>(response);
 }
@@ -302,7 +425,7 @@ export async function fetchStudentRegistry(
       query.set(key, String(value).trim());
   }
   return parseResponse<RegistryPage>(
-    await fetch(`${API_BASE_URL}/student-registry?${query}`, {
+    await apiFetch(`${API_BASE_URL}/student-registry?${query}`, {
       headers: bearerHeaders(token),
       cache: "no-store",
       signal,
@@ -316,7 +439,7 @@ export async function fetchStudentProfile(
   signal?: AbortSignal,
 ): Promise<StudentProfile> {
   return parseResponse<StudentProfile>(
-    await fetch(
+    await apiFetch(
       `${API_BASE_URL}/students/${encodeURIComponent(studentId)}/profile`,
       {
         headers: bearerHeaders(token),
@@ -332,7 +455,7 @@ export async function fetchCurrentModelPerformance(
   signal?: AbortSignal,
 ): Promise<ModelPerformance> {
   return parseResponse<ModelPerformance>(
-    await fetch(`${API_BASE_URL}/models/current/performance`, {
+    await apiFetch(`${API_BASE_URL}/models/current/performance`, {
       headers: bearerHeaders(token),
       cache: "no-store",
       signal,
@@ -345,7 +468,7 @@ export async function fetchCurrentModel(
   signal?: AbortSignal,
 ): Promise<CurrentModel> {
   return parseResponse<CurrentModel>(
-    await fetch(`${API_BASE_URL}/models/current`, {
+    await apiFetch(`${API_BASE_URL}/models/current`, {
       headers: bearerHeaders(token),
       cache: "no-store",
       signal,
@@ -363,7 +486,7 @@ export async function fetchPredictions(
       query.set(key, String(value).trim());
   }
   return parseResponse<PredictionPage>(
-    await fetch(`${API_BASE_URL}/predictions?${query}`, {
+    await apiFetch(`${API_BASE_URL}/predictions?${query}`, {
       headers: bearerHeaders(token),
       cache: "no-store",
       signal,
@@ -376,7 +499,7 @@ export async function fetchPrediction(
   signal?: AbortSignal,
 ): Promise<PredictionDetail> {
   return parseResponse<PredictionDetail>(
-    await fetch(
+    await apiFetch(
       `${API_BASE_URL}/predictions/${encodeURIComponent(predictionId)}`,
       { headers: bearerHeaders(token), cache: "no-store", signal },
     ),
@@ -388,7 +511,7 @@ export async function fetchDashboardOverview(
   signal?: AbortSignal,
 ): Promise<DashboardOverview> {
   return parseResponse<DashboardOverview>(
-    await fetch(`${API_BASE_URL}/dashboard/overview`, {
+    await apiFetch(`${API_BASE_URL}/dashboard/overview`, {
       headers: bearerHeaders(token),
       cache: "no-store",
       signal,
@@ -402,7 +525,7 @@ export async function reviewWarning(
   payload: ReviewWarningInput,
 ): Promise<WarningDetail> {
   return parseResponse<WarningDetail>(
-    await fetch(
+    await apiFetch(
       `${API_BASE_URL}/warnings/${encodeURIComponent(warningId)}/reviews`,
       {
         method: "POST",
@@ -424,7 +547,7 @@ export async function fetchWarnings(
       query.set(key, String(value).trim());
   }
   return parseResponse<WarningPage>(
-    await fetch(`${API_BASE_URL}/warnings?${query}`, {
+    await apiFetch(`${API_BASE_URL}/warnings?${query}`, {
       headers: bearerHeaders(token),
       cache: "no-store",
       signal,
@@ -438,11 +561,14 @@ export async function fetchWarning(
   signal?: AbortSignal,
 ): Promise<WarningDetail> {
   return parseResponse<WarningDetail>(
-    await fetch(`${API_BASE_URL}/warnings/${encodeURIComponent(warningId)}`, {
-      headers: bearerHeaders(token),
-      cache: "no-store",
-      signal,
-    }),
+    await apiFetch(
+      `${API_BASE_URL}/warnings/${encodeURIComponent(warningId)}`,
+      {
+        headers: bearerHeaders(token),
+        cache: "no-store",
+        signal,
+      },
+    ),
   );
 }
 
@@ -458,7 +584,7 @@ export async function fetchStudentPredictions(
     page_size: String(pageSize),
   });
   return parseResponse<StudentPredictionPage>(
-    await fetch(
+    await apiFetch(
       `${API_BASE_URL}/students/${encodeURIComponent(studentId)}/predictions?${query}`,
       {
         headers: bearerHeaders(token),
@@ -474,7 +600,7 @@ export async function createIntervention(
   payload: InterventionInput,
 ): Promise<InterventionReceipt> {
   return parseResponse<InterventionReceipt>(
-    await fetch(`${API_BASE_URL}/interventions`, {
+    await apiFetch(`${API_BASE_URL}/interventions`, {
       method: "POST",
       headers: bearerHeaders(token, true),
       body: JSON.stringify(payload),
@@ -486,7 +612,7 @@ export async function runBatchPrediction(
   token: string,
 ): Promise<BatchPredictionResponse> {
   return parseResponse<BatchPredictionResponse>(
-    await fetch(`${API_BASE_URL}/predictions/batch`, {
+    await apiFetch(`${API_BASE_URL}/predictions/batch`, {
       method: "POST",
       headers: bearerHeaders(token),
     }),
@@ -504,7 +630,7 @@ export async function fetchStudents(
     page_size: String(pageSize),
   });
   if (search.trim()) params.set("search", search.trim());
-  const response = await fetch(`${API_BASE_URL}/students?${params}`, {
+  const response = await apiFetch(`${API_BASE_URL}/students?${params}`, {
     headers: bearerHeaders(token),
   });
   return parseResponse<StudentPage>(response);
@@ -514,7 +640,7 @@ export async function fetchStudent(
   token: string,
   studentId: string,
 ): Promise<Student> {
-  const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
+  const response = await apiFetch(`${API_BASE_URL}/students/${studentId}`, {
     headers: bearerHeaders(token),
   });
   return parseResponse<Student>(response);
@@ -524,7 +650,7 @@ export async function createStudent(
   token: string,
   payload: StudentInput,
 ): Promise<Student> {
-  const response = await fetch(`${API_BASE_URL}/students`, {
+  const response = await apiFetch(`${API_BASE_URL}/students`, {
     method: "POST",
     headers: bearerHeaders(token, true),
     body: JSON.stringify(payload),
@@ -537,7 +663,7 @@ export async function updateStudent(
   studentId: string,
   payload: Partial<StudentInput>,
 ): Promise<Student> {
-  const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
+  const response = await apiFetch(`${API_BASE_URL}/students/${studentId}`, {
     method: "PATCH",
     headers: bearerHeaders(token, true),
     body: JSON.stringify(payload),
@@ -549,7 +675,7 @@ export async function deleteStudent(
   token: string,
   studentId: string,
 ): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/students/${studentId}`, {
+  const response = await apiFetch(`${API_BASE_URL}/students/${studentId}`, {
     method: "DELETE",
     headers: bearerHeaders(token),
   });
@@ -560,7 +686,7 @@ export async function fetchAdmission(
   token: string,
   studentId: string,
 ): Promise<AdmissionRecord> {
-  const response = await fetch(
+  const response = await apiFetch(
     `${API_BASE_URL}/students/${studentId}/admission`,
     {
       headers: bearerHeaders(token),
@@ -574,7 +700,7 @@ export async function saveAdmission(
   studentId: string,
   payload: AdmissionInput,
 ): Promise<AdmissionRecord> {
-  const response = await fetch(
+  const response = await apiFetch(
     `${API_BASE_URL}/students/${studentId}/admission`,
     {
       method: "PUT",
@@ -589,7 +715,7 @@ export async function fetchFirstSemester(
   token: string,
   studentId: string,
 ): Promise<FirstSemesterRecord> {
-  const response = await fetch(
+  const response = await apiFetch(
     `${API_BASE_URL}/students/${studentId}/semester-1`,
     {
       headers: bearerHeaders(token),
@@ -603,7 +729,7 @@ export async function saveFirstSemester(
   studentId: string,
   payload: FirstSemesterInput,
 ): Promise<FirstSemesterRecord> {
-  const response = await fetch(
+  const response = await apiFetch(
     `${API_BASE_URL}/students/${studentId}/semester-1`,
     {
       method: "PUT",
@@ -626,7 +752,7 @@ export async function fetchStagedImports(
   signal?: AbortSignal,
 ): Promise<StagedBatchPage> {
   return parseResponse<StagedBatchPage>(
-    await fetch(`${API_BASE_URL}/imports/staged?${stagedQuery(params)}`, {
+    await apiFetch(`${API_BASE_URL}/imports/staged?${stagedQuery(params)}`, {
       headers: bearerHeaders(token),
       cache: "no-store",
       signal,
@@ -639,7 +765,7 @@ export async function fetchStagedImport(
   signal?: AbortSignal,
 ): Promise<StagedBatch> {
   return parseResponse<StagedBatch>(
-    await fetch(
+    await apiFetch(
       `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}`,
       { headers: bearerHeaders(token), cache: "no-store", signal },
     ),
@@ -652,7 +778,7 @@ export async function fetchStagedRows(
   signal?: AbortSignal,
 ): Promise<StagedRowPage> {
   return parseResponse<StagedRowPage>(
-    await fetch(
+    await apiFetch(
       `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}/rows?${stagedQuery(params)}`,
       { headers: bearerHeaders(token), cache: "no-store", signal },
     ),
@@ -665,7 +791,7 @@ export async function uploadStagedCsv(
   const body = new FormData();
   body.append("file", file);
   return parseResponse<StagedBatch>(
-    await fetch(`${API_BASE_URL}/imports/staged/csv`, {
+    await apiFetch(`${API_BASE_URL}/imports/staged/csv`, {
       method: "POST",
       headers: bearerHeaders(token),
       body,
@@ -679,7 +805,7 @@ export async function correctStagedRow(
   request: StagedCorrectionRequest,
 ): Promise<StagedCorrectionResponse> {
   return parseResponse<StagedCorrectionResponse>(
-    await fetch(
+    await apiFetch(
       `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}/rows/${encodeURIComponent(rowId)}`,
       {
         method: "PATCH",
@@ -696,7 +822,7 @@ async function stagedBatchAction(
   request: StagedVersionRequest,
 ): Promise<StagedBatch> {
   return parseResponse<StagedBatch>(
-    await fetch(
+    await apiFetch(
       `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}/${action}`,
       {
         method: "POST",
@@ -728,7 +854,7 @@ export async function fetchStagedActions(
   signal?: AbortSignal,
 ): Promise<StagedActionPage> {
   return parseResponse<StagedActionPage>(
-    await fetch(
+    await apiFetch(
       `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}/actions?page=${page}&page_size=${pageSize}`,
       { headers: bearerHeaders(token), cache: "no-store", signal },
     ),
@@ -738,7 +864,7 @@ export async function exportStagedCsv(
   token: string,
   batchId: string,
 ): Promise<void> {
-  const response = await fetch(
+  const response = await apiFetch(
     `${API_BASE_URL}/imports/staged/${encodeURIComponent(batchId)}/export`,
     { headers: bearerHeaders(token), cache: "no-store" },
   );
@@ -761,7 +887,7 @@ export async function fetchImports(
     page: String(page),
     page_size: String(pageSize),
   });
-  const response = await fetch(`${API_BASE_URL}/imports?${params}`, {
+  const response = await apiFetch(`${API_BASE_URL}/imports?${params}`, {
     headers: bearerHeaders(token),
     cache: "no-store",
     signal,
@@ -780,7 +906,7 @@ export async function fetchImportErrors(
     page: String(page),
     page_size: String(pageSize),
   });
-  const response = await fetch(
+  const response = await apiFetch(
     `${API_BASE_URL}/imports/${importId}/errors?${params}`,
     {
       headers: bearerHeaders(token),
@@ -797,7 +923,7 @@ export async function uploadStudentCsv(
 ): Promise<ImportJob> {
   const body = new FormData();
   body.append("file", file);
-  const response = await fetch(`${API_BASE_URL}/imports/csv`, {
+  const response = await apiFetch(`${API_BASE_URL}/imports/csv`, {
     method: "POST",
     headers: bearerHeaders(token),
     body,
@@ -806,7 +932,7 @@ export async function uploadStudentCsv(
 }
 
 export async function downloadImportTemplate(token: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/imports/template`, {
+  const response = await apiFetch(`${API_BASE_URL}/imports/template`, {
     headers: bearerHeaders(token),
   });
   if (!response.ok) await parseResponse<never>(response);

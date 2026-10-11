@@ -110,7 +110,7 @@ export function FollowUpDetail({
               maxLength: 2000,
             },
             ...(user.role === "ACADEMIC_ADMIN"
-              ? [{ key: "assigned_to", label: "Assigned advisor ID" }]
+              ? [{ key: "assigned_to", label: "Assigned advisor" }]
               : []),
           ];
   const initial: Record<string, string> =

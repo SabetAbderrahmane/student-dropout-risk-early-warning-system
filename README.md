@@ -28,6 +28,7 @@ casework, audit history, and dashboard read models.
    ```
 
 6. After the account is created, remove `BOOTSTRAP_ADMIN_PASSWORD` from `.env` and restart the backend. The bootstrap command is idempotent and never overwrites an existing account.
+7. Sign in and replace the bootstrap password in the dedicated password-change screen. Open **Administration → Users** to provision Academic Admin and Academic Advisor accounts. Each owner must replace their temporary password before ordinary use.
 
 Services:
 
@@ -49,6 +50,11 @@ Login accepts JSON. The `username` field may contain either the account username
 ```
 
 Use the returned token as `Authorization: Bearer <access_token>`.
+
+System Admins manage accounts at `/admin/users`; account creation is never public.
+See [user administration](docs/user-administration.md) for endpoints, migration
+conflict handling, temporary passwords, token revocation, advisor safeguards,
+and isolated PostgreSQL verification.
 
 Student read endpoints allow all three roles. Student creation, editing, deletion, admission updates, and first-semester updates are restricted to `ACADEMIC_ADMIN`. Student deletion deliberately cascades to its admission and first-semester records at both the ORM and PostgreSQL foreign-key levels.
 

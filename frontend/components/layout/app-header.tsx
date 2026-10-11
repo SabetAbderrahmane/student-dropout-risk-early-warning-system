@@ -1,4 +1,5 @@
 import type { User } from "@/types/auth";
+import Link from "next/link";
 import { readable } from "@/lib/dashboard";
 import { Icon } from "@/components/dashboard/icon";
 import { ThemeControl } from "@/components/theme/theme-control";
@@ -35,6 +36,13 @@ export function AppHeader({
       </div>
       <div className="dash-account">
         <ThemeControl />
+        <Link
+          href="/change-password"
+          className="dash-button"
+          title="Change your password"
+        >
+          Password
+        </Link>
         {user && (
           <>
             <div className="dash-avatar" aria-hidden="true">

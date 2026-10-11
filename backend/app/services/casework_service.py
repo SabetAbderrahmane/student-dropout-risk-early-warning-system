@@ -16,6 +16,7 @@ from app.models.student import Student
 from app.models.user import User, UserRole
 from app.models.warning import Warning, WarningReviewState
 from app.repositories.casework_repository import CaseworkRepository
+from app.repositories.user_repository import UserRepository
 from app.schemas.casework import (
     AdvisorSummary,
     CancellationRequest,
@@ -64,7 +65,7 @@ class CaseworkService:
         return EffectiveFollowUpStatus.SCHEDULED
 
     def _advisor(self, user_id: UUID, code: str) -> User:
-        user = self.db.get(User, user_id)
+        user = UserRepository(self.db).lock_by_id(user_id)
         if user is None or not user.is_active or user.role != UserRole.ACADEMIC_ADVISOR:
             raise ApplicationError(
                 422, code, "The assignee must be an active Academic Advisor."

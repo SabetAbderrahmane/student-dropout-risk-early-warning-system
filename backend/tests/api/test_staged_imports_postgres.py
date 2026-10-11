@@ -220,6 +220,7 @@ def test_migration_upgrade_downgrade_preserves_historical_import(monkeypatch):
     from alembic.migration import MigrationContext
     from app.core.config import get_settings
     from app.models import ImportStatus
+    from sqlalchemy import text
     from sqlalchemy.engine import make_url
 
     url = os.environ.get("STAGED_IMPORT_TEST_DATABASE_URL")
@@ -245,18 +246,16 @@ def test_migration_upgrade_downgrade_preserves_historical_import(monkeypatch):
     try:
         command.upgrade(config, "20260930_0007")
         with Session(engine) as db:
-            actor = User(
-                username="historical",
-                email="historical@example.test",
-                full_name="Historical",
-                password_hash="not-used",
-                role=UserRole.ACADEMIC_ADMIN,
-                is_active=True,
+            # Populate the historical schema without using current User columns.
+            actor_id = uuid4()
+            db.execute(
+                text(
+                    "INSERT INTO users (id, username, email, full_name, password_hash, role, is_active) VALUES (:id, 'historical', 'historical@example.test', 'Historical', 'not-used', 'ACADEMIC_ADMIN', true)"
+                ),
+                {"id": actor_id},
             )
-            db.add(actor)
-            db.flush()
             job = ImportJob(
-                uploaded_by=actor.id,
+                uploaded_by=actor_id,
                 filename="historical.csv",
                 total_rows=3,
                 valid_rows=2,

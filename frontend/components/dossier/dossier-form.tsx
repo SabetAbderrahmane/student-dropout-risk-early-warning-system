@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import { readable } from "@/lib/dashboard";
+import { AdvisorSelect } from "@/components/users/advisor-select";
 export interface DossierField {
   key: string;
   label: string;
@@ -49,7 +50,16 @@ export function DossierForm({
         {fields.map((field) => (
           <label key={field.key}>
             {field.label} {field.optional && <small>Optional</small>}
-            {field.options ? (
+            {field.key === "assigned_to" && !field.readOnly ? (
+              <AdvisorSelect
+                label="Assigned advisor"
+                value={values[field.key] ?? ""}
+                optional={field.optional}
+                onChange={(value) =>
+                  setValues((v) => ({ ...v, [field.key]: value }))
+                }
+              />
+            ) : field.options ? (
               <select
                 aria-label={field.label}
                 required={!field.optional}

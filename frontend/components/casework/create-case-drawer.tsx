@@ -198,7 +198,7 @@ export function CreateCaseDrawer({
                 key: "assigned_to",
                 label:
                   user.role === "ACADEMIC_ADMIN"
-                    ? "Assigned advisor ID"
+                    ? "Assigned advisor"
                     : `Assigned advisor — ${user.full_name}`,
                 readOnly: user.role !== "ACADEMIC_ADMIN",
               },
@@ -218,7 +218,7 @@ export function CreateCaseDrawer({
                   values.assigned_to,
                 )
               )
-                return "Enter a valid advisor user ID.";
+                return "Choose an active academic advisor.";
               const payload: InterventionInput = {
                 student_id: warning.student_id,
                 warning_id: warning.id,

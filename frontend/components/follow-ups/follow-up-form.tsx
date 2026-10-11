@@ -9,6 +9,7 @@ import {
   updateCaseFollowUp,
 } from "@/lib/api";
 import { readable } from "@/lib/dashboard";
+import { AdvisorSelect } from "@/components/users/advisor-select";
 import {
   FOLLOW_UP_METHODS,
   FOLLOW_UP_OUTCOMES,
@@ -177,20 +178,28 @@ export function FollowUpForm({
             {fieldError("purpose")}
             <label htmlFor={`${prefix}-assigned_to`}>
               Assigned advisor
-              {user.role === "ACADEMIC_ADMIN" ? " ID" : ` — ${user.full_name}`}
+              {user.role === "ACADEMIC_ADMIN" ? "" : ` — ${user.full_name}`}
             </label>
-            <input
-              id={`${prefix}-assigned_to`}
-              required
-              readOnly={user.role !== "ACADEMIC_ADMIN"}
-              value={assigned}
-              onChange={(e) => setAssigned(e.target.value)}
-              {...invalid("assigned_to")}
-            />
+            {user.role === "ACADEMIC_ADMIN" ? (
+              <AdvisorSelect
+                id={`${prefix}-assigned_to`}
+                value={assigned}
+                onChange={setAssigned}
+              />
+            ) : (
+              <input
+                id={`${prefix}-assigned_to`}
+                required
+                readOnly
+                value={assigned}
+                onChange={(e) => setAssigned(e.target.value)}
+                {...invalid("assigned_to")}
+              />
+            )}
             {fieldError("assigned_to")}
             {user.role === "ACADEMIC_ADMIN" && (
               <p className="follow-muted">
-                Enter an existing active academic advisor's user ID.
+                Choose an active academic advisor from the directory.
               </p>
             )}
           </>

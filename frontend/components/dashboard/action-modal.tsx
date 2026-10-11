@@ -7,12 +7,14 @@ export function ActionModal({
   onClose,
   children,
   className = "",
+  eyebrow = "Academic support workflow",
 }: {
   title: string;
   busy: boolean;
   onClose: () => void;
   children: ReactNode;
   className?: string;
+  eyebrow?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -41,7 +43,7 @@ export function ActionModal({
     >
       <div className="dash-modal-heading">
         <div>
-          <p className="dash-eyebrow">Academic support workflow</p>
+          <p className="dash-eyebrow">{eyebrow}</p>
           <h2 id={titleId}>{title}</h2>
         </div>
         <button

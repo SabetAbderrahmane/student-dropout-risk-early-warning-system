@@ -478,12 +478,12 @@ export function StudentDossier({ studentId }: { studentId: string }) {
           onClose={close}
         >
           <p>
-            Enter an active Academic Advisor’s ID. Leave it empty to remove the
-            assignment.
+            Choose an active Academic Advisor from the directory, or select
+            Unassigned to remove the assignment.
           </p>
           <DossierForm
             fields={[
-              { key: "assigned_to", label: "Advisor ID", optional: true },
+              { key: "assigned_to", label: "Assigned advisor", optional: true },
             ]}
             initial={{
               assigned_to: dialog.warning.assigned_advisor?.user_id ?? "",

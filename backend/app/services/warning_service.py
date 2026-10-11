@@ -1,5 +1,5 @@
-from typing import Any
 from datetime import datetime, timezone
+from typing import Any
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.core.exceptions import ApplicationError
 from app.models.user import User, UserRole
 from app.models.warning import Warning, WarningReview, WarningReviewState
+from app.repositories.user_repository import UserRepository
 from app.repositories.warning_repository import WarningRepository
 from app.schemas.warning import (
     AdvisorSummary,
@@ -124,7 +125,7 @@ class WarningService:
     def assign(self, warning_id: UUID, payload: AssignmentRequest) -> WarningDetail:
         warning = self._get(warning_id, lock=True)
         if payload.assigned_to is not None:
-            user = self.db.get(User, payload.assigned_to)
+            user = UserRepository(self.db).lock_by_id(payload.assigned_to)
             if (
                 user is None
                 or not user.is_active
