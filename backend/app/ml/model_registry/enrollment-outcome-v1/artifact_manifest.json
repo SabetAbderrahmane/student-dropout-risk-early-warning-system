@@ -1,0 +1,23 @@
+{
+  "artifact_sha256": "bc3690bb930b3320e029673282e3e6c5bedccbfd332cdd28953677dbfc1c8602",
+  "format_version": 2,
+  "model_version": "enrollment-outcome-v1",
+  "prediction_stage": "ENROLLMENT",
+  "registry_sha256": {
+    "data_audit.json": "24d6d068a978e3a8de5220c0408430388886a0392c1cab4aa7dc072a85a9b9b5",
+    "evaluation.json": "2a16b232f91554da8c4781d4c1d531ad882cea405036b50bb04d46752203d36d",
+    "metadata.json": "8846a0100ca836f789feb9245a022afa6804fe4eeae3959db2c66aa869cf378e",
+    "model_selection.json": "c2be401531c0cc39b3a1700ecd9672d20285921e6d3b8dda1824e90f16d9ad77",
+    "split_manifest.json": "d3b4e3186caa8862fd30f8300f08c0117c61a20c528e566c6a337329ba696823",
+    "threshold_calibration.json": "6a8cfd3d833c227b8b6e3a776bd9d11979bea9e1d8d8e3c635322b323bcfab69"
+  },
+  "runtime_versions": {
+    "joblib": "1.6.0",
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "python": "3.11.9",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.17.1",
+    "xgboost": "3.2.0"
+  }
+}

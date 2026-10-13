@@ -8,6 +8,7 @@ import { ActionModal } from "@/components/dashboard/action-modal";
 import { ExplanationFactors } from "@/components/warnings/explanation-factors";
 import { PredictionHistoryChart } from "@/components/warnings/prediction-history-chart";
 import { PredictionRiskBadge } from "./predictions-table";
+import { OutcomeSummary } from "./outcome-summary";
 export function PredictionDetailModal({
   row,
   token,
@@ -93,6 +94,7 @@ export function PredictionDetailModal({
             </div>
             <PredictionRiskBadge risk={detail.risk_level} />
           </div>
+          <OutcomeSummary prediction={detail} />
           <dl className="warning-detail-meta">
             <dt>Model version</dt>
             <dd>{detail.model_version}</dd>

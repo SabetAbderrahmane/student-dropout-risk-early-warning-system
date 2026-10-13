@@ -1,11 +1,28 @@
+import type {
+  AcademicOutcome,
+  ClassProbabilities,
+  ModelTargetType,
+  PredictionStage,
+  StageReadiness,
+} from "./outcome";
 export type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
 export type WarningState =
-  "PENDING_REVIEW" | "CONFIRMED" | "DISMISSED" | "NONE";
+  | "PENDING_REVIEW"
+  | "CONFIRMED"
+  | "DISMISSED"
+  | "NONE";
 export type InterventionState =
-  "PLANNED" | "IN_PROGRESS" | "ACTION_REQUIRED" | "COMPLETED" | "CANCELLED";
+  | "PLANNED"
+  | "IN_PROGRESS"
+  | "ACTION_REQUIRED"
+  | "COMPLETED"
+  | "CANCELLED";
 export type PredictionReadiness = "READY" | "NOT_READY";
 export type RegistrySort =
-  "student_number" | "name" | "risk_probability" | "updated_at";
+  | "student_number"
+  | "name"
+  | "risk_probability"
+  | "updated_at";
 export interface StudentRegistryParams {
   page: number;
   page_size: 25 | 50 | 100;
@@ -27,6 +44,10 @@ export interface RegistryPrediction {
   probability: number;
   risk_level: string;
   predicted_at: string;
+  prediction_stage: PredictionStage;
+  model_target_type: ModelTargetType;
+  predicted_outcome: AcademicOutcome | null;
+  class_probabilities: ClassProbabilities | null;
 }
 export interface RegistrySemester {
   average_grade: number;
@@ -67,6 +88,9 @@ export interface ProfileWarning {
   review_state: string;
   assigned_advisor: CaseOwner | null;
   created_at: string;
+  prediction_stage: PredictionStage;
+  model_target_type: ModelTargetType;
+  model_version: string | null;
   reviews: Array<{
     id: string;
     decision: string;
@@ -101,6 +125,7 @@ export interface ProfileFollowUp {
   completed_at: string | null;
 }
 export interface StudentProfile {
+  stage_readiness: StageReadiness[];
   student: {
     id: string;
     student_number: string;

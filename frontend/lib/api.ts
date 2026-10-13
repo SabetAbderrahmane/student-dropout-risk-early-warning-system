@@ -1,6 +1,11 @@
 import { API_BASE_URL } from "@/lib/constants";
 import { getAccessToken } from "@/lib/auth";
 import type {
+  ModelCatalog,
+  ModelCatalogEntry,
+  PredictionStage,
+} from "@/types/outcome";
+import type {
   InterventionDetail,
   InterventionUpdate,
   InterventionNote,
@@ -230,10 +235,14 @@ export function accountError(caught: unknown): string {
       .join(", ")}.`;
   return caught.message;
 }
-export const predictStudent = (token: string, id: string) =>
+export const predictStudent = (
+  token: string,
+  id: string,
+  stage?: PredictionStage,
+) =>
   dossierRequest<PredictionDetail>(
     token,
-    `/students/${encodeURIComponent(id)}/predictions`,
+    `/students/${encodeURIComponent(id)}/predictions${stage ? `?prediction_stage=${stage}` : ""}`,
     "POST",
   );
 export const assignStudentWarning = (
@@ -610,14 +619,38 @@ export async function createIntervention(
 
 export async function runBatchPrediction(
   token: string,
+  stage?: PredictionStage,
 ): Promise<BatchPredictionResponse> {
   return parseResponse<BatchPredictionResponse>(
-    await apiFetch(`${API_BASE_URL}/predictions/batch`, {
-      method: "POST",
-      headers: bearerHeaders(token),
-    }),
+    await apiFetch(
+      `${API_BASE_URL}/predictions/batch${stage ? `?prediction_stage=${stage}` : ""}`,
+      {
+        method: "POST",
+        headers: bearerHeaders(token),
+      },
+    ),
   );
 }
+
+export const fetchModelCatalog = (token: string, signal?: AbortSignal) =>
+  dossierRequest<ModelCatalog>(token, "/models", "GET", undefined, signal);
+export const validateStageModel = (
+  token: string,
+  version: string,
+  student_id: string,
+) =>
+  dossierRequest<ModelCatalogEntry>(
+    token,
+    `/models/${encodeURIComponent(version)}/validate`,
+    "POST",
+    { student_id },
+  );
+export const activateStageModel = (token: string, version: string) =>
+  dossierRequest<ModelCatalogEntry>(
+    token,
+    `/models/${encodeURIComponent(version)}/activate`,
+    "POST",
+  );
 
 export async function fetchStudents(
   token: string,

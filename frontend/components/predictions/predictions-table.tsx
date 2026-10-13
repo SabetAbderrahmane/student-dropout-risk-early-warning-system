@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PredictionPage, PredictionRow } from "@/types/prediction";
 import { percent, readable, timestamp } from "@/lib/dashboard";
+import { stageLabel } from "@/types/outcome";
 export function PredictionRiskBadge({ risk }: { risk: string }) {
   return (
     <span className={`warning-badge state-${risk.toLowerCase()}`}>
@@ -99,6 +100,7 @@ export function PredictionsTable({
               <tr>
                 {[
                   "Student",
+                  "Stage / outcome",
                   "Risk probability",
                   "Risk level",
                   "Top explanation factors",
@@ -118,6 +120,20 @@ export function PredictionsTable({
                   <td>
                     <strong>{row.student_name}</strong>
                     <small>{row.student_number}</small>
+                  </td>
+                  <td>
+                    <strong>
+                      {stageLabel(
+                        row.model_target_type === "BINARY_DROPOUT"
+                          ? "LEGACY"
+                          : row.prediction_stage,
+                      )}
+                    </strong>
+                    <small>
+                      {row.predicted_outcome
+                        ? readable(row.predicted_outcome)
+                        : "Binary assessment"}
+                    </small>
                   </td>
                   <td>
                     <strong>{percent(row.probability)}</strong>

@@ -1,5 +1,6 @@
 import type { CurrentModel, PredictionParams } from "@/types/prediction";
 import { readable } from "@/lib/dashboard";
+import type { ModelTargetType, PredictionStage } from "@/types/outcome";
 export const PREDICTION_INITIAL: PredictionParams = {
   page: 1,
   page_size: 25,
@@ -39,13 +40,51 @@ export function PredictionsFilters({
   onDensity: (value: boolean) => void;
 }) {
   const hasFilters =
-    !!params.search || !!params.risk_level || !!params.model_version;
+    !!params.search ||
+    !!params.risk_level ||
+    !!params.model_version ||
+    !!params.prediction_stage ||
+    !!params.model_target_type;
   return (
     <section
       className="warning-filters prediction-filters"
       aria-label="Prediction filters"
     >
       <div className="warning-filter-grid prediction-filter-grid">
+        <label>
+          <span>Prediction stage</span>
+          <select
+            value={params.prediction_stage ?? ""}
+            onChange={(event) =>
+              onChange({
+                prediction_stage: (event.target.value || undefined) as
+                  | PredictionStage
+                  | undefined,
+              })
+            }
+          >
+            <option value="">All stages</option>
+            <option value="ENROLLMENT">Enrollment</option>
+            <option value="FIRST_SEMESTER">First semester</option>
+          </select>
+        </label>
+        <label>
+          <span>Model type</span>
+          <select
+            value={params.model_target_type ?? ""}
+            onChange={(event) =>
+              onChange({
+                model_target_type: (event.target.value || undefined) as
+                  | ModelTargetType
+                  | undefined,
+              })
+            }
+          >
+            <option value="">All model types</option>
+            <option value="BINARY_DROPOUT">Legacy binary</option>
+            <option value="MULTICLASS_OUTCOME">Three-class outcome</option>
+          </select>
+        </label>
         <label>
           <span>Search students</span>
           <input
@@ -90,8 +129,15 @@ export function PredictionsFilters({
             {model && (
               <option value={model.version}>Current: {model.version}</option>
             )}
+            <option value="enrollment-outcome-v1">Enrollment outcome v1</option>
+            <option value="first-semester-outcome-v1">
+              First-semester outcome v1
+            </option>
             {params.model_version &&
-              params.model_version !== model?.version && (
+              params.model_version !== model?.version &&
+              !["enrollment-outcome-v1", "first-semester-outcome-v1"].includes(
+                params.model_version,
+              ) && (
                 <option value={params.model_version}>
                   Selected: {params.model_version}
                 </option>
@@ -102,6 +148,22 @@ export function PredictionsFilters({
       <div className="warning-filter-meta">
         <div className="warning-chips">
           <span className="warning-label">Active filters</span>
+          {params.prediction_stage && (
+            <button
+              className="warning-chip"
+              onClick={() => onChange({ prediction_stage: undefined })}
+            >
+              {readable(params.prediction_stage)} ×
+            </button>
+          )}
+          {params.model_target_type && (
+            <button
+              className="warning-chip"
+              onClick={() => onChange({ model_target_type: undefined })}
+            >
+              {readable(params.model_target_type)} ×
+            </button>
+          )}
           {params.search && (
             <button className="warning-chip" onClick={() => onSearch("")}>
               Search: {params.search} ×

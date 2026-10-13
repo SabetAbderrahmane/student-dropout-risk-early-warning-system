@@ -9,6 +9,10 @@ tests
 app/ml/artifacts/**
 !app/ml/artifacts/dropout-risk-v1/
 !app/ml/artifacts/dropout-risk-v1/model.joblib
+!app/ml/artifacts/enrollment-outcome-v1/
+!app/ml/artifacts/enrollment-outcome-v1/model.joblib
+!app/ml/artifacts/first-semester-outcome-v1/
+!app/ml/artifacts/first-semester-outcome-v1/model.joblib
 ml_artifacts
 checkpoints
 *.pkl

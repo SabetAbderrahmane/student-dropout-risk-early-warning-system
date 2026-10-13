@@ -27,3 +27,4 @@ CMD ["sh", "-c", "alembic upgrade head && python -m app.db.init_db && uvicorn ap
 FROM development AS runtime
 ENV ML_MODEL_REQUIRED=true
 RUN python -m app.ml.deployment verify
+RUN python -m app.ml.outcomes.deployment verify

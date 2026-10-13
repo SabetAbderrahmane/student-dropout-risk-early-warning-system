@@ -1,0 +1,17 @@
+{
+  "canonical_csv_sha256": "4b15c8e0b1fc9ea1e7994caaff47db72c07e0049bf9e47758aa53c2fc7fd6376",
+  "class_counts": {
+    "Dropout": 1421,
+    "Enrolled": 794,
+    "Graduate": 2209
+  },
+  "dataset_id": 697,
+  "exact_duplicate_rows": 0,
+  "excluded_macroeconomic_reason": "Observation/release vintage is unavailable at either stage cutoff",
+  "homepage": "https://archive.ics.uci.edu/dataset/697/",
+  "independence_limitation": "Student rows have no identity/group/time fields for temporal or institutional validation",
+  "license": "CC BY 4.0",
+  "missing_values": 0,
+  "name": "Predict Students' Dropout and Academic Success",
+  "rows": 4424
+}

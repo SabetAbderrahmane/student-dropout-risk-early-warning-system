@@ -7,6 +7,9 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict
 
+from app.ml.outcomes.contracts import AcademicOutcome, ModelTargetType, PredictionStage
+from app.schemas.prediction import StageReadiness
+
 
 class Counts(BaseModel):
     total: int
@@ -97,6 +100,10 @@ class DashboardOverview(BaseModel):
     warning_activity: list[WarningActivity]
     intervention_activity: list[InterventionActivity]
     attention_students: list[AttentionStudent]
+    prediction_scope: Literal["LEGACY_BINARY_FIRST_SEMESTER"] = (
+        "LEGACY_BINARY_FIRST_SEMESTER"
+    )
+    support_scope: Literal["ALL_PREDICTION_STAGES"] = "ALL_PREDICTION_STAGES"
 
 
 class Course(BaseModel):
@@ -131,6 +138,10 @@ class PredictionSummary(BaseModel):
     probability: float
     risk_level: str
     predicted_at: datetime
+    prediction_stage: PredictionStage = PredictionStage.FIRST_SEMESTER
+    model_target_type: ModelTargetType = ModelTargetType.BINARY_DROPOUT
+    predicted_outcome: AcademicOutcome | None = None
+    class_probabilities: dict[str, float] | None = None
 
 
 class RegistryWarning(BaseModel):
@@ -168,8 +179,13 @@ class RegistryPage(BaseModel):
 
     @classmethod
     def create(cls, *, items: list[RegistryRow], page: int, page_size: int, total: int):
-        return cls(items=items, page=page, page_size=page_size, total=total,
-                   total_pages=ceil(total / page_size) if total else 0)
+        return cls(
+            items=items,
+            page=page,
+            page_size=page_size,
+            total=total,
+            total_pages=ceil(total / page_size) if total else 0,
+        )
 
 
 class ProfileStudent(BaseModel):
@@ -240,6 +256,9 @@ class ProfileWarning(BaseModel):
     assigned_advisor: Advisor | None
     created_at: datetime
     reviews: list[ProfileReview]
+    prediction_stage: PredictionStage = PredictionStage.FIRST_SEMESTER
+    model_target_type: ModelTargetType = ModelTargetType.BINARY_DROPOUT
+    model_version: str | None = None
 
 
 class ProfileIntervention(BaseModel):
@@ -289,3 +308,4 @@ class StudentProfile(BaseModel):
     interventions: list[ProfileIntervention]
     follow_ups: list[ProfileFollowUp]
     timeline: list[TimelineEvent]
+    stage_readiness: list[StageReadiness] = []

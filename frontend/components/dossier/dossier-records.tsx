@@ -5,6 +5,8 @@ import type {
   ProfileWarning,
 } from "@/types/registry";
 import type { ReactNode } from "react";
+import { OutcomeSummary } from "@/components/predictions/outcome-summary";
+import { stageLabel } from "@/types/outcome";
 export function DossierCard({
   title,
   action,
@@ -57,6 +59,52 @@ export function ReadinessCard({
   const readiness = profile.prediction_readiness;
   return (
     <DossierCard title="Prediction readiness" action={action}>
+      {(profile.stage_readiness ?? []).map((stage) => (
+        <section
+          key={stage.prediction_stage}
+          className="dossier-readiness-stage"
+        >
+          <h3>{stageLabel(stage.prediction_stage)}</h3>
+          <div className="dossier-readiness">
+            <DossierBadge value={stage.status} />
+            <strong>
+              {stage.available_feature_count} / {stage.required_feature_count}
+            </strong>
+            <span>
+              Inputs available · Model {stage.model_status.toLowerCase()}
+            </span>
+          </div>
+          <p className="dossier-muted">
+            {stage.model_version}
+            {stage.model_error ? ` · ${readable(stage.model_error)}` : ""}
+          </p>
+          {stage.model_status === "INACTIVE" && (
+            <p className="dossier-muted">
+              A System Admin must validate and activate this model before
+              assessment.
+            </p>
+          )}
+          {(stage.missing_features.length > 0 ||
+            Object.keys(stage.invalid_features).length > 0) && (
+            <details>
+              <summary>Required stage inputs</summary>
+              <ul className="dossier-feature-list">
+                {stage.missing_features.map((name) => (
+                  <li key={name}>{readable(name)}: not recorded</li>
+                ))}
+                {Object.entries(stage.invalid_features).map(
+                  ([name, message]) => (
+                    <li key={name}>
+                      {readable(name)}: {message}
+                    </li>
+                  ),
+                )}
+              </ul>
+            </details>
+          )}
+        </section>
+      ))}
+      <h3>Legacy binary · First semester</h3>
       <div className="dossier-readiness">
         <DossierBadge value={readiness.status} />
         <strong>
@@ -91,6 +139,7 @@ export function PredictionRecord({
 }) {
   return (
     <article className="dossier-prediction">
+      <OutcomeSummary prediction={prediction} />
       <div className="dossier-row">
         <strong>{percent(prediction.probability)} dropout probability</strong>
         <DossierBadge value={prediction.risk_level} />
@@ -137,6 +186,14 @@ export function WarningRecord({
         {warning.assigned_advisor?.full_name ?? "Unassigned"}
       </p>
       <p className="dossier-muted">Created {timestamp(warning.created_at)}</p>
+      <p className="dossier-muted">
+        {stageLabel(
+          warning.model_target_type === "BINARY_DROPOUT"
+            ? "LEGACY"
+            : warning.prediction_stage,
+        )}{" "}
+        · {warning.model_version ?? "Model not recorded"}
+      </p>
       <p className="dossier-id">
         Warning {warning.id} · Prediction {warning.prediction_id}
       </p>

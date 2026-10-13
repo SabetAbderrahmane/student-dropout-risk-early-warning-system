@@ -64,12 +64,19 @@ export function DossierOverview({
           }}
         />
       </DossierCard>
-      <DossierCard title="Active warning">
-        {p.active_warning ? (
-          <WarningRecord
-            warning={p.active_warning}
-            action={warningActions(p.active_warning)}
-          />
+      <DossierCard title="Active warnings across stages">
+        {p.warning_history.some(
+          (warning) => warning.review_state !== "DISMISSED",
+        ) ? (
+          p.warning_history
+            .filter((warning) => warning.review_state !== "DISMISSED")
+            .map((warning) => (
+              <WarningRecord
+                key={warning.id}
+                warning={warning}
+                action={warningActions(warning)}
+              />
+            ))
         ) : (
           <p className="dossier-empty">No active warning.</p>
         )}

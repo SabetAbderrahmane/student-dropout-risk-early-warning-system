@@ -37,6 +37,8 @@ import { PredictionsTable } from "./predictions-table";
 import { PredictionDetailModal } from "./prediction-detail-modal";
 import { ModelDetailsModal } from "./model-details-modal";
 import { BatchPredictionResult } from "./batch-prediction-result";
+import { ModelCatalogPanel } from "./model-catalog-panel";
+import type { StageSelection } from "@/types/outcome";
 export function PredictionsWorkspace() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -60,6 +62,8 @@ export function PredictionsWorkspace() {
   const [batchBusy, setBatchBusy] = useState(false);
   const batchLock = useRef(false);
   const [batchError, setBatchError] = useState("");
+  const [lastBatchStage, setLastBatchStage] =
+    useState<StageSelection>("LEGACY");
   const [batchResult, setBatchResult] =
     useState<BatchPredictionResponse | null>(null);
   function signOut() {
@@ -181,15 +185,18 @@ export function PredictionsWorkspace() {
     );
     return () => clearTimeout(timer);
   }, [search]);
-  async function batch() {
+  async function batch(stage: StageSelection = "LEGACY") {
     if (batchLock.current || !user || !hasRole(user.role, ["ACADEMIC_ADMIN"]))
       return;
     batchLock.current = true;
     setBatchBusy(true);
     setBatchError("");
     setBatchResult(null);
+    setLastBatchStage(stage);
     try {
-      setBatchResult(await runBatchPrediction(token));
+      setBatchResult(
+        await runBatchPrediction(token, stage === "LEGACY" ? undefined : stage),
+      );
       refresh();
     } catch (caught) {
       if (caught instanceof ApiError && caught.status === 401) signOut();
@@ -256,11 +263,22 @@ export function PredictionsWorkspace() {
                   <Icon name="play" />
                   {batchBusy
                     ? "Running batch prediction…"
-                    : "Run Batch Prediction"}
+                    : "Run Legacy Batch Prediction"}
                 </button>
               )}
             </div>
           </div>
+          <ModelCatalogPanel
+            revision={revision}
+            onChanged={refresh}
+            onBatch={(stage) => void batch(stage)}
+            batchBusy={batchBusy}
+          />
+          <h2>Legacy binary first-semester model</h2>
+          <p className="prediction-muted">
+            The following performance, feature importance, readiness, and
+            student risk aggregates retain the approved binary model's scope.
+          </p>
           <div className="prediction-model-ribbon">
             {analyticsLoading ? (
               <span
@@ -292,7 +310,7 @@ export function PredictionsWorkspace() {
               <button
                 className="dash-button"
                 disabled={batchBusy}
-                onClick={() => void batch()}
+                onClick={() => void batch(lastBatchStage)}
               >
                 Retry batch prediction
               </button>
@@ -330,7 +348,8 @@ export function PredictionsWorkspace() {
               <h2>Student Prediction Records</h2>
               <p className="prediction-muted">
                 Records may include multiple predictions per student. Students
-                Assessed counts unique students with a latest prediction.
+                Assessed above counts unique students with a latest legacy
+                binary prediction. Records below include all stages.
               </p>
             </div>
             <button

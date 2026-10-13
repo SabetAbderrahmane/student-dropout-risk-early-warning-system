@@ -49,3 +49,12 @@ checkpoints/
 *.pth
 *.h5
 *.keras
+
+# B1 immutable verified models are small enough to deliver with their manifests.
+# Keep the approved A1 artifact and all other generated artifacts ignored.
+!backend/app/ml/artifacts/
+backend/app/ml/artifacts/*
+!backend/app/ml/artifacts/enrollment-outcome-v1/
+!backend/app/ml/artifacts/first-semester-outcome-v1/
+!backend/app/ml/artifacts/enrollment-outcome-v1/model.joblib
+!backend/app/ml/artifacts/first-semester-outcome-v1/model.joblib

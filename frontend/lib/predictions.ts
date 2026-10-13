@@ -34,6 +34,10 @@ export function exportPredictionPage(rows: readonly PredictionRow[]): void {
   const header = [
     "student_number",
     "student_name",
+    "prediction_stage",
+    "model_target_type",
+    "predicted_outcome",
+    "class_probabilities",
     "probability",
     "risk_level",
     "model_version",
@@ -44,6 +48,10 @@ export function exportPredictionPage(rows: readonly PredictionRow[]): void {
     [
       row.student_number,
       row.student_name,
+      row.prediction_stage,
+      row.model_target_type,
+      row.predicted_outcome ?? "",
+      row.class_probabilities ? JSON.stringify(row.class_probabilities) : "",
       row.probability,
       row.risk_level,
       row.model_version,

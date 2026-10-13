@@ -8,6 +8,25 @@
   width: 100%;
   box-sizing: border-box;
 }
+.dossier-readiness-stage {
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 0 16px;
+  margin-bottom: 16px;
+}
+.dossier-stage-select {
+  display: grid;
+  gap: 8px;
+  margin: 20px 0;
+}
+.dossier-stage-select select {
+  min-height: 44px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  color: var(--text-primary);
+  background: var(--surface);
+}
 .dossier-breadcrumb {
   display: flex;
   align-items: center;

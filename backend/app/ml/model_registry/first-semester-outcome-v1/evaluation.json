@@ -1,0 +1,1524 @@
+{
+  "candidate_comparison": [
+    {
+      "best_hyperparameters": {
+        "model__C": 0.05,
+        "model__class_weight": null
+      },
+      "calibration_after": {
+        "accuracy": 0.7372881355932204,
+        "calibration": {
+          "dropout_brier_score": 0.11058411905823272,
+          "dropout_ece_10_bins": 0.04965110142118434,
+          "dropout_reliability_bins": [
+            {
+              "count": 228,
+              "lower": 0.0,
+              "mean_probability": 0.058425807853279194,
+              "observed_dropout_rate": 0.05701754385964912,
+              "upper": 0.1
+            },
+            {
+              "count": 117,
+              "lower": 0.1,
+              "mean_probability": 0.1399763494543824,
+              "observed_dropout_rate": 0.08547008547008547,
+              "upper": 0.2
+            },
+            {
+              "count": 61,
+              "lower": 0.2,
+              "mean_probability": 0.2520364679832971,
+              "observed_dropout_rate": 0.18032786885245902,
+              "upper": 0.3
+            },
+            {
+              "count": 47,
+              "lower": 0.3,
+              "mean_probability": 0.34520670803069736,
+              "observed_dropout_rate": 0.19148936170212766,
+              "upper": 0.4
+            },
+            {
+              "count": 41,
+              "lower": 0.4,
+              "mean_probability": 0.4515825613993314,
+              "observed_dropout_rate": 0.3902439024390244,
+              "upper": 0.5
+            },
+            {
+              "count": 37,
+              "lower": 0.5,
+              "mean_probability": 0.5544383037427033,
+              "observed_dropout_rate": 0.4594594594594595,
+              "upper": 0.6
+            },
+            {
+              "count": 36,
+              "lower": 0.6,
+              "mean_probability": 0.6554098070744064,
+              "observed_dropout_rate": 0.6666666666666666,
+              "upper": 0.7
+            },
+            {
+              "count": 46,
+              "lower": 0.7,
+              "mean_probability": 0.7589128464134388,
+              "observed_dropout_rate": 0.8260869565217391,
+              "upper": 0.8
+            },
+            {
+              "count": 68,
+              "lower": 0.8,
+              "mean_probability": 0.8479290229031262,
+              "observed_dropout_rate": 0.9411764705882353,
+              "upper": 0.9
+            },
+            {
+              "count": 27,
+              "lower": 0.9,
+              "mean_probability": 0.9262763630992216,
+              "observed_dropout_rate": 0.9629629629629629,
+              "upper": 1.0
+            }
+          ],
+          "multiclass_brier_score": 0.370920524589664
+        },
+        "confusion_matrix": {
+          "labels": [
+            "DROPOUT",
+            "ENROLLED",
+            "GRADUATE"
+          ],
+          "rows_actual_columns_predicted": [
+            [
+              181,
+              9,
+              38
+            ],
+            [
+              44,
+              22,
+              61
+            ],
+            [
+              22,
+              12,
+              319
+            ]
+          ]
+        },
+        "dropout_pr_auc": 0.8508798284507436,
+        "dropout_precision": 0.7327935222672065,
+        "dropout_recall": 0.793859649122807,
+        "evaluation_scope": "DEVELOPMENT_THRESHOLD_HOLDOUT",
+        "log_loss": 0.6578236088020909,
+        "macro_f1": 0.6161418500091688,
+        "macro_precision": 0.6691931079935975,
+        "macro_recall": 0.623590238375414,
+        "multiclass_roc_auc_ovr": 0.8443143679822338,
+        "per_class": {
+          "DROPOUT": {
+            "f1": 0.7621052631578947,
+            "precision": 0.7327935222672065,
+            "recall": 0.793859649122807,
+            "support": 228
+          },
+          "ENROLLED": {
+            "f1": 0.25882352941176473,
+            "precision": 0.5116279069767442,
+            "recall": 0.1732283464566929,
+            "support": 127
+          },
+          "GRADUATE": {
+            "f1": 0.8274967574578469,
+            "precision": 0.7631578947368421,
+            "recall": 0.9036827195467422,
+            "support": 353
+          }
+        },
+        "sample_size": 708,
+        "weighted_f1": 0.7044307113247373
+      },
+      "calibration_before": {
+        "accuracy": 0.7344632768361582,
+        "calibration": {
+          "dropout_brier_score": 0.10766791067800416,
+          "dropout_ece_10_bins": 0.034863201817555166,
+          "dropout_reliability_bins": [
+            {
+              "count": 241,
+              "lower": 0.0,
+              "mean_probability": 0.054692694326240486,
+              "observed_dropout_rate": 0.058091286307053944,
+              "upper": 0.1
+            },
+            {
+              "count": 117,
+              "lower": 0.1,
+              "mean_probability": 0.14468112994384535,
+              "observed_dropout_rate": 0.08547008547008547,
+              "upper": 0.2
+            },
+            {
+              "count": 71,
+              "lower": 0.2,
+              "mean_probability": 0.24871999071244272,
+              "observed_dropout_rate": 0.19718309859154928,
+              "upper": 0.3
+            },
+            {
+              "count": 52,
+              "lower": 0.3,
+              "mean_probability": 0.34916320772165754,
+              "observed_dropout_rate": 0.3076923076923077,
+              "upper": 0.4
+            },
+            {
+              "count": 31,
+              "lower": 0.4,
+              "mean_probability": 0.4385210041206108,
+              "observed_dropout_rate": 0.3870967741935484,
+              "upper": 0.5
+            },
+            {
+              "count": 32,
+              "lower": 0.5,
+              "mean_probability": 0.5464417128492907,
+              "observed_dropout_rate": 0.46875,
+              "upper": 0.6
+            },
+            {
+              "count": 20,
+              "lower": 0.6,
+              "mean_probability": 0.6546365653575691,
+              "observed_dropout_rate": 0.8,
+              "upper": 0.7
+            },
+            {
+              "count": 28,
+              "lower": 0.7,
+              "mean_probability": 0.7655057621238618,
+              "observed_dropout_rate": 0.8214285714285714,
+              "upper": 0.8
+            },
+            {
+              "count": 50,
+              "lower": 0.8,
+              "mean_probability": 0.852346659087086,
+              "observed_dropout_rate": 0.9,
+              "upper": 0.9
+            },
+            {
+              "count": 66,
+              "lower": 0.9,
+              "mean_probability": 0.957344356605622,
+              "observed_dropout_rate": 0.9545454545454546,
+              "upper": 1.0
+            }
+          ],
+          "multiclass_brier_score": 0.36394262218347084
+        },
+        "confusion_matrix": {
+          "labels": [
+            "DROPOUT",
+            "ENROLLED",
+            "GRADUATE"
+          ],
+          "rows_actual_columns_predicted": [
+            [
+              172,
+              17,
+              39
+            ],
+            [
+              32,
+              32,
+              63
+            ],
+            [
+              18,
+              19,
+              316
+            ]
+          ]
+        },
+        "dropout_pr_auc": 0.8524012710818198,
+        "dropout_precision": 0.7747747747747747,
+        "dropout_recall": 0.7543859649122807,
+        "evaluation_scope": "DEVELOPMENT_THRESHOLD_HOLDOUT",
+        "log_loss": 0.6442409909574499,
+        "macro_f1": 0.6374547429800348,
+        "macro_precision": 0.6671146237709705,
+        "macro_recall": 0.6338462016088753,
+        "multiclass_roc_auc_ovr": 0.8530333593994711,
+        "per_class": {
+          "DROPOUT": {
+            "f1": 0.7644444444444445,
+            "precision": 0.7747747747747747,
+            "recall": 0.7543859649122807,
+            "support": 228
+          },
+          "ENROLLED": {
+            "f1": 0.3282051282051282,
+            "precision": 0.47058823529411764,
+            "recall": 0.25196850393700787,
+            "support": 127
+          },
+          "GRADUATE": {
+            "f1": 0.8197146562905318,
+            "precision": 0.7559808612440191,
+            "recall": 0.8951841359773371,
+            "support": 353
+          }
+        },
+        "sample_size": 708,
+        "weighted_f1": 0.7137495173530258
+      },
+      "cv_metric_std": {
+        "accuracy": 0.0155537224782026,
+        "dropout_pr_auc": 0.020080021823599588,
+        "dropout_precision": 0.036040465227638596,
+        "dropout_recall": 0.03928580475849899,
+        "log_loss": 0.028196045468665762,
+        "macro_f1": 0.01849177479955907,
+        "macro_precision": 0.03333313853246647,
+        "macro_recall": 0.016781823711317805,
+        "weighted_f1": 0.015799703453992762
+      },
+      "cv_metrics": {
+        "accuracy": 0.7428013318534961,
+        "dropout_pr_auc": 0.8549132776988714,
+        "dropout_precision": 0.7861407648075088,
+        "dropout_recall": 0.7536281665951053,
+        "log_loss": 0.6416716499398407,
+        "macro_f1": 0.6396272535270086,
+        "macro_precision": 0.6960501067691548,
+        "macro_recall": 0.6353752064965924,
+        "weighted_f1": 0.7173601090857427
+      },
+      "final_test": {
+        "accuracy": 0.7423728813559322,
+        "calibration": {
+          "dropout_brier_score": 0.10971134136103206,
+          "dropout_ece_10_bins": 0.05725275771079666,
+          "dropout_reliability_bins": [
+            {
+              "count": 278,
+              "lower": 0.0,
+              "mean_probability": 0.05621466835637801,
+              "observed_dropout_rate": 0.04316546762589928,
+              "upper": 0.1
+            },
+            {
+              "count": 163,
+              "lower": 0.1,
+              "mean_probability": 0.14094423809975645,
+              "observed_dropout_rate": 0.09202453987730061,
+              "upper": 0.2
+            },
+            {
+              "count": 68,
+              "lower": 0.2,
+              "mean_probability": 0.24842411944633755,
+              "observed_dropout_rate": 0.19117647058823528,
+              "upper": 0.3
+            },
+            {
+              "count": 68,
+              "lower": 0.3,
+              "mean_probability": 0.34769484766711345,
+              "observed_dropout_rate": 0.29411764705882354,
+              "upper": 0.4
+            },
+            {
+              "count": 54,
+              "lower": 0.4,
+              "mean_probability": 0.45188911395556236,
+              "observed_dropout_rate": 0.25925925925925924,
+              "upper": 0.5
+            },
+            {
+              "count": 51,
+              "lower": 0.5,
+              "mean_probability": 0.5598177175950748,
+              "observed_dropout_rate": 0.6470588235294118,
+              "upper": 0.6
+            },
+            {
+              "count": 49,
+              "lower": 0.6,
+              "mean_probability": 0.6415966248804316,
+              "observed_dropout_rate": 0.7346938775510204,
+              "upper": 0.7
+            },
+            {
+              "count": 50,
+              "lower": 0.7,
+              "mean_probability": 0.7575858111491187,
+              "observed_dropout_rate": 0.8,
+              "upper": 0.8
+            },
+            {
+              "count": 70,
+              "lower": 0.8,
+              "mean_probability": 0.8502095466935207,
+              "observed_dropout_rate": 0.9571428571428572,
+              "upper": 0.9
+            },
+            {
+              "count": 34,
+              "lower": 0.9,
+              "mean_probability": 0.9261206739441483,
+              "observed_dropout_rate": 1.0,
+              "upper": 1.0
+            }
+          ],
+          "multiclass_brier_score": 0.36459326372267986
+        },
+        "confusion_matrix": {
+          "labels": [
+            "DROPOUT",
+            "ENROLLED",
+            "GRADUATE"
+          ],
+          "rows_actual_columns_predicted": [
+            [
+              226,
+              13,
+              45
+            ],
+            [
+              55,
+              23,
+              81
+            ],
+            [
+              25,
+              9,
+              408
+            ]
+          ]
+        },
+        "dropout_pr_auc": 0.8543479856849812,
+        "dropout_precision": 0.738562091503268,
+        "dropout_recall": 0.795774647887324,
+        "evaluation_scope": "FINAL_TEST_SET",
+        "log_loss": 0.653108547024264,
+        "macro_f1": 0.6092191549213924,
+        "macro_precision": 0.671239382144868,
+        "macro_recall": 0.6211685530048539,
+        "multiclass_roc_auc_ovr": 0.8518858758314495,
+        "per_class": {
+          "DROPOUT": {
+            "f1": 0.7661016949152543,
+            "precision": 0.738562091503268,
+            "recall": 0.795774647887324,
+            "support": 284
+          },
+          "ENROLLED": {
+            "f1": 0.22549019607843138,
+            "precision": 0.5111111111111111,
+            "recall": 0.14465408805031446,
+            "support": 159
+          },
+          "GRADUATE": {
+            "f1": 0.8360655737704918,
+            "precision": 0.7640449438202247,
+            "recall": 0.9230769230769231,
+            "support": 442
+          }
+        },
+        "sample_size": 885,
+        "weighted_f1": 0.7039172950722714
+      },
+      "meets_constraints": true,
+      "name": "Logistic Regression",
+      "search_space": {
+        "model__C": [
+          0.05,
+          0.2,
+          1.0,
+          5.0
+        ],
+        "model__class_weight": [
+          null,
+          "balanced"
+        ]
+      },
+      "selection_score": 0.7644647771338563
+    },
+    {
+      "best_hyperparameters": {
+        "model__class_weight": null,
+        "model__max_depth": 16,
+        "model__min_samples_leaf": 1,
+        "model__n_estimators": 250
+      },
+      "calibration_after": {
+        "accuracy": 0.7358757062146892,
+        "calibration": {
+          "dropout_brier_score": 0.10499878775715833,
+          "dropout_ece_10_bins": 0.04502774249722705,
+          "dropout_reliability_bins": [
+            {
+              "count": 261,
+              "lower": 0.0,
+              "mean_probability": 0.06415036867198043,
+              "observed_dropout_rate": 0.0421455938697318,
+              "upper": 0.1
+            },
+            {
+              "count": 119,
+              "lower": 0.1,
+              "mean_probability": 0.14543340853539405,
+              "observed_dropout_rate": 0.15126050420168066,
+              "upper": 0.2
+            },
+            {
+              "count": 57,
+              "lower": 0.2,
+              "mean_probability": 0.24876698152227003,
+              "observed_dropout_rate": 0.14035087719298245,
+              "upper": 0.3
+            },
+            {
+              "count": 41,
+              "lower": 0.3,
+              "mean_probability": 0.3538966454985097,
+              "observed_dropout_rate": 0.34146341463414637,
+              "upper": 0.4
+            },
+            {
+              "count": 26,
+              "lower": 0.4,
+              "mean_probability": 0.45929507125605196,
+              "observed_dropout_rate": 0.2692307692307692,
+              "upper": 0.5
+            },
+            {
+              "count": 25,
+              "lower": 0.5,
+              "mean_probability": 0.5603855004034786,
+              "observed_dropout_rate": 0.52,
+              "upper": 0.6
+            },
+            {
+              "count": 29,
+              "lower": 0.6,
+              "mean_probability": 0.6523451581164991,
+              "observed_dropout_rate": 0.8620689655172413,
+              "upper": 0.7
+            },
+            {
+              "count": 30,
+              "lower": 0.7,
+              "mean_probability": 0.7544921476557869,
+              "observed_dropout_rate": 0.8,
+              "upper": 0.8
+            },
+            {
+              "count": 71,
+              "lower": 0.8,
+              "mean_probability": 0.8522577005191654,
+              "observed_dropout_rate": 0.8309859154929577,
+              "upper": 0.9
+            },
+            {
+              "count": 49,
+              "lower": 0.9,
+              "mean_probability": 0.9215375799265206,
+              "observed_dropout_rate": 1.0,
+              "upper": 1.0
+            }
+          ],
+          "multiclass_brier_score": 0.36180349846119875
+        },
+        "confusion_matrix": {
+          "labels": [
+            "DROPOUT",
+            "ENROLLED",
+            "GRADUATE"
+          ],
+          "rows_actual_columns_predicted": [
+            [
+              175,
+              14,
+              39
+            ],
+            [
+              34,
+              36,
+              57
+            ],
+            [
+              17,
+              26,
+              310
+            ]
+          ]
+        },
+        "dropout_pr_auc": 0.8582424087983603,
+        "dropout_precision": 0.7743362831858407,
+        "dropout_recall": 0.7675438596491229,
+        "evaluation_scope": "DEVELOPMENT_THRESHOLD_HOLDOUT",
+        "log_loss": 0.644096115953316,
+        "macro_f1": 0.647489736070996,
+        "macro_precision": 0.6705224305805709,
+        "macro_recall": 0.6430651318055945,
+        "multiclass_roc_auc_ovr": 0.8626758243556097,
+        "per_class": {
+          "DROPOUT": {
+            "f1": 0.7709251101321586,
+            "precision": 0.7743362831858407,
+            "recall": 0.7675438596491229,
+            "support": 228
+          },
+          "ENROLLED": {
+            "f1": 0.35467980295566504,
+            "precision": 0.47368421052631576,
+            "recall": 0.28346456692913385,
+            "support": 127
+          },
+          "GRADUATE": {
+            "f1": 0.8168642951251647,
+            "precision": 0.7635467980295566,
+            "recall": 0.8781869688385269,
+            "support": 353
+          }
+        },
+        "sample_size": 708,
+        "weighted_f1": 0.7191643450066169
+      },
+      "calibration_before": {
+        "accuracy": 0.7387005649717514,
+        "calibration": {
+          "dropout_brier_score": 0.11153223134282497,
+          "dropout_ece_10_bins": 0.07132994973998215,
+          "dropout_reliability_bins": [
+            {
+              "count": 164,
+              "lower": 0.0,
+              "mean_probability": 0.06169185020436366,
+              "observed_dropout_rate": 0.036585365853658534,
+              "upper": 0.1
+            },
+            {
+              "count": 156,
+              "lower": 0.1,
+              "mean_probability": 0.14365507151603354,
+              "observed_dropout_rate": 0.08333333333333333,
+              "upper": 0.2
+            },
+            {
+              "count": 100,
+              "lower": 0.2,
+              "mean_probability": 0.24849199046593284,
+              "observed_dropout_rate": 0.16,
+              "upper": 0.3
+            },
+            {
+              "count": 63,
+              "lower": 0.3,
+              "mean_probability": 0.3480551883361989,
+              "observed_dropout_rate": 0.2698412698412698,
+              "upper": 0.4
+            },
+            {
+              "count": 42,
+              "lower": 0.4,
+              "mean_probability": 0.4460619311226727,
+              "observed_dropout_rate": 0.4523809523809524,
+              "upper": 0.5
+            },
+            {
+              "count": 40,
+              "lower": 0.5,
+              "mean_probability": 0.5417370653465938,
+              "observed_dropout_rate": 0.75,
+              "upper": 0.6
+            },
+            {
+              "count": 35,
+              "lower": 0.6,
+              "mean_probability": 0.6489650250309834,
+              "observed_dropout_rate": 0.7714285714285715,
+              "upper": 0.7
+            },
+            {
+              "count": 41,
+              "lower": 0.7,
+              "mean_probability": 0.7474572612046233,
+              "observed_dropout_rate": 0.8536585365853658,
+              "upper": 0.8
+            },
+            {
+              "count": 44,
+              "lower": 0.8,
+              "mean_probability": 0.8468666585599233,
+              "observed_dropout_rate": 0.9545454545454546,
+              "upper": 0.9
+            },
+            {
+              "count": 23,
+              "lower": 0.9,
+              "mean_probability": 0.946825469685075,
+              "observed_dropout_rate": 1.0,
+              "upper": 1.0
+            }
+          ],
+          "multiclass_brier_score": 0.373973053992284
+        },
+        "confusion_matrix": {
+          "labels": [
+            "DROPOUT",
+            "ENROLLED",
+            "GRADUATE"
+          ],
+          "rows_actual_columns_predicted": [
+            [
+              180,
+              4,
+              44
+            ],
+            [
+              34,
+              20,
+              73
+            ],
+            [
+              14,
+              16,
+              323
+            ]
+          ]
+        },
+        "dropout_pr_auc": 0.8567001141940888,
+        "dropout_precision": 0.7894736842105263,
+        "dropout_recall": 0.7894736842105263,
+        "evaluation_scope": "DEVELOPMENT_THRESHOLD_HOLDOUT",
+        "log_loss": 0.6665099176482712,
+        "macro_f1": 0.6145408790834074,
+        "macro_precision": 0.6745215311004785,
+        "macro_recall": 0.6206560544923684,
+        "multiclass_roc_auc_ovr": 0.8612678775853357,
+        "per_class": {
+          "DROPOUT": {
+            "f1": 0.7894736842105263,
+            "precision": 0.7894736842105263,
+            "recall": 0.7894736842105263,
+            "support": 228
+          },
+          "ENROLLED": {
+            "f1": 0.23952095808383234,
+            "precision": 0.5,
+            "recall": 0.15748031496062992,
+            "support": 127
+          },
+          "GRADUATE": {
+            "f1": 0.8146279949558638,
+            "precision": 0.7340909090909091,
+            "recall": 0.9150141643059491,
+            "support": 353
+          }
+        },
+        "sample_size": 708,
+        "weighted_f1": 0.703365598723258
+      },
+      "cv_metric_std": {
+        "accuracy": 0.015750726583920623,
+        "dropout_pr_auc": 0.01824199433364897,
+        "dropout_precision": 0.035788089032480194,
+        "dropout_recall": 0.035960687103029604,
+        "log_loss": 0.020802125518110653,
+        "macro_f1": 0.01751219085040056,
+        "macro_precision": 0.019147880706104396,
+        "macro_recall": 0.016080394167788954,
+        "weighted_f1": 0.016825171587222135
+      },
+      "cv_metrics": {
+        "accuracy": 0.7456403995560488,
+        "dropout_pr_auc": 0.852326139658903,
+        "dropout_precision": 0.7760494132403284,
+        "dropout_recall": 0.744890510948905,
+        "log_loss": 0.6634932187315392,
+        "macro_f1": 0.6325778569541514,
+        "macro_precision": 0.7175657077242189,
+        "macro_recall": 0.6300804125599898,
+        "weighted_f1": 0.7135804363935618
+      },
+      "final_test": {
+        "accuracy": 0.7163841807909604,
+        "calibration": {
+          "dropout_brier_score": 0.12071727515952432,
+          "dropout_ece_10_bins": 0.04070007058735247,
+          "dropout_reliability_bins": [
+            {
+              "count": 334,
+              "lower": 0.0,
+              "mean_probability": 0.06428058717989071,
+              "observed_dropout_rate": 0.05089820359281437,
+              "upper": 0.1
+            },
+            {
+              "count": 149,
+              "lower": 0.1,
+              "mean_probability": 0.14321828268772566,
+              "observed_dropout_rate": 0.16778523489932887,
+              "upper": 0.2
+            },
+            {
+              "count": 74,
+              "lower": 0.2,
+              "mean_probability": 0.2532308325088728,
+              "observed_dropout_rate": 0.28378378378378377,
+              "upper": 0.3
+            },
+            {
+              "count": 42,
+              "lower": 0.3,
+              "mean_probability": 0.34615805381912135,
+              "observed_dropout_rate": 0.42857142857142855,
+              "upper": 0.4
+            },
+            {
+              "count": 36,
+              "lower": 0.4,
+              "mean_probability": 0.44848804728918285,
+              "observed_dropout_rate": 0.3888888888888889,
+              "upper": 0.5
+            },
+            {
+              "count": 33,
+              "lower": 0.5,
+              "mean_probability": 0.5419250423031736,
+              "observed_dropout_rate": 0.36363636363636365,
+              "upper": 0.6
+            },
+            {
+              "count": 47,
+              "lower": 0.6,
+              "mean_probability": 0.6541980409938273,
+              "observed_dropout_rate": 0.5319148936170213,
+              "upper": 0.7
+            },
+            {
+              "count": 33,
+              "lower": 0.7,
+              "mean_probability": 0.7549810352228621,
+              "observed_dropout_rate": 0.7272727272727273,
+              "upper": 0.8
+            },
+            {
+              "count": 90,
+              "lower": 0.8,
+              "mean_probability": 0.8580900039746853,
+              "observed_dropout_rate": 0.9,
+              "upper": 0.9
+            },
+            {
+              "count": 47,
+              "lower": 0.9,
+              "mean_probability": 0.9211827125851856,
+              "observed_dropout_rate": 1.0,
+              "upper": 1.0
+            }
+          ],
+          "multiclass_brier_score": 0.37424507762920317
+        },
+        "confusion_matrix": {
+          "labels": [
+            "DROPOUT",
+            "ENROLLED",
+            "GRADUATE"
+          ],
+          "rows_actual_columns_predicted": [
+            [
+              200,
+              34,
+              50
+            ],
+            [
+              47,
+              41,
+              71
+            ],
+            [
+              29,
+              20,
+              393
+            ]
+          ]
+        },
+        "dropout_pr_auc": 0.8304201744860276,
+        "dropout_precision": 0.7246376811594203,
+        "dropout_recall": 0.704225352112676,
+        "evaluation_scope": "FINAL_TEST_SET",
+        "log_loss": 0.6609230832407974,
+        "macro_f1": 0.6197653640575264,
+        "macro_precision": 0.6402693560721858,
+        "macro_recall": 0.6170757529420048,
+        "multiclass_roc_auc_ovr": 0.8534501297762983,
+        "per_class": {
+          "DROPOUT": {
+            "f1": 0.7142857142857143,
+            "precision": 0.7246376811594203,
+            "recall": 0.704225352112676,
+            "support": 284
+          },
+          "ENROLLED": {
+            "f1": 0.3228346456692913,
+            "precision": 0.43157894736842106,
+            "recall": 0.2578616352201258,
+            "support": 159
+          },
+          "GRADUATE": {
+            "f1": 0.8221757322175732,
+            "precision": 0.7645914396887159,
+            "recall": 0.8891402714932126,
+            "support": 442
+          }
+        },
+        "sample_size": 885,
+        "weighted_f1": 0.6978412713657939
+      },
+      "meets_constraints": true,
+      "name": "Random Forest",
+      "search_space": {
+        "model__class_weight": [
+          null,
+          "balanced"
+        ],
+        "model__max_depth": [
+          null,
+          8,
+          16
+        ],
+        "model__min_samples_leaf": [
+          1,
+          3,
+          6
+        ],
+        "model__n_estimators": [
+          150,
+          250
+        ]
+      },
+      "selection_score": 0.757774558992096
+    },
+    {
+      "best_hyperparameters": {
+        "model__learning_rate": 0.1,
+        "model__max_depth": 4,
+        "model__n_estimators": 120,
+        "model__reg_lambda": 1.0,
+        "model__weight_strategy": null
+      },
+      "calibration_after": {
+        "accuracy": 0.75,
+        "calibration": {
+          "dropout_brier_score": 0.1070027616692627,
+          "dropout_ece_10_bins": 0.03953802992991784,
+          "dropout_reliability_bins": [
+            {
+              "count": 295,
+              "lower": 0.0,
+              "mean_probability": 0.0692684211056401,
+              "observed_dropout_rate": 0.05423728813559322,
+              "upper": 0.1
+            },
+            {
+              "count": 112,
+              "lower": 0.1,
+              "mean_probability": 0.1411819934880271,
+              "observed_dropout_rate": 0.17857142857142858,
+              "upper": 0.2
+            },
+            {
+              "count": 42,
+              "lower": 0.2,
+              "mean_probability": 0.2443824237443128,
+              "observed_dropout_rate": 0.19047619047619047,
+              "upper": 0.3
+            },
+            {
+              "count": 32,
+              "lower": 0.3,
+              "mean_probability": 0.3505755856587902,
+              "observed_dropout_rate": 0.1875,
+              "upper": 0.4
+            },
+            {
+              "count": 10,
+              "lower": 0.4,
+              "mean_probability": 0.4473660305904531,
+              "observed_dropout_rate": 0.6,
+              "upper": 0.5
+            },
+            {
+              "count": 27,
+              "lower": 0.5,
+              "mean_probability": 0.5402783922614063,
+              "observed_dropout_rate": 0.4444444444444444,
+              "upper": 0.6
+            },
+            {
+              "count": 22,
+              "lower": 0.6,
+              "mean_probability": 0.6417460826292527,
+              "observed_dropout_rate": 0.5909090909090909,
+              "upper": 0.7
+            },
+            {
+              "count": 38,
+              "lower": 0.7,
+              "mean_probability": 0.753920802361377,
+              "observed_dropout_rate": 0.7368421052631579,
+              "upper": 0.8
+            },
+            {
+              "count": 130,
+              "lower": 0.8,
+              "mean_probability": 0.8691739761245747,
+              "observed_dropout_rate": 0.9153846153846154,
+              "upper": 0.9
+            },
+            {
+              "count": 0,
+              "lower": 0.9,
+              "mean_probability": null,
+              "observed_dropout_rate": null,
+              "upper": 1.0
+            }
+          ],
+          "multiclass_brier_score": 0.36101256979880836
+        },
+        "confusion_matrix": {
+          "labels": [
+            "DROPOUT",
+            "ENROLLED",
+            "GRADUATE"
+          ],
+          "rows_actual_columns_predicted": [
+            [
+              177,
+              15,
+              36
+            ],
+            [
+              37,
+              42,
+              48
+            ],
+            [
+              12,
+              29,
+              312
+            ]
+          ]
+        },
+        "dropout_pr_auc": 0.8544731352042596,
+        "dropout_precision": 0.7831858407079646,
+        "dropout_recall": 0.7763157894736842,
+        "evaluation_scope": "DEVELOPMENT_THRESHOLD_HOLDOUT",
+        "log_loss": 0.6434970111435528,
+        "macro_f1": 0.6690708981405692,
+        "macro_precision": 0.686478907203336,
+        "macro_recall": 0.663625714036379,
+        "multiclass_roc_auc_ovr": 0.8665720141611432,
+        "per_class": {
+          "DROPOUT": {
+            "f1": 0.7797356828193832,
+            "precision": 0.7831858407079646,
+            "recall": 0.7763157894736842,
+            "support": 228
+          },
+          "ENROLLED": {
+            "f1": 0.39436619718309857,
+            "precision": 0.4883720930232558,
+            "recall": 0.33070866141732286,
+            "support": 127
+          },
+          "GRADUATE": {
+            "f1": 0.8331108144192256,
+            "precision": 0.7878787878787878,
+            "recall": 0.8838526912181303,
+            "support": 353
+          }
+        },
+        "sample_size": 708,
+        "weighted_f1": 0.7372208477613835
+      },
+      "calibration_before": {
+        "accuracy": 0.7457627118644068,
+        "calibration": {
+          "dropout_brier_score": 0.10526467336747895,
+          "dropout_ece_10_bins": 0.02057495074330876,
+          "dropout_reliability_bins": [
+            {
+              "count": 276,
+              "lower": 0.0,
+              "mean_probability": 0.04993336391635239,
+              "observed_dropout_rate": 0.050724637681159424,
+              "upper": 0.1
+            },
+            {
+              "count": 99,
+              "lower": 0.1,
+              "mean_probability": 0.14066393703523308,
+              "observed_dropout_rate": 0.13131313131313133,
+              "upper": 0.2
+            },
+            {
+              "count": 66,
+              "lower": 0.2,
+              "mean_probability": 0.24129037468722372,
+              "observed_dropout_rate": 0.21212121212121213,
+              "upper": 0.3
+            },
+            {
+              "count": 40,
+              "lower": 0.3,
+              "mean_probability": 0.34243774563074114,
+              "observed_dropout_rate": 0.25,
+              "upper": 0.4
+            },
+            {
+              "count": 24,
+              "lower": 0.4,
+              "mean_probability": 0.45575984319051105,
+              "observed_dropout_rate": 0.4583333333333333,
+              "upper": 0.5
+            },
+            {
+              "count": 29,
+              "lower": 0.5,
+              "mean_probability": 0.5457164562981704,
+              "observed_dropout_rate": 0.4827586206896552,
+              "upper": 0.6
+            },
+            {
+              "count": 22,
+              "lower": 0.6,
+              "mean_probability": 0.650308367880908,
+              "observed_dropout_rate": 0.6363636363636364,
+              "upper": 0.7
+            },
+            {
+              "count": 30,
+              "lower": 0.7,
+              "mean_probability": 0.7479887266953786,
+              "observed_dropout_rate": 0.8666666666666667,
+              "upper": 0.8
+            },
+            {
+              "count": 28,
+              "lower": 0.8,
+              "mean_probability": 0.8577887820346015,
+              "observed_dropout_rate": 0.7857142857142857,
+              "upper": 0.9
+            },
+            {
+              "count": 94,
+              "lower": 0.9,
+              "mean_probability": 0.9577395751121196,
+              "observed_dropout_rate": 0.9574468085106383,
+              "upper": 1.0
+            }
+          ],
+          "multiclass_brier_score": 0.35480237746937093
+        },
+        "confusion_matrix": {
+          "labels": [
+            "DROPOUT",
+            "ENROLLED",
+            "GRADUATE"
+          ],
+          "rows_actual_columns_predicted": [
+            [
+              173,
+              17,
+              38
+            ],
+            [
+              36,
+              42,
+              49
+            ],
+            [
+              12,
+              28,
+              313
+            ]
+          ]
+        },
+        "dropout_pr_auc": 0.8563546237897133,
+        "dropout_precision": 0.7828054298642534,
+        "dropout_recall": 0.7587719298245614,
+        "evaluation_scope": "DEVELOPMENT_THRESHOLD_HOLDOUT",
+        "log_loss": 0.6265407004477155,
+        "macro_f1": 0.6648220007499,
+        "macro_precision": 0.6826880168513029,
+        "macro_recall": 0.6587220478832722,
+        "multiclass_roc_auc_ovr": 0.8660102230789292,
+        "per_class": {
+          "DROPOUT": {
+            "f1": 0.7706013363028953,
+            "precision": 0.7828054298642534,
+            "recall": 0.7587719298245614,
+            "support": 228
+          },
+          "ENROLLED": {
+            "f1": 0.3925233644859813,
+            "precision": 0.4827586206896552,
+            "recall": 0.33070866141732286,
+            "support": 127
+          },
+          "GRADUATE": {
+            "f1": 0.8313413014608234,
+            "precision": 0.7825,
+            "recall": 0.886685552407932,
+            "support": 353
+          }
+        },
+        "sample_size": 708,
+        "weighted_f1": 0.7330664567548735
+      },
+      "cv_metric_std": {
+        "accuracy": 0.0156866320050845,
+        "dropout_pr_auc": 0.012897462146044656,
+        "dropout_precision": 0.012869005265211637,
+        "dropout_recall": 0.054852939065378435,
+        "log_loss": 0.024496778552556088,
+        "macro_f1": 0.018150146072951887,
+        "macro_precision": 0.024662331018416507,
+        "macro_recall": 0.017979484281040504,
+        "weighted_f1": 0.014914132455535693
+      },
+      "cv_metrics": {
+        "accuracy": 0.7503362930077692,
+        "dropout_pr_auc": 0.8531995970036226,
+        "dropout_precision": 0.7746616284818951,
+        "dropout_recall": 0.743344783168742,
+        "log_loss": 0.6266716238749261,
+        "macro_f1": 0.6650125542056877,
+        "macro_precision": 0.6936715316678181,
+        "macro_recall": 0.6576703815375536,
+        "weighted_f1": 0.7345805245670545
+      },
+      "final_test": {
+        "accuracy": 0.7333333333333333,
+        "calibration": {
+          "dropout_brier_score": 0.11688593439222146,
+          "dropout_ece_10_bins": 0.038384550698192445,
+          "dropout_reliability_bins": [
+            {
+              "count": 374,
+              "lower": 0.0,
+              "mean_probability": 0.06913758719531378,
+              "observed_dropout_rate": 0.06417112299465241,
+              "upper": 0.1
+            },
+            {
+              "count": 128,
+              "lower": 0.1,
+              "mean_probability": 0.14209683168800014,
+              "observed_dropout_rate": 0.15625,
+              "upper": 0.2
+            },
+            {
+              "count": 54,
+              "lower": 0.2,
+              "mean_probability": 0.24652877296504436,
+              "observed_dropout_rate": 0.2777777777777778,
+              "upper": 0.3
+            },
+            {
+              "count": 33,
+              "lower": 0.3,
+              "mean_probability": 0.34443643435433585,
+              "observed_dropout_rate": 0.30303030303030304,
+              "upper": 0.4
+            },
+            {
+              "count": 37,
+              "lower": 0.4,
+              "mean_probability": 0.44820289209752723,
+              "observed_dropout_rate": 0.5135135135135135,
+              "upper": 0.5
+            },
+            {
+              "count": 25,
+              "lower": 0.5,
+              "mean_probability": 0.5508057310800928,
+              "observed_dropout_rate": 0.24,
+              "upper": 0.6
+            },
+            {
+              "count": 39,
+              "lower": 0.6,
+              "mean_probability": 0.6595162318227008,
+              "observed_dropout_rate": 0.5128205128205128,
+              "upper": 0.7
+            },
+            {
+              "count": 36,
+              "lower": 0.7,
+              "mean_probability": 0.7535203974479763,
+              "observed_dropout_rate": 0.6666666666666666,
+              "upper": 0.8
+            },
+            {
+              "count": 159,
+              "lower": 0.8,
+              "mean_probability": 0.8665854591149057,
+              "observed_dropout_rate": 0.9182389937106918,
+              "upper": 0.9
+            },
+            {
+              "count": 0,
+              "lower": 0.9,
+              "mean_probability": null,
+              "observed_dropout_rate": null,
+              "upper": 1.0
+            }
+          ],
+          "multiclass_brier_score": 0.3685316024446992
+        },
+        "confusion_matrix": {
+          "labels": [
+            "DROPOUT",
+            "ENROLLED",
+            "GRADUATE"
+          ],
+          "rows_actual_columns_predicted": [
+            [
+              210,
+              32,
+              42
+            ],
+            [
+              49,
+              51,
+              59
+            ],
+            [
+              24,
+              30,
+              388
+            ]
+          ]
+        },
+        "dropout_pr_auc": 0.8443467933441503,
+        "dropout_precision": 0.7420494699646644,
+        "dropout_recall": 0.7394366197183099,
+        "evaluation_scope": "FINAL_TEST_SET",
+        "log_loss": 0.6505169136467915,
+        "macro_f1": 0.6497510310166952,
+        "macro_precision": 0.6622776454376065,
+        "macro_recall": 0.6460064636660282,
+        "multiclass_roc_auc_ovr": 0.864875475340997,
+        "per_class": {
+          "DROPOUT": {
+            "f1": 0.7407407407407407,
+            "precision": 0.7420494699646644,
+            "recall": 0.7394366197183099,
+            "support": 284
+          },
+          "ENROLLED": {
+            "f1": 0.375,
+            "precision": 0.45132743362831856,
+            "recall": 0.32075471698113206,
+            "support": 159
+          },
+          "GRADUATE": {
+            "f1": 0.8335123523093448,
+            "precision": 0.7934560327198364,
+            "recall": 0.8778280542986425,
+            "support": 442
+          }
+        },
+        "sample_size": 885,
+        "weighted_f1": 0.7213647797639556
+      },
+      "meets_constraints": true,
+      "name": "XGBoost",
+      "search_space": {
+        "model__learning_rate": [
+          0.04,
+          0.1
+        ],
+        "model__max_depth": [
+          2,
+          3,
+          4
+        ],
+        "model__n_estimators": [
+          120,
+          220
+        ],
+        "model__reg_lambda": [
+          1.0,
+          5.0
+        ],
+        "model__weight_strategy": [
+          null,
+          "balanced"
+        ]
+      },
+      "selection_score": 0.7637664660579107
+    }
+  ],
+  "final_test": {
+    "accuracy": 0.7423728813559322,
+    "calibration": {
+      "dropout_brier_score": 0.10971134136103206,
+      "dropout_ece_10_bins": 0.05725275771079666,
+      "dropout_reliability_bins": [
+        {
+          "count": 278,
+          "lower": 0.0,
+          "mean_probability": 0.05621466835637801,
+          "observed_dropout_rate": 0.04316546762589928,
+          "upper": 0.1
+        },
+        {
+          "count": 163,
+          "lower": 0.1,
+          "mean_probability": 0.14094423809975645,
+          "observed_dropout_rate": 0.09202453987730061,
+          "upper": 0.2
+        },
+        {
+          "count": 68,
+          "lower": 0.2,
+          "mean_probability": 0.24842411944633755,
+          "observed_dropout_rate": 0.19117647058823528,
+          "upper": 0.3
+        },
+        {
+          "count": 68,
+          "lower": 0.3,
+          "mean_probability": 0.34769484766711345,
+          "observed_dropout_rate": 0.29411764705882354,
+          "upper": 0.4
+        },
+        {
+          "count": 54,
+          "lower": 0.4,
+          "mean_probability": 0.45188911395556236,
+          "observed_dropout_rate": 0.25925925925925924,
+          "upper": 0.5
+        },
+        {
+          "count": 51,
+          "lower": 0.5,
+          "mean_probability": 0.5598177175950748,
+          "observed_dropout_rate": 0.6470588235294118,
+          "upper": 0.6
+        },
+        {
+          "count": 49,
+          "lower": 0.6,
+          "mean_probability": 0.6415966248804316,
+          "observed_dropout_rate": 0.7346938775510204,
+          "upper": 0.7
+        },
+        {
+          "count": 50,
+          "lower": 0.7,
+          "mean_probability": 0.7575858111491187,
+          "observed_dropout_rate": 0.8,
+          "upper": 0.8
+        },
+        {
+          "count": 70,
+          "lower": 0.8,
+          "mean_probability": 0.8502095466935207,
+          "observed_dropout_rate": 0.9571428571428572,
+          "upper": 0.9
+        },
+        {
+          "count": 34,
+          "lower": 0.9,
+          "mean_probability": 0.9261206739441483,
+          "observed_dropout_rate": 1.0,
+          "upper": 1.0
+        }
+      ],
+      "multiclass_brier_score": 0.36459326372267986
+    },
+    "confusion_matrix": {
+      "labels": [
+        "DROPOUT",
+        "ENROLLED",
+        "GRADUATE"
+      ],
+      "rows_actual_columns_predicted": [
+        [
+          226,
+          13,
+          45
+        ],
+        [
+          55,
+          23,
+          81
+        ],
+        [
+          25,
+          9,
+          408
+        ]
+      ]
+    },
+    "dropout_pr_auc": 0.8543479856849812,
+    "dropout_precision": 0.738562091503268,
+    "dropout_recall": 0.795774647887324,
+    "evaluation_scope": "FINAL_TEST_SET",
+    "log_loss": 0.653108547024264,
+    "macro_f1": 0.6092191549213924,
+    "macro_precision": 0.671239382144868,
+    "macro_recall": 0.6211685530048539,
+    "multiclass_roc_auc_ovr": 0.8518858758314495,
+    "per_class": {
+      "DROPOUT": {
+        "f1": 0.7661016949152543,
+        "precision": 0.738562091503268,
+        "recall": 0.795774647887324,
+        "support": 284
+      },
+      "ENROLLED": {
+        "f1": 0.22549019607843138,
+        "precision": 0.5111111111111111,
+        "recall": 0.14465408805031446,
+        "support": 159
+      },
+      "GRADUATE": {
+        "f1": 0.8360655737704918,
+        "precision": 0.7640449438202247,
+        "recall": 0.9230769230769231,
+        "support": 442
+      }
+    },
+    "sample_size": 885,
+    "weighted_f1": 0.7039172950722714
+  },
+  "model_version": "first-semester-outcome-v1",
+  "prediction_stage": "FIRST_SEMESTER",
+  "threshold_calibration": {
+    "calibration_source": "Disjoint development risk-threshold partition; not final test",
+    "dropout_count": 228,
+    "high_achieved_precision": 0.8247422680412371,
+    "high_achieved_recall": 0.7017543859649122,
+    "high_target_recall": 0.7,
+    "high_threshold": 0.56377401368663,
+    "low_achieved_precision": 0.5435356200527705,
+    "low_achieved_recall": 0.9035087719298246,
+    "low_target_recall": 0.9,
+    "low_threshold": 0.18210779379857042,
+    "method": "LOW largest threshold retaining >=90% dropout recall; HIGH maximum precision retaining >=70% recall and greater than LOW; no fallback",
+    "model_version": "first-semester-outcome-v1",
+    "sample_size": 708
+  }
+}

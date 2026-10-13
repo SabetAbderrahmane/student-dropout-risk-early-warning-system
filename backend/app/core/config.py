@@ -8,7 +8,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     app_env: str = "development"
     app_name: str = "student-dropout-warning-system"
-    database_url: str = "postgresql+psycopg://user:password@localhost:5432/dropout_system"
+    database_url: str = (
+        "postgresql+psycopg://user:password@localhost:5432/dropout_system"
+    )
 
     jwt_secret_key: str = Field(min_length=32)
     jwt_algorithm: Literal["HS256"] = "HS256"
@@ -18,8 +20,11 @@ class Settings(BaseSettings):
     ml_model_path: str = "app/ml/artifacts/dropout-risk-v1/model.joblib"
     ml_metadata_path: str = "app/ml/model_registry/dropout-risk-v1/metadata.json"
     ml_evaluation_path: str = "app/ml/model_registry/dropout-risk-v1/evaluation.json"
-    ml_manifest_path: str = "app/ml/model_registry/dropout-risk-v1/artifact_manifest.json"
+    ml_manifest_path: str = (
+        "app/ml/model_registry/dropout-risk-v1/artifact_manifest.json"
+    )
     ml_model_required: bool = False
+    ml_outcome_root: str = "app/ml"
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -30,7 +35,9 @@ class Settings(BaseSettings):
 
     @property
     def cors_origin_list(self) -> list[str]:
-        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+        return [
+            origin.strip() for origin in self.cors_origins.split(",") if origin.strip()
+        ]
 
 
 @lru_cache

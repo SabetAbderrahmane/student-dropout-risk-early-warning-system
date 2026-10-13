@@ -11,7 +11,13 @@ from app.models.casework import (
     InterventionType,
 )
 from app.models.import_job import ImportJob, ImportStatus, ImportValidationError
-from app.models.prediction import ModelVersion, PredictionResult, RiskLevel
+from app.models.prediction import (
+    ModelActivationEvent,
+    ModelValidation,
+    ModelVersion,
+    PredictionResult,
+    RiskLevel,
+)
 from app.models.semester_one import FirstSemesterRecord
 from app.models.staged_import import (
     StagedImportAction,
@@ -49,6 +55,8 @@ __all__ = [
     "ImportStatus",
     "ImportValidationError",
     "ModelVersion",
+    "ModelValidation",
+    "ModelActivationEvent",
     "PredictionResult",
     "RiskLevel",
     "Student",

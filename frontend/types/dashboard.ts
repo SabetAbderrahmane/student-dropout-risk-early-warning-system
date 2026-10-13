@@ -1,4 +1,6 @@
 export interface DashboardOverview {
+  prediction_scope: "LEGACY_BINARY_FIRST_SEMESTER";
+  support_scope: "ALL_PREDICTION_STAGES";
   students: {
     total: number;
     prediction_ready: number;

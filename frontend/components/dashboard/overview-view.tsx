@@ -21,6 +21,12 @@ export function OverviewView({
 }) {
   return (
     <>
+      <p className="dash-description">
+        Risk counts, readiness, and model thresholds show legacy binary
+        first-semester assessments. Warning and support totals include all
+        prediction stages. Review enrollment and multiclass results in
+        Prediction Analytics.
+      </p>
       <div className="dash-kpi-grid">
         <KpiCard
           title="Total Students"
@@ -58,7 +64,7 @@ export function OverviewView({
               ? "Model threshold not available"
               : `Model threshold: P ≥ ${percent(data.model.high_threshold)}`}
           </span>
-          <span>Latest backend risk classification</span>
+          <span>Latest legacy binary assessment per student</span>
         </KpiCard>
         <KpiCard
           title="Pending Reviews"

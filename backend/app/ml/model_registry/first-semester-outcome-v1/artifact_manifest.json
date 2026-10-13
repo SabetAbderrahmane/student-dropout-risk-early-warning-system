@@ -1,0 +1,23 @@
+{
+  "artifact_sha256": "2d6f7f80d6d6dcc2c844d9c3b714b1f5d7d92fa42d0a2db21fb3a3b139b5da81",
+  "format_version": 2,
+  "model_version": "first-semester-outcome-v1",
+  "prediction_stage": "FIRST_SEMESTER",
+  "registry_sha256": {
+    "data_audit.json": "24d6d068a978e3a8de5220c0408430388886a0392c1cab4aa7dc072a85a9b9b5",
+    "evaluation.json": "0fcb38b6f20806ef8e67590bab4d80703a254a59016c75b92930c11934f1beea",
+    "metadata.json": "72eb6708339cc0ac2b00b0f7e9521cdf774ef84b2856ebab559680fc174674c1",
+    "model_selection.json": "8d5a44dd4a1f569b8a4d94862ba3667a36ce292b281b7224b1f1dcdd6ba6174b",
+    "split_manifest.json": "d3b4e3186caa8862fd30f8300f08c0117c61a20c528e566c6a337329ba696823",
+    "threshold_calibration.json": "3bf7217fe043842ac460cc4234cb572a344c7426259196a0025b4db88fb2454d"
+  },
+  "runtime_versions": {
+    "joblib": "1.6.0",
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "python": "3.11.9",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.17.1",
+    "xgboost": "3.2.0"
+  }
+}

@@ -3,6 +3,7 @@ from uuid import UUID
 from sqlalchemy import asc, desc, func, or_, select, update
 from sqlalchemy.orm import Session, joinedload
 
+from app.ml.outcomes.contracts import ModelTargetType, PredictionStage
 from app.models.prediction import ModelVersion, PredictionResult, RiskLevel
 from app.models.student import Student
 
@@ -16,9 +17,18 @@ class PredictionRepository:
             select(ModelVersion).where(ModelVersion.model_version == version)
         )
 
-    def get_active_model(self) -> ModelVersion | None:
+    def get_active_model(
+        self,
+        *,
+        stage=PredictionStage.FIRST_SEMESTER,
+        target_type=ModelTargetType.BINARY_DROPOUT,
+    ) -> ModelVersion | None:
         return self.db.scalar(
-            select(ModelVersion).where(ModelVersion.is_active.is_(True))
+            select(ModelVersion).where(
+                ModelVersion.is_active.is_(True),
+                ModelVersion.prediction_stage == stage,
+                ModelVersion.model_target_type == target_type,
+            )
         )
 
     def add_model(self, model: ModelVersion) -> ModelVersion:
@@ -30,6 +40,10 @@ class PredictionRepository:
         self.db.execute(
             update(ModelVersion)
             .where(ModelVersion.id != model.id)
+            .where(
+                ModelVersion.prediction_stage == model.prediction_stage,
+                ModelVersion.model_target_type == model.model_target_type,
+            )
             .values(is_active=False)
         )
         model.is_active = True
@@ -83,8 +97,14 @@ class PredictionRepository:
         student_id: UUID | None,
         sort: str,
         order: str,
+        prediction_stage: PredictionStage | None = None,
+        model_target_type: ModelTargetType | None = None,
     ) -> tuple[list[PredictionResult], int]:
         filters = []
+        if prediction_stage is not None:
+            filters.append(PredictionResult.prediction_stage == prediction_stage)
+        if model_target_type is not None:
+            filters.append(PredictionResult.model_target_type == model_target_type)
         if search:
             pattern = f"%{search.strip()}%"
             filters.append(
@@ -132,15 +152,21 @@ class PredictionRepository:
         return list(self.db.scalars(statement).unique()), total
 
     def list_student_history(
-        self, student_id: UUID, *, page: int, page_size: int
+        self,
+        student_id: UUID,
+        *,
+        page: int,
+        page_size: int,
+        prediction_stage: PredictionStage | None = None,
+        model_target_type: ModelTargetType | None = None,
     ) -> tuple[list[PredictionResult], int]:
+        filters = [PredictionResult.student_id == student_id]
+        if prediction_stage is not None:
+            filters.append(PredictionResult.prediction_stage == prediction_stage)
+        if model_target_type is not None:
+            filters.append(PredictionResult.model_target_type == model_target_type)
         total = (
-            self.db.scalar(
-                select(func.count(PredictionResult.id)).where(
-                    PredictionResult.student_id == student_id
-                )
-            )
-            or 0
+            self.db.scalar(select(func.count(PredictionResult.id)).where(*filters)) or 0
         )
         statement = (
             select(PredictionResult)
@@ -148,7 +174,7 @@ class PredictionRepository:
                 joinedload(PredictionResult.student),
                 joinedload(PredictionResult.model_version),
             )
-            .where(PredictionResult.student_id == student_id)
+            .where(*filters)
             .order_by(PredictionResult.predicted_at.desc(), PredictionResult.id.desc())
             .offset((page - 1) * page_size)
             .limit(page_size)

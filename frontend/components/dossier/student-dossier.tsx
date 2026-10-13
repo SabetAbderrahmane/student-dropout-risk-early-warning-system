@@ -29,6 +29,7 @@ import { CaseDetail } from "./case-detail";
 import { FollowUpDetail } from "./follow-up-detail";
 import { DossierOverview } from "./dossier-overview";
 import { DossierForm } from "./dossier-form";
+import { stageLabel, type StageSelection } from "@/types/outcome";
 
 const tabs = [
   "Overview",
@@ -51,6 +52,8 @@ export function StudentDossier({ studentId }: { studentId: string }) {
   const [tab, setTab] = useState<Tab>("Overview");
   const [dialog, setDialog] = useState<Dialog | null>(null);
   const [reviewBusy, setReviewBusy] = useState(false);
+  const [predictionStage, setPredictionStage] =
+    useState<StageSelection>("ENROLLMENT");
   const p = state.profile;
   const u = state.user;
   const close = () => {
@@ -107,8 +110,20 @@ export function StudentDossier({ studentId }: { studentId: string }) {
   const predictionButton = state.canEdit ? (
     <button
       className="dash-button dash-button-primary"
-      disabled={state.busy || p?.prediction_readiness.status !== "READY"}
-      onClick={() => setDialog({ kind: "predict" })}
+      disabled={
+        state.busy ||
+        !(
+          p?.prediction_readiness.status === "READY" ||
+          p?.stage_readiness.some((stage) => stage.status === "READY")
+        )
+      }
+      onClick={() => {
+        setPredictionStage(
+          p?.stage_readiness.find((stage) => stage.status === "READY")
+            ?.prediction_stage ?? "LEGACY",
+        );
+        setDialog({ kind: "predict" });
+      }}
     >
       Run Prediction
     </button>
@@ -202,7 +217,12 @@ export function StudentDossier({ studentId }: { studentId: string }) {
                   </p>
                 </div>
                 <div className="dossier-identity-risk">
-                  <small>Latest dropout probability</small>
+                  <small>
+                    Latest dropout probability
+                    {p.latest_prediction
+                      ? ` · ${stageLabel(p.latest_prediction.prediction_stage)}`
+                      : ""}
+                  </small>
                   <strong>
                     {p.latest_prediction
                       ? percent(p.latest_prediction.probability)
@@ -439,6 +459,29 @@ export function StudentDossier({ studentId }: { studentId: string }) {
           <p className="dossier-muted">
             Readiness is checked again before the prediction is saved.
           </p>
+          <label className="dossier-stage-select">
+            Prediction stage
+            <select
+              disabled={state.busy}
+              value={predictionStage}
+              onChange={(event) =>
+                setPredictionStage(event.target.value as StageSelection)
+              }
+            >
+              {(["ENROLLMENT", "FIRST_SEMESTER", "LEGACY"] as const).map(
+                (stage) => (
+                  <option key={stage} value={stage}>
+                    {stageLabel(stage)}
+                  </option>
+                ),
+              )}
+            </select>
+          </label>
+          <p className="dossier-muted">
+            {predictionStage === "LEGACY"
+              ? "Uses the preserved binary model and its 30-input contract."
+              : `${p.stage_readiness.find((stage) => stage.prediction_stage === predictionStage)?.available_feature_count ?? 0} / ${p.stage_readiness.find((stage) => stage.prediction_stage === predictionStage)?.required_feature_count ?? 0} inputs available · Model ${p.stage_readiness.find((stage) => stage.prediction_stage === predictionStage)?.model_status.toLowerCase() ?? "unavailable"}.`}
+          </p>
           {state.error && (
             <p className="dash-inline-error" role="alert">
               {state.error}
@@ -454,11 +497,25 @@ export function StudentDossier({ studentId }: { studentId: string }) {
             </button>
             <button
               className="dash-button dash-button-primary"
-              disabled={state.busy || p.prediction_readiness.status !== "READY"}
+              disabled={
+                state.busy ||
+                (predictionStage === "LEGACY"
+                  ? p.prediction_readiness.status !== "READY"
+                  : p.stage_readiness.find(
+                      (stage) => stage.prediction_stage === predictionStage,
+                    )?.status !== "READY")
+              }
               onClick={() =>
                 void state
                   .mutate(
-                    () => predictStudent(state.token, studentId),
+                    () =>
+                      predictStudent(
+                        state.token,
+                        studentId,
+                        predictionStage === "LEGACY"
+                          ? undefined
+                          : predictionStage,
+                      ),
                     "Prediction saved. Risk and warning information have been refreshed.",
                   )
                   .then((error) => {

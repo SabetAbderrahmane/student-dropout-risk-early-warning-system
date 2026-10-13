@@ -1,0 +1,554 @@
+{
+  "artifact_path": "app/ml/artifacts/enrollment-outcome-v1/model.joblib",
+  "class_labels": [
+    "DROPOUT",
+    "ENROLLED",
+    "GRADUATE"
+  ],
+  "counts": {
+    "final_test": 885,
+    "fitting": 2123,
+    "probability_calibration": 708,
+    "threshold_calibration": 708
+  },
+  "dataset": {
+    "canonical_csv_sha256": "4b15c8e0b1fc9ea1e7994caaff47db72c07e0049bf9e47758aa53c2fc7fd6376",
+    "class_counts": {
+      "Dropout": 1421,
+      "Enrolled": 794,
+      "Graduate": 2209
+    },
+    "dataset_id": 697,
+    "exact_duplicate_rows": 0,
+    "excluded_macroeconomic_reason": "Observation/release vintage is unavailable at either stage cutoff",
+    "homepage": "https://archive.ics.uci.edu/dataset/697/",
+    "independence_limitation": "Student rows have no identity/group/time fields for temporal or institutional validation",
+    "license": "CC BY 4.0",
+    "missing_values": 0,
+    "name": "Predict Students' Dropout and Academic Success",
+    "rows": 4424
+  },
+  "explanation_method": "Model-agnostic single-feature reference perturbation of calibrated P(Dropout): observed probability minus probability after replacing one feature with its fitting-partition median (numeric) or mode (categorical). Non-causal; not SHAP.",
+  "explanation_reference": {
+    "admission_grade": 126.0,
+    "age_at_enrollment": 20.0,
+    "application_mode_code": 1.0,
+    "application_order": 1.0,
+    "course_code": 9500.0,
+    "daytime_evening_attendance": 1.0,
+    "debtor": 0.0,
+    "displaced": 1.0,
+    "educational_special_needs": 0.0,
+    "father_occupation_code": 9.0,
+    "father_qualification_code": 37.0,
+    "gender_code": 0.0,
+    "international_student": 0.0,
+    "marital_status_code": 1.0,
+    "mother_occupation_code": 9.0,
+    "mother_qualification_code": 1.0,
+    "nationality_code": 1.0,
+    "previous_qualification_code": 1.0,
+    "previous_qualification_grade": 133.1,
+    "scholarship_holder": 0.0,
+    "tuition_fees_up_to_date": 1.0
+  },
+  "feature_schema_version": "uci697-enrollment-outcome-v1",
+  "features": [
+    "marital_status_code",
+    "application_mode_code",
+    "application_order",
+    "course_code",
+    "daytime_evening_attendance",
+    "previous_qualification_code",
+    "previous_qualification_grade",
+    "nationality_code",
+    "mother_qualification_code",
+    "father_qualification_code",
+    "mother_occupation_code",
+    "father_occupation_code",
+    "admission_grade",
+    "displaced",
+    "educational_special_needs",
+    "debtor",
+    "tuition_fees_up_to_date",
+    "gender_code",
+    "scholarship_holder",
+    "age_at_enrollment",
+    "international_student"
+  ],
+  "final_test_metrics": {
+    "accuracy": 0.6305084745762712,
+    "calibration": {
+      "dropout_brier_score": 0.15631437073052312,
+      "dropout_ece_10_bins": 0.03705371038935989,
+      "dropout_reliability_bins": [
+        {
+          "count": 118,
+          "lower": 0.0,
+          "mean_probability": 0.08485649220489155,
+          "observed_dropout_rate": 0.09322033898305085,
+          "upper": 0.1
+        },
+        {
+          "count": 249,
+          "lower": 0.1,
+          "mean_probability": 0.15162386400664662,
+          "observed_dropout_rate": 0.12048192771084337,
+          "upper": 0.2
+        },
+        {
+          "count": 141,
+          "lower": 0.2,
+          "mean_probability": 0.24541447942502082,
+          "observed_dropout_rate": 0.22695035460992907,
+          "upper": 0.3
+        },
+        {
+          "count": 92,
+          "lower": 0.3,
+          "mean_probability": 0.3537611697699009,
+          "observed_dropout_rate": 0.391304347826087,
+          "upper": 0.4
+        },
+        {
+          "count": 93,
+          "lower": 0.4,
+          "mean_probability": 0.448570559497309,
+          "observed_dropout_rate": 0.41935483870967744,
+          "upper": 0.5
+        },
+        {
+          "count": 56,
+          "lower": 0.5,
+          "mean_probability": 0.5480511384476331,
+          "observed_dropout_rate": 0.42857142857142855,
+          "upper": 0.6
+        },
+        {
+          "count": 33,
+          "lower": 0.6,
+          "mean_probability": 0.6444544140698275,
+          "observed_dropout_rate": 0.6363636363636364,
+          "upper": 0.7
+        },
+        {
+          "count": 46,
+          "lower": 0.7,
+          "mean_probability": 0.7646621017911363,
+          "observed_dropout_rate": 0.8260869565217391,
+          "upper": 0.8
+        },
+        {
+          "count": 57,
+          "lower": 0.8,
+          "mean_probability": 0.8334494931793086,
+          "observed_dropout_rate": 0.9298245614035088,
+          "upper": 0.9
+        },
+        {
+          "count": 0,
+          "lower": 0.9,
+          "mean_probability": null,
+          "observed_dropout_rate": null,
+          "upper": 1.0
+        }
+      ],
+      "multiclass_brier_score": 0.48977086303296175
+    },
+    "confusion_matrix": {
+      "labels": [
+        "DROPOUT",
+        "ENROLLED",
+        "GRADUATE"
+      ],
+      "rows_actual_columns_predicted": [
+        [
+          188,
+          7,
+          89
+        ],
+        [
+          47,
+          8,
+          104
+        ],
+        [
+          73,
+          7,
+          362
+        ]
+      ]
+    },
+    "dropout_pr_auc": 0.7114026979624344,
+    "dropout_precision": 0.6103896103896104,
+    "dropout_recall": 0.6619718309859155,
+    "evaluation_scope": "FINAL_TEST_SET",
+    "log_loss": 0.8408243541087811,
+    "macro_f1": 0.48323715359906805,
+    "macro_precision": 0.542092742092742,
+    "macro_recall": 0.5104302737605327,
+    "multiclass_roc_auc_ovr": 0.750389370312067,
+    "per_class": {
+      "DROPOUT": {
+        "f1": 0.6351351351351351,
+        "precision": 0.6103896103896104,
+        "recall": 0.6619718309859155,
+        "support": 284
+      },
+      "ENROLLED": {
+        "f1": 0.08839779005524862,
+        "precision": 0.36363636363636365,
+        "recall": 0.050314465408805034,
+        "support": 159
+      },
+      "GRADUATE": {
+        "f1": 0.7261785356068204,
+        "precision": 0.6522522522522523,
+        "recall": 0.8190045248868778,
+        "support": 442
+      }
+    },
+    "sample_size": 885,
+    "weighted_f1": 0.5823780110004265
+  },
+  "model_name": "Random Forest",
+  "model_target_type": "MULTICLASS_OUTCOME",
+  "model_version": "enrollment-outcome-v1",
+  "prediction_stage": "ENROLLMENT",
+  "preprocessing": "Fold-local median imputation/scaling and mode imputation/one-hot encoding, unknown categories ignored",
+  "probability_calibration": {
+    "after": {
+      "accuracy": 0.6483050847457628,
+      "calibration": {
+        "dropout_brier_score": 0.15418759134719423,
+        "dropout_ece_10_bins": 0.04396705134216865,
+        "dropout_reliability_bins": [
+          {
+            "count": 82,
+            "lower": 0.0,
+            "mean_probability": 0.08316120427849819,
+            "observed_dropout_rate": 0.036585365853658534,
+            "upper": 0.1
+          },
+          {
+            "count": 205,
+            "lower": 0.1,
+            "mean_probability": 0.1494618404916675,
+            "observed_dropout_rate": 0.13170731707317074,
+            "upper": 0.2
+          },
+          {
+            "count": 124,
+            "lower": 0.2,
+            "mean_probability": 0.24858705278754117,
+            "observed_dropout_rate": 0.27419354838709675,
+            "upper": 0.3
+          },
+          {
+            "count": 78,
+            "lower": 0.3,
+            "mean_probability": 0.3473865160906071,
+            "observed_dropout_rate": 0.2692307692307692,
+            "upper": 0.4
+          },
+          {
+            "count": 45,
+            "lower": 0.4,
+            "mean_probability": 0.44952186578736575,
+            "observed_dropout_rate": 0.35555555555555557,
+            "upper": 0.5
+          },
+          {
+            "count": 59,
+            "lower": 0.5,
+            "mean_probability": 0.5443080883725316,
+            "observed_dropout_rate": 0.5254237288135594,
+            "upper": 0.6
+          },
+          {
+            "count": 36,
+            "lower": 0.6,
+            "mean_probability": 0.653748693488992,
+            "observed_dropout_rate": 0.75,
+            "upper": 0.7
+          },
+          {
+            "count": 32,
+            "lower": 0.7,
+            "mean_probability": 0.7506675229641158,
+            "observed_dropout_rate": 0.8125,
+            "upper": 0.8
+          },
+          {
+            "count": 47,
+            "lower": 0.8,
+            "mean_probability": 0.838040954994488,
+            "observed_dropout_rate": 0.9148936170212766,
+            "upper": 0.9
+          },
+          {
+            "count": 0,
+            "lower": 0.9,
+            "mean_probability": null,
+            "observed_dropout_rate": null,
+            "upper": 1.0
+          }
+        ],
+        "multiclass_brier_score": 0.47515480554745465
+      },
+      "confusion_matrix": {
+        "labels": [
+          "DROPOUT",
+          "ENROLLED",
+          "GRADUATE"
+        ],
+        "rows_actual_columns_predicted": [
+          [
+            145,
+            6,
+            77
+          ],
+          [
+            42,
+            10,
+            75
+          ],
+          [
+            46,
+            3,
+            304
+          ]
+        ]
+      },
+      "dropout_pr_auc": 0.7232706142925048,
+      "dropout_precision": 0.6223175965665236,
+      "dropout_recall": 0.6359649122807017,
+      "evaluation_scope": "DEVELOPMENT_THRESHOLD_HOLDOUT",
+      "log_loss": 0.8203388416562616,
+      "macro_f1": 0.5058662213060311,
+      "macro_precision": 0.6051000175689581,
+      "macro_recall": 0.5252982904869111,
+      "multiclass_roc_auc_ovr": 0.7704854783550926,
+      "per_class": {
+        "DROPOUT": {
+          "f1": 0.6290672451193059,
+          "precision": 0.6223175965665236,
+          "recall": 0.6359649122807017,
+          "support": 228
+        },
+        "ENROLLED": {
+          "f1": 0.136986301369863,
+          "precision": 0.5263157894736842,
+          "recall": 0.07874015748031496,
+          "support": 127
+        },
+        "GRADUATE": {
+          "f1": 0.7515451174289246,
+          "precision": 0.6666666666666666,
+          "recall": 0.8611898016997167,
+          "support": 353
+        }
+      },
+      "sample_size": 708,
+      "weighted_f1": 0.6018644330700349
+    },
+    "before": {
+      "accuracy": 0.5988700564971752,
+      "calibration": {
+        "dropout_brier_score": 0.15699289784271783,
+        "dropout_ece_10_bins": 0.05594253944159358,
+        "dropout_reliability_bins": [
+          {
+            "count": 30,
+            "lower": 0.0,
+            "mean_probability": 0.08787562195554906,
+            "observed_dropout_rate": 0.0,
+            "upper": 0.1
+          },
+          {
+            "count": 160,
+            "lower": 0.1,
+            "mean_probability": 0.15634931047659012,
+            "observed_dropout_rate": 0.0875,
+            "upper": 0.2
+          },
+          {
+            "count": 194,
+            "lower": 0.2,
+            "mean_probability": 0.24583445746224053,
+            "observed_dropout_rate": 0.20103092783505155,
+            "upper": 0.3
+          },
+          {
+            "count": 118,
+            "lower": 0.3,
+            "mean_probability": 0.3415647756092967,
+            "observed_dropout_rate": 0.3220338983050847,
+            "upper": 0.4
+          },
+          {
+            "count": 76,
+            "lower": 0.4,
+            "mean_probability": 0.4507612046446279,
+            "observed_dropout_rate": 0.47368421052631576,
+            "upper": 0.5
+          },
+          {
+            "count": 41,
+            "lower": 0.5,
+            "mean_probability": 0.5472516367900954,
+            "observed_dropout_rate": 0.6341463414634146,
+            "upper": 0.6
+          },
+          {
+            "count": 34,
+            "lower": 0.6,
+            "mean_probability": 0.646400205947144,
+            "observed_dropout_rate": 0.7352941176470589,
+            "upper": 0.7
+          },
+          {
+            "count": 31,
+            "lower": 0.7,
+            "mean_probability": 0.7499162846311971,
+            "observed_dropout_rate": 0.8387096774193549,
+            "upper": 0.8
+          },
+          {
+            "count": 24,
+            "lower": 0.8,
+            "mean_probability": 0.8383828413620282,
+            "observed_dropout_rate": 1.0,
+            "upper": 0.9
+          },
+          {
+            "count": 0,
+            "lower": 0.9,
+            "mean_probability": null,
+            "observed_dropout_rate": null,
+            "upper": 1.0
+          }
+        ],
+        "multiclass_brier_score": 0.5224192392479536
+      },
+      "confusion_matrix": {
+        "labels": [
+          "DROPOUT",
+          "ENROLLED",
+          "GRADUATE"
+        ],
+        "rows_actual_columns_predicted": [
+          [
+            145,
+            43,
+            40
+          ],
+          [
+            30,
+            64,
+            33
+          ],
+          [
+            55,
+            83,
+            215
+          ]
+        ]
+      },
+      "dropout_pr_auc": 0.7230159699791296,
+      "dropout_precision": 0.6304347826086957,
+      "dropout_recall": 0.6359649122807017,
+      "evaluation_scope": "DEVELOPMENT_THRESHOLD_HOLDOUT",
+      "log_loss": 0.8875737888909866,
+      "macro_f1": 0.5692666983193592,
+      "macro_precision": 0.5712682218832105,
+      "macro_recall": 0.5829890253206943,
+      "multiclass_roc_auc_ovr": 0.769247942860834,
+      "per_class": {
+        "DROPOUT": {
+          "f1": 0.6331877729257642,
+          "precision": 0.6304347826086957,
+          "recall": 0.6359649122807017,
+          "support": 228
+        },
+        "ENROLLED": {
+          "f1": 0.4037854889589905,
+          "precision": 0.3368421052631579,
+          "recall": 0.5039370078740157,
+          "support": 127
+        },
+        "GRADUATE": {
+          "f1": 0.6708268330733229,
+          "precision": 0.7465277777777778,
+          "recall": 0.6090651558073654,
+          "support": 353
+        }
+      },
+      "sample_size": 708,
+      "weighted_f1": 0.6108042957623574
+    },
+    "method": "sigmoid, frozen base estimator, separate development probability-calibration partition",
+    "sample_size": 708
+  },
+  "random_seed": 42,
+  "runtime_versions": {
+    "joblib": "1.6.0",
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "python": "3.11.9",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.17.1",
+    "xgboost": "3.2.0"
+  },
+  "selected_hyperparameters": {
+    "model__class_weight": "balanced",
+    "model__max_depth": 16,
+    "model__min_samples_leaf": 6,
+    "model__n_estimators": 250
+  },
+  "selection": {
+    "constraints": {
+      "minimum_dropout_recall": 0.55,
+      "minimum_macro_f1": 0.45
+    },
+    "cv_folds": 5,
+    "method": "0.40 dropout recall + 0.30 dropout PR-AUC + 0.20 macro F1 + 0.10 dropout precision",
+    "reason": "Maximum eligible dropout-oriented development CV score; final test unavailable during selection",
+    "score": 0.6542915235782197,
+    "search_iterations_per_family": 6,
+    "selected_hyperparameters": {
+      "model__class_weight": "balanced",
+      "model__max_depth": 16,
+      "model__min_samples_leaf": 6,
+      "model__n_estimators": 250
+    },
+    "winner": "Random Forest"
+  },
+  "split_sha256": {
+    "final_test": "de6543c05ab9f5217ac461430845211cb2d0046be45724fd4e407c6db8a4798c",
+    "fitting": "7fbec54c1702026918b3c0bda0a84b4839c170c0f08a813ad773d3f78cacd8d6",
+    "probability_calibration": "966e65db3c4b8b8166e29bf331417f6ddd4c6c9b0a7c2e6b9af5145cb533914f",
+    "threshold_calibration": "a56f00df984cd81e94c3edd0c01895db38310d5cd385a151249488c6e97a9cdb"
+  },
+  "target_mapping": {
+    "Dropout": 0,
+    "Enrolled": 1,
+    "Graduate": 2
+  },
+  "thresholds": {
+    "calibration_source": "Disjoint development risk-threshold partition; not final test",
+    "dropout_count": 228,
+    "high_achieved_precision": 0.5653710247349824,
+    "high_achieved_recall": 0.7017543859649122,
+    "high_target_recall": 0.7,
+    "high_threshold": 0.3198928692997696,
+    "low_achieved_precision": 0.430062630480167,
+    "low_achieved_recall": 0.9035087719298246,
+    "low_target_recall": 0.9,
+    "low_threshold": 0.1663330378872195,
+    "method": "LOW largest threshold retaining >=90% dropout recall; HIGH maximum precision retaining >=70% recall and greater than LOW; no fallback",
+    "model_version": "enrollment-outcome-v1",
+    "sample_size": 708
+  },
+  "trained_at": "2026-10-11T17:03:32.113499+00:00"
+}

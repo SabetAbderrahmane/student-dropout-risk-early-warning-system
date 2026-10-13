@@ -5,6 +5,94 @@
   color: var(--text-muted);
   font-weight: 400;
 }
+.outcome-catalog {
+  margin: 24px 0 32px;
+}
+.outcome-comparison {
+  margin-top: 18px;
+}
+.outcome-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+.outcome-metrics div {
+  min-width: 0;
+}
+.outcome-metrics dt {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.outcome-metrics dd {
+  margin: 4px 0 0;
+  font-weight: 650;
+  color: var(--text-primary);
+}
+.outcome-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.outcome-table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.outcome-table th,
+.outcome-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: left;
+}
+.outcome-table caption {
+  text-align: left;
+  padding-bottom: 10px;
+  color: var(--text-muted);
+}
+.outcome-form {
+  display: grid;
+  gap: 16px;
+  border: 0;
+  padding: 0;
+  margin: 18px 0;
+}
+.outcome-form label {
+  display: grid;
+  gap: 8px;
+}
+.outcome-form input,
+.outcome-form select {
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface);
+  color: var(--text-primary);
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+.outcome-form .outcome-confirm {
+  display: flex;
+  align-items: center;
+}
+.outcome-checksum {
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+.outcome-audit {
+  max-height: 360px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+.outcome-table-scroll:focus-visible,
+.outcome-form input:focus-visible,
+.outcome-form select:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
 .prediction-muted {
   color: var(--text-muted);
   font-size: 12px;

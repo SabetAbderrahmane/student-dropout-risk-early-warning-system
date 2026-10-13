@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.core.exceptions import ApplicationError
 from app.ml.feature_schema import PREDICTION_FEATURES
 from app.ml.inference_features import FeatureAssembly, assemble_prediction_features
+from app.ml.outcomes.contracts import ModelTargetType, PredictionStage
 from app.ml.runtime import ModelRuntime, get_model_runtime
 from app.models.prediction import ModelVersion, PredictionResult, RiskLevel
 from app.models.student import Student
@@ -47,7 +48,11 @@ class PredictionService:
             missing_features=list(assembly.missing_features),
         )
 
-    def readiness(self, student_id: UUID) -> PredictionReadiness:
+    def readiness(self, student_id: UUID, stage: PredictionStage | None = None):
+        if stage is not None:
+            from app.services.outcome_prediction_service import OutcomePredictionService
+
+            return OutcomePredictionService(self.db).stage_readiness(student_id, stage)
         return self._readiness(assemble_prediction_features(self._student(student_id)))
 
     def synchronize_registry(self, runtime: ModelRuntime | None = None) -> ModelVersion:
@@ -146,6 +151,11 @@ class PredictionService:
             student_number=prediction.student.student_number,
             student_name=prediction.student.name,
             probability=prediction.probability,
+            dropout_probability=prediction.probability,
+            prediction_stage=prediction.prediction_stage,
+            model_target_type=prediction.model_target_type,
+            predicted_outcome=prediction.predicted_outcome,
+            class_probabilities=prediction.class_probabilities,
             risk_level=prediction.risk_level,
             model_version=prediction.model_version.model_version,
             top_explanation_factors=prediction.explanation,
@@ -153,8 +163,18 @@ class PredictionService:
         )
 
     def predict_student(
-        self, student_id: UUID, *, created_by: UUID
+        self,
+        student_id: UUID,
+        *,
+        created_by: UUID,
+        stage: PredictionStage | None = None,
     ) -> PredictionDetail:
+        if stage is not None:
+            from app.services.outcome_prediction_service import OutcomePredictionService
+
+            return OutcomePredictionService(self.db).predict_stage(
+                student_id, stage, created_by=created_by
+            )
         student = self._student(student_id)
         assembly = assemble_prediction_features(student)
         readiness = self._readiness(assembly)
@@ -183,7 +203,15 @@ class PredictionService:
             raise
         return self.get_prediction(prediction.id)
 
-    def predict_batch(self, *, created_by: UUID) -> BatchPredictionResponse:
+    def predict_batch(
+        self, *, created_by: UUID, stage: PredictionStage | None = None
+    ) -> BatchPredictionResponse:
+        if stage is not None:
+            from app.services.outcome_prediction_service import OutcomePredictionService
+
+            return OutcomePredictionService(self.db).predict_stage_batch(
+                stage, created_by=created_by
+            )
         runtime = get_model_runtime()
         model = self.synchronize_registry(runtime)
         students = self.repository.list_student_graphs()
@@ -231,7 +259,7 @@ class PredictionService:
             **summary,
             feature_snapshot={
                 name: prediction.feature_snapshot[name]
-                for name in (item.name for item in PREDICTION_FEATURES)
+                for name in prediction.model_version.metadata_json["features"]
             },
             explanation_method=prediction.model_version.metadata_json[
                 "explanation_method"
@@ -251,11 +279,21 @@ class PredictionService:
         )
 
     def student_history(
-        self, student_id: UUID, *, page: int, page_size: int
+        self,
+        student_id: UUID,
+        *,
+        page: int,
+        page_size: int,
+        prediction_stage: PredictionStage | None = None,
+        model_target_type: ModelTargetType | None = None,
     ) -> PredictionPage:
         self._student(student_id)
         predictions, total = self.repository.list_student_history(
-            student_id, page=page, page_size=page_size
+            student_id,
+            page=page,
+            page_size=page_size,
+            prediction_stage=prediction_stage,
+            model_target_type=model_target_type,
         )
         return PredictionPage.create(
             items=[self._summary(item) for item in predictions],

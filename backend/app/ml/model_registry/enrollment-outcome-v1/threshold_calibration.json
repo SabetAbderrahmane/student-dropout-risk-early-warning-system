@@ -1,0 +1,15 @@
+{
+  "calibration_source": "Disjoint development risk-threshold partition; not final test",
+  "dropout_count": 228,
+  "high_achieved_precision": 0.5653710247349824,
+  "high_achieved_recall": 0.7017543859649122,
+  "high_target_recall": 0.7,
+  "high_threshold": 0.3198928692997696,
+  "low_achieved_precision": 0.430062630480167,
+  "low_achieved_recall": 0.9035087719298246,
+  "low_target_recall": 0.9,
+  "low_threshold": 0.1663330378872195,
+  "method": "LOW largest threshold retaining >=90% dropout recall; HIGH maximum precision retaining >=70% recall and greater than LOW; no fallback",
+  "model_version": "enrollment-outcome-v1",
+  "sample_size": 708
+}

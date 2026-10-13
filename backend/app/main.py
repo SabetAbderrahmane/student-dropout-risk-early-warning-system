@@ -18,6 +18,7 @@ from app.core.exceptions import (
 from app.core.logging import configure_logging
 from app.db.session import SessionLocal
 from app.ml.runtime import initialize_model_runtime
+from app.services.model_catalog_service import ModelCatalogService
 from app.services.prediction_service import PredictionService
 
 settings = get_settings()
@@ -32,6 +33,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         try:
             with SessionLocal() as db:
                 PredictionService(db).synchronize_registry(runtime)
+                ModelCatalogService(db).register_new_models()
         except (ApplicationError, SQLAlchemyError):
             logger.warning("Model registry startup synchronization was deferred.")
     yield

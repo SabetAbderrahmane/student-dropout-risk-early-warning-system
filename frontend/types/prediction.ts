@@ -1,5 +1,11 @@
 import type { RiskLevel } from "./registry";
 import type { ExplanationFactor } from "./warning";
+import type {
+  AcademicOutcome,
+  ClassProbabilities,
+  ModelTargetType,
+  PredictionStage,
+} from "./outcome";
 export interface PredictionParams {
   page: number;
   page_size: number;
@@ -7,6 +13,8 @@ export interface PredictionParams {
   risk_level?: RiskLevel;
   model_version?: string;
   student_id?: string;
+  prediction_stage?: PredictionStage;
+  model_target_type?: ModelTargetType;
   sort:
     | "predicted_at"
     | "probability"
@@ -25,6 +33,11 @@ export interface PredictionRow {
   model_version: string;
   top_explanation_factors: ExplanationFactor[];
   predicted_at: string;
+  prediction_stage: PredictionStage;
+  model_target_type: ModelTargetType;
+  predicted_outcome: AcademicOutcome | null;
+  class_probabilities: ClassProbabilities | null;
+  dropout_probability: number;
 }
 export interface PredictionPage {
   items: PredictionRow[];
