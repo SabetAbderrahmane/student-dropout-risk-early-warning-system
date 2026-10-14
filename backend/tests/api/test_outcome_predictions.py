@@ -165,7 +165,7 @@ def test_genuine_enrollment_without_semester_and_first_semester_reassessment(
         "FIRST_SEMESTER",
     }
     overview = client.get(
-        "/api/v1/dashboard/overview", headers=headers[UserRole.ACADEMIC_ADMIN]
+        "/api/v1/dashboard/overview?prediction_scope=LEGACY_BINARY_FIRST_SEMESTER", headers=headers[UserRole.ACADEMIC_ADMIN]
     ).json()
     assert overview["prediction_scope"] == "LEGACY_BINARY_FIRST_SEMESTER"
     assert overview["students"]["with_latest_prediction"] == 0

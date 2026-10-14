@@ -1,4 +1,5 @@
 import type { RiskLevel } from "./registry";
+import type { PredictionFreshnessFields } from "./assessment";
 import type { ExplanationFactor } from "./warning";
 import type {
   AcademicOutcome,
@@ -23,7 +24,7 @@ export interface PredictionParams {
     | "model_version";
   order: "asc" | "desc";
 }
-export interface PredictionRow {
+export interface PredictionRow extends PredictionFreshnessFields {
   id: string;
   student_id: string;
   student_number: string;

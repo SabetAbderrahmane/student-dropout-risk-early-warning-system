@@ -144,6 +144,20 @@ class ModelVersion(Base):
 class PredictionResult(Base):
     __tablename__ = "prediction_results"
     __table_args__ = (
+        Index("ix_predictions_student_stage", "student_id", "prediction_stage"),
+        Index(
+            "ix_predictions_student_model_latest",
+            "student_id",
+            "model_version_id",
+            text("predicted_at DESC"),
+            text("id DESC"),
+        ),
+        Index(
+            "ix_predictions_student_latest",
+            "student_id",
+            text("predicted_at DESC"),
+            text("id DESC"),
+        ),
         CheckConstraint(
             "probability >= 0 AND probability <= 1", name="probability_range"
         ),

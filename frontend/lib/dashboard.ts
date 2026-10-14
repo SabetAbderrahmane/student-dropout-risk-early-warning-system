@@ -44,12 +44,13 @@ export function factorLabel(factor: Record<string, unknown>): string {
   }
   return "Prediction factor";
 }
-export function isWarningPriority(value: string): value is WarningPriority {
-  return ["P1_URGENT", "P2_ELEVATED", "P3_STANDARD"].includes(value);
+export function isWarningPriority(value: string | null): value is WarningPriority {
+  return value !== null && ["P1_URGENT", "P2_ELEVATED", "P3_STANDARD"].includes(value);
 }
 export function canReview(user: User, student: AttentionStudent): boolean {
   return (
     user.role === "ACADEMIC_ADVISOR" &&
+    !!student.warning_id &&
     student.review_state === "PENDING_REVIEW" &&
     student.assigned_advisor?.user_id === user.id
   );
@@ -57,6 +58,7 @@ export function canReview(user: User, student: AttentionStudent): boolean {
 export function canIntervene(user: User, student: AttentionStudent): boolean {
   return (
     student.review_state === "CONFIRMED" &&
+    !!student.warning_id &&
     !!student.assigned_advisor &&
     isWarningPriority(student.priority) &&
     (user.role === "ACADEMIC_ADMIN" ||

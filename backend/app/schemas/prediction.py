@@ -12,6 +12,7 @@ from app.ml.outcomes.contracts import (
     PredictionStage,
 )
 from app.models.prediction import RiskLevel
+from app.services.assessment_service import PredictionFreshness
 
 
 class PredictionReadiness(BaseModel):
@@ -46,6 +47,11 @@ class PredictionResponse(BaseModel):
     predicted_outcome: AcademicOutcome | None = None
     class_probabilities: dict[str, float] | None = None
     dropout_probability: float
+    prediction_freshness: PredictionFreshness = PredictionFreshness.NO_PREDICTION
+    is_operational_current: bool = False
+    requires_reassessment: bool = False
+    changed_features: list[str] = []
+    missing_features: list[str] = []
 
     @model_validator(mode="after")
     def validate_classification(self):
@@ -91,7 +97,7 @@ class PredictionResponse(BaseModel):
 
 
 class PredictionDetail(PredictionResponse):
-    feature_snapshot: dict[str, int | float]
+    feature_snapshot: dict[str, Any]
     explanation_method: str
     created_by: UUID | None
 

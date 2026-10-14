@@ -489,7 +489,7 @@ def test_supported_postgres_dual_stage_workflow_uses_real_models(
                 )
             overview = client.get("/api/v1/dashboard/overview", headers=academic).json()
             assert overview["model"]["version"] == "dropout-logistic-regression-v1"
-            assert overview["students"]["with_latest_prediction"] == 0
+            assert overview["students"]["current_assessed"] == 1
             profile = client.get(url + "/profile", headers=academic).json()
             assert any(
                 w["id"] == warning_id and w["review_state"] == "CONFIRMED"

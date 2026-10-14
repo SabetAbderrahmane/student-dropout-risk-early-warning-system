@@ -2,6 +2,21 @@
   box-sizing: border-box;
 }
 
+.assessment-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--ink);
+  background: var(--surface);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 4px 0;
+}
+.assessment-notice { margin: 8px 0 16px; }
+.assessment-notice p { font-size: 0.85rem; line-height: 1.6; }
+
 html,
 body {
   min-height: 100%;

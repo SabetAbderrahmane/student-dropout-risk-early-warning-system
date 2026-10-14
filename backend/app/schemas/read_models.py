@@ -9,12 +9,29 @@ from pydantic import BaseModel, ConfigDict
 
 from app.ml.outcomes.contracts import AcademicOutcome, ModelTargetType, PredictionStage
 from app.schemas.prediction import StageReadiness
+from app.services.assessment_service import PredictionFreshness
+
+
+class AssessmentFields(BaseModel):
+    assessment_as_of: datetime
+    assessment_status: PredictionFreshness
+    reassessment_required: bool
+    recommended_stage: PredictionStage
+    recommended_target_type: ModelTargetType
+    recommended_model_version: str | None
+    recommended_model_available: bool
+    enrollment_ready: bool
+    first_semester_ready: bool
+    legacy_ready: bool
 
 
 class Counts(BaseModel):
     total: int
     prediction_ready: int
     with_latest_prediction: int
+    current_assessed: int = 0
+    reassessment_required: int = 0
+    without_predictions: int = 0
 
 
 class RiskCounts(BaseModel):
@@ -78,14 +95,17 @@ class AttentionStudent(BaseModel):
     student_id: UUID
     student_number: str
     name: str
-    probability: float
-    risk_level: str
-    warning_id: UUID
-    priority: str
-    review_state: str
+    probability: float | None
+    risk_level: str | None
+    warning_id: UUID | None
+    priority: str | None
+    review_state: str | None
     assigned_advisor: Advisor | None
-    predicted_at: datetime
+    predicted_at: datetime | None
     top_explanation_factors: list[dict[str, Any]]
+    assessment_status: PredictionFreshness = PredictionFreshness.NO_PREDICTION
+    attention_reason: str = "CURRENT_RISK"
+    prediction_stage: PredictionStage | None = None
 
 
 class DashboardOverview(BaseModel):
@@ -100,9 +120,10 @@ class DashboardOverview(BaseModel):
     warning_activity: list[WarningActivity]
     intervention_activity: list[InterventionActivity]
     attention_students: list[AttentionStudent]
-    prediction_scope: Literal["LEGACY_BINARY_FIRST_SEMESTER"] = (
-        "LEGACY_BINARY_FIRST_SEMESTER"
+    prediction_scope: Literal["OPERATIONAL_CURRENT", "LEGACY_BINARY_FIRST_SEMESTER"] = (
+        "OPERATIONAL_CURRENT"
     )
+    legacy_risk_distribution: RiskCounts = RiskCounts(low=0, medium=0, high=0)
     support_scope: Literal["ALL_PREDICTION_STAGES"] = "ALL_PREDICTION_STAGES"
 
 
@@ -142,6 +163,12 @@ class PredictionSummary(BaseModel):
     model_target_type: ModelTargetType = ModelTargetType.BINARY_DROPOUT
     predicted_outcome: AcademicOutcome | None = None
     class_probabilities: dict[str, float] | None = None
+    model_version: str | None = None
+    prediction_freshness: PredictionFreshness = PredictionFreshness.NO_PREDICTION
+    is_operational_current: bool = False
+    requires_reassessment: bool = False
+    changed_features: list[str] = []
+    missing_features: list[str] = []
 
 
 class RegistryWarning(BaseModel):
@@ -155,7 +182,7 @@ class RegistryIntervention(BaseModel):
     status: str
 
 
-class RegistryRow(BaseModel):
+class RegistryRow(AssessmentFields):
     student_id: UUID
     student_number: str
     name: str
@@ -164,6 +191,8 @@ class RegistryRow(BaseModel):
     semester_one: RegistrySemesterOne | None
     prediction_readiness: Literal["READY", "NOT_READY"]
     latest_prediction: PredictionSummary | None
+    operational_prediction: PredictionSummary | None
+    latest_historical_prediction: PredictionSummary | None
     warning: RegistryWarning | None
     case_owner: Advisor | None
     intervention: RegistryIntervention | None
@@ -237,6 +266,8 @@ class Readiness(BaseModel):
 class ProfilePrediction(PredictionSummary):
     model_version: str
     explanation: list[dict[str, Any]]
+    feature_snapshot: dict[str, Any] = {}
+    explanation_method: str | None = None
 
 
 class ProfileReview(BaseModel):
@@ -296,15 +327,18 @@ class TimelineEvent(BaseModel):
     entity_id: UUID
 
 
-class StudentProfile(BaseModel):
+class StudentProfile(AssessmentFields):
     student: ProfileStudent
     admission: ProfileAdmission | None
     semester_one: SemesterOne | None
     prediction_readiness: Readiness
     latest_prediction: ProfilePrediction | None
+    operational_prediction: ProfilePrediction | None
+    latest_historical_prediction: ProfilePrediction | None
     prediction_history: list[ProfilePrediction]
     active_warning: ProfileWarning | None
     warning_history: list[ProfileWarning]
+    open_warnings: list[ProfileWarning] = []
     interventions: list[ProfileIntervention]
     follow_ups: list[ProfileFollowUp]
     timeline: list[TimelineEvent]

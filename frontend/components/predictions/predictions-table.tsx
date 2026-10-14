@@ -1,3 +1,4 @@
+import { FreshnessBadge } from "./assessment-status";
 import Link from "next/link";
 import type { PredictionPage, PredictionRow } from "@/types/prediction";
 import { percent, readable, timestamp } from "@/lib/dashboard";
@@ -101,7 +102,7 @@ export function PredictionsTable({
                 {[
                   "Student",
                   "Stage / outcome",
-                  "Risk probability",
+                  "Recorded probability",
                   "Risk level",
                   "Top explanation factors",
                   "Model version",
@@ -146,6 +147,7 @@ export function PredictionsTable({
                   </td>
                   <td>
                     <PredictionRiskBadge risk={row.risk_level} />
+                    <FreshnessBadge prediction={row} />
                   </td>
                   <td>
                     {row.top_explanation_factors.length ? (

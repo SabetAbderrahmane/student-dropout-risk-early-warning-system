@@ -5,6 +5,7 @@ import type {
   PredictionStage,
   StageReadiness,
 } from "./outcome";
+import type { AssessmentFields, PredictionFreshnessFields } from "./assessment";
 export type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
 export type WarningState =
   | "PENDING_REVIEW"
@@ -29,6 +30,10 @@ export interface StudentRegistryParams {
   search?: string;
   course_code?: number;
   risk_level?: RiskLevel;
+  current_risk?: RiskLevel | "NONE";
+  assessment_state?: "CURRENT" | "REASSESSMENT_REQUIRED" | "NOT_ASSESSED";
+  prediction_stage?: PredictionStage;
+  stage_readiness?: PredictionReadiness;
   warning_state?: WarningState;
   intervention_state?: InterventionState;
   prediction_readiness?: PredictionReadiness;
@@ -39,7 +44,7 @@ export interface CaseOwner {
   user_id: string;
   full_name: string;
 }
-export interface RegistryPrediction {
+export interface RegistryPrediction extends PredictionFreshnessFields {
   id: string;
   probability: number;
   risk_level: string;
@@ -55,7 +60,7 @@ export interface RegistrySemester {
   approved_units: number;
   approval_rate: number | null;
 }
-export interface RegistryRow {
+export interface RegistryRow extends AssessmentFields {
   student_id: string;
   student_number: string;
   name: string;
@@ -64,6 +69,8 @@ export interface RegistryRow {
   semester_one: RegistrySemester | null;
   prediction_readiness: PredictionReadiness;
   latest_prediction: RegistryPrediction | null;
+  latest_historical_prediction: RegistryPrediction | null;
+  operational_prediction: RegistryPrediction | null;
   warning: { id: string; state: string; priority: string } | null;
   case_owner: CaseOwner | null;
   intervention: { id: string; status: string } | null;
@@ -79,6 +86,8 @@ export interface RegistryPage {
 export interface ProfilePrediction extends RegistryPrediction {
   model_version: string;
   explanation: Array<Record<string, unknown>>;
+  feature_snapshot: Record<string, number>;
+  explanation_method: string | null;
 }
 export interface ProfileWarning {
   id: string;
@@ -124,7 +133,7 @@ export interface ProfileFollowUp {
   assigned_advisor: CaseOwner | null;
   completed_at: string | null;
 }
-export interface StudentProfile {
+export interface StudentProfile extends AssessmentFields {
   stage_readiness: StageReadiness[];
   student: {
     id: string;
@@ -177,9 +186,12 @@ export interface StudentProfile {
     missing_features: string[];
   };
   latest_prediction: ProfilePrediction | null;
+  latest_historical_prediction: ProfilePrediction | null;
+  operational_prediction: ProfilePrediction | null;
   prediction_history: ProfilePrediction[];
   active_warning: ProfileWarning | null;
   warning_history: ProfileWarning[];
+  open_warnings: ProfileWarning[];
   interventions: ProfileIntervention[];
   follow_ups: ProfileFollowUp[];
   timeline: Array<{

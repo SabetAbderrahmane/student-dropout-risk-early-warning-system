@@ -1,10 +1,14 @@
 export interface DashboardOverview {
-  prediction_scope: "LEGACY_BINARY_FIRST_SEMESTER";
+  prediction_scope: "OPERATIONAL_CURRENT" | "LEGACY_BINARY_FIRST_SEMESTER";
+  legacy_risk_distribution: { low: number; medium: number; high: number };
   support_scope: "ALL_PREDICTION_STAGES";
   students: {
     total: number;
     prediction_ready: number;
     with_latest_prediction: number;
+    current_assessed: number;
+    reassessment_required: number;
+    without_predictions: number;
   };
   risk_distribution: { low: number; medium: number; high: number };
   warnings: {
@@ -50,13 +54,16 @@ export interface AttentionStudent {
   student_id: string;
   student_number: string;
   name: string;
-  probability: number;
-  risk_level: string;
-  warning_id: string;
-  priority: string;
-  review_state: string;
+  probability: number | null;
+  risk_level: string | null;
+  warning_id: string | null;
+  priority: string | null;
+  review_state: string | null;
   assigned_advisor: { user_id: string; full_name: string } | null;
-  predicted_at: string;
+  predicted_at: string | null;
+  assessment_status: import("./assessment").PredictionFreshness;
+  attention_reason: string;
+  prediction_stage: import("./outcome").PredictionStage | null;
   top_explanation_factors: Array<Record<string, unknown>>;
 }
 

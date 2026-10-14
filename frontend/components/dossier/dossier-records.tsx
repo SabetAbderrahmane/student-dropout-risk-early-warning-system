@@ -1,3 +1,4 @@
+import { FreshnessBadge, InputChanges } from "@/components/predictions/assessment-status";
 import { readable, percent, timestamp } from "@/lib/dashboard";
 import type {
   StudentProfile,
@@ -139,7 +140,9 @@ export function PredictionRecord({
 }) {
   return (
     <article className="dossier-prediction">
+      <FreshnessBadge prediction={prediction} />
       <OutcomeSummary prediction={prediction} />
+      <InputChanges prediction={prediction} />
       <div className="dossier-row">
         <strong>{percent(prediction.probability)} dropout probability</strong>
         <DossierBadge value={prediction.risk_level} />
@@ -148,6 +151,8 @@ export function PredictionRecord({
         {timestamp(prediction.predicted_at)} · Model {prediction.model_version}
       </p>
       <p className="dossier-id">Prediction {prediction.id}</p>
+      <details><summary>Recorded input snapshot</summary><RecordValues record={prediction.feature_snapshot} /></details>
+      <p className="dossier-muted">{prediction.explanation_method}</p>
       <details>
         <summary>
           Recorded explanation factors ({prediction.explanation.length})

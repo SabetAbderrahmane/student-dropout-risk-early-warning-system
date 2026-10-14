@@ -119,8 +119,7 @@ export function StudentDossier({ studentId }: { studentId: string }) {
       }
       onClick={() => {
         setPredictionStage(
-          p?.stage_readiness.find((stage) => stage.status === "READY")
-            ?.prediction_stage ?? "LEGACY",
+          p?.recommended_target_type === "BINARY_DROPOUT" ? "LEGACY" : p?.recommended_stage ?? "ENROLLMENT",
         );
         setDialog({ kind: "predict" });
       }}
@@ -200,8 +199,8 @@ export function StudentDossier({ studentId }: { studentId: string }) {
                     <span className="dossier-number">
                       {p.student.student_number}
                     </span>
-                    {p.latest_prediction && (
-                      <DossierBadge value={p.latest_prediction.risk_level} />
+                    {p.operational_prediction && (
+                      <DossierBadge value={p.operational_prediction.risk_level} />
                     )}
                   </div>
                   <p>
@@ -210,28 +209,28 @@ export function StudentDossier({ studentId }: { studentId: string }) {
                   </p>
                   <p className="dossier-muted">
                     Warning advisor:{" "}
-                    {p.active_warning
-                      ? (p.active_warning.assigned_advisor?.full_name ??
+                    {p.open_warnings[0]
+                      ? (p.open_warnings[0].assigned_advisor?.full_name ??
                         "Unassigned")
                       : "No active warning"}
                   </p>
                 </div>
                 <div className="dossier-identity-risk">
                   <small>
-                    Latest dropout probability
-                    {p.latest_prediction
-                      ? ` · ${stageLabel(p.latest_prediction.prediction_stage)}`
+                    Current dropout probability
+                    {p.operational_prediction
+                      ? ` · ${stageLabel(p.operational_prediction.prediction_stage)}`
                       : ""}
                   </small>
                   <strong>
-                    {p.latest_prediction
-                      ? percent(p.latest_prediction.probability)
-                      : "Unassessed"}
+                    {p.operational_prediction
+                      ? percent(p.operational_prediction.probability)
+                      : "Unavailable"}
                   </strong>
                   <span>
-                    {p.latest_prediction
-                      ? timestamp(p.latest_prediction.predicted_at)
-                      : "No prediction recorded"}
+                    {p.operational_prediction
+                      ? timestamp(p.operational_prediction.predicted_at)
+                      : p.latest_historical_prediction ? "Reassessment required" : "Not assessed"}
                   </span>
                 </div>
               </section>
@@ -325,10 +324,10 @@ export function StudentDossier({ studentId }: { studentId: string }) {
                 {tab === "Warnings" && (
                   <div className="dossier-stack">
                     <DossierCard title="Active warning">
-                      {p.active_warning ? (
+                      {p.open_warnings[0] ? (
                         <WarningRecord
-                          warning={p.active_warning}
-                          action={warningActions(p.active_warning)}
+                          warning={p.open_warnings[0]}
+                          action={warningActions(p.open_warnings[0])}
                         />
                       ) : (
                         <p className="dossier-empty">No active warning.</p>

@@ -1,3 +1,4 @@
+import { AssessmentStatus } from "@/components/predictions/assessment-status";
 import type { ReactNode } from "react";
 import type { StudentProfile, ProfileWarning } from "@/types/registry";
 import { percent, timestamp } from "@/lib/dashboard";
@@ -28,14 +29,16 @@ export function DossierOverview({
 }) {
   return (
     <div className="dossier-overview">
-      <DossierCard title="Latest risk assessment" action={predictionAction}>
-        {p.latest_prediction ? (
-          <PredictionRecord prediction={p.latest_prediction} />
+      <DossierCard title="Current risk assessment" action={predictionAction}>
+        <AssessmentStatus assessment={p} />
+        {p.operational_prediction ? (
+          <PredictionRecord prediction={p.operational_prediction} />
         ) : (
           <p className="dossier-empty">
-            No prediction has been recorded for this student.
+            No current prediction is available.
           </p>
         )}
+        {!p.operational_prediction && p.latest_historical_prediction && <details><summary>Last historical assessment</summary><PredictionRecord prediction={p.latest_historical_prediction} /></details>}
         <p className="dossier-advisory">
           Predictions support advisor review. They do not replace an individual
           assessment of the student’s situation.

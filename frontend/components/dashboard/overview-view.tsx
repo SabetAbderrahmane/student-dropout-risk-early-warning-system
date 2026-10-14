@@ -22,10 +22,9 @@ export function OverviewView({
   return (
     <>
       <p className="dash-description">
-        Risk counts, readiness, and model thresholds show legacy binary
-        first-semester assessments. Warning and support totals include all
-        prediction stages. Review enrollment and multiclass results in
-        Prediction Analytics.
+        Current risk combines each student's selected stage-specific risk tier, with
+        separately calibrated thresholds. Historical assessments and support
+        obligations are counted separately; probabilities are never averaged.
       </p>
       <div className="dash-kpi-grid">
         <KpiCard
@@ -38,8 +37,8 @@ export function OverviewView({
             ready
           </span>
           <span>
-            {data.students.with_latest_prediction.toLocaleString("en")} with a
-            latest prediction
+            {data.students.current_assessed.toLocaleString("en")} with a
+            current assessment
           </span>
         </KpiCard>
         <KpiCard
@@ -47,7 +46,7 @@ export function OverviewView({
           value={data.warnings.active}
           icon="warning"
         >
-          <span>Current academic warning caseload</span>
+          <span>Support workflows across historical assessments</span>
           <span>
             {data.warnings.confirmed.toLocaleString("en")} confirmed ·{" "}
             {data.warnings.dismissed.toLocaleString("en")} dismissed
@@ -60,11 +59,9 @@ export function OverviewView({
           danger
         >
           <span>
-            {data.model.high_threshold === null
-              ? "Model threshold not available"
-              : `Model threshold: P ≥ ${percent(data.model.high_threshold)}`}
+            {data.risk_distribution.low} LOW · {data.risk_distribution.medium} MEDIUM · {data.risk_distribution.high} HIGH
           </span>
-          <span>Latest legacy binary assessment per student</span>
+          <span>One operational assessment per student</span>
         </KpiCard>
         <KpiCard
           title="Pending Reviews"
@@ -75,6 +72,7 @@ export function OverviewView({
           <span>Confirm or dismiss with a review note</span>
         </KpiCard>
       </div>
+      <p className="assessment-notice"><strong>{data.students.reassessment_required}</strong> students require reassessment · <strong>{data.students.without_predictions}</strong> have no prediction.</p>
       <div className="dash-analytics-grid">
         <WarningActivityChart data={data} />
         <InterventionSummary data={data} />
@@ -99,7 +97,7 @@ export function OverviewView({
           </p>
         </div>
         <div>
-          <span>Active model</span>
+          <span>Legacy binary model reference</span>
           <p>
             <strong>{data.model.name ?? "No active model"}</strong>
             {data.model.version && ` · ${data.model.version}`}

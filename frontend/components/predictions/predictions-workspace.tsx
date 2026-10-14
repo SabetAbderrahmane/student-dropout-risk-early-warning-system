@@ -151,7 +151,7 @@ export function PredictionsWorkspace() {
     void Promise.allSettled([
       fetchCurrentModel(token, controller.signal),
       fetchCurrentModelPerformance(token, controller.signal),
-      fetchDashboardOverview(token, controller.signal),
+      fetchDashboardOverview(token, controller.signal, "LEGACY_BINARY_FIRST_SEMESTER"),
     ]).then(([metadata, metrics, overview]) => {
       if (controller.signal.aborted) return;
       const failures: string[] = [];

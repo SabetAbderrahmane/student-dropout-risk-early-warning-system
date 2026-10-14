@@ -23,6 +23,7 @@ from app.schemas.prediction import (
     PredictionReadiness,
     PredictionResponse,
 )
+from app.services.assessment_service import prediction_metadata, input_changes
 
 
 class PredictionService:
@@ -144,7 +145,7 @@ class PredictionService:
         return True
 
     @staticmethod
-    def _summary(prediction: PredictionResult) -> PredictionResponse:
+    def _summary(prediction: PredictionResult, freshness=None) -> PredictionResponse:
         return PredictionResponse(
             id=prediction.id,
             student_id=prediction.student_id,
@@ -160,6 +161,7 @@ class PredictionService:
             model_version=prediction.model_version.model_version,
             top_explanation_factors=prediction.explanation,
             predicted_at=prediction.predicted_at,
+            **(freshness or {}),
         )
 
     def predict_student(
@@ -254,13 +256,12 @@ class PredictionService:
             raise ApplicationError(
                 404, "PREDICTION_NOT_FOUND", "The requested prediction does not exist."
             )
-        summary = self._summary(prediction).model_dump()
+        metadata = prediction_metadata(self.db, [prediction.id])
+        summary = self._summary(prediction, metadata.get(prediction.id)).model_dump()
+        summary.update(input_changes(self._student(prediction.student_id), prediction))
         return PredictionDetail(
             **summary,
-            feature_snapshot={
-                name: prediction.feature_snapshot[name]
-                for name in prediction.model_version.metadata_json["features"]
-            },
+            feature_snapshot=dict(prediction.feature_snapshot),
             explanation_method=prediction.model_version.metadata_json[
                 "explanation_method"
             ],
@@ -271,8 +272,9 @@ class PredictionService:
         page = kwargs["page"]
         page_size = kwargs["page_size"]
         predictions, total = self.repository.list_predictions(**kwargs)
+        metadata = prediction_metadata(self.db, [p.id for p in predictions])
         return PredictionPage.create(
-            items=[self._summary(item) for item in predictions],
+            items=[self._summary(item, metadata.get(item.id)) for item in predictions],
             page=page,
             page_size=page_size,
             total=total,
@@ -295,8 +297,9 @@ class PredictionService:
             prediction_stage=prediction_stage,
             model_target_type=model_target_type,
         )
+        metadata = prediction_metadata(self.db, [p.id for p in predictions])
         return PredictionPage.create(
-            items=[self._summary(item) for item in predictions],
+            items=[self._summary(item, metadata.get(item.id)) for item in predictions],
             page=page,
             page_size=page_size,
             total=total,

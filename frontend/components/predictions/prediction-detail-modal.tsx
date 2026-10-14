@@ -1,3 +1,4 @@
+import { FreshnessBadge, InputChanges } from "@/components/predictions/assessment-status";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ApiError, fetchPrediction } from "@/lib/api";
@@ -87,6 +88,7 @@ export function PredictionDetailModal({
       )}
       {detail && !loading && (
         <>
+          <FreshnessBadge prediction={detail} /><InputChanges prediction={detail} />
           <div className="warning-detail-risk">
             <div>
               <strong>{percent(detail.probability)}</strong>

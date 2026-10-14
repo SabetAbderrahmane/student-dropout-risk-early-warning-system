@@ -46,7 +46,7 @@ export function AttentionTable({
             Students Requiring Attention{" "}
             <span className="dash-count">{students.length}</span>
           </h2>
-          <p>Priority-ranked cases selected by the early warning system</p>
+          <p>Current risk, reassessment requirements, and overdue support obligations</p>
         </div>
         <Link className="dash-text-link" href="/students">
           View Full Registry <Icon name="arrow" />
@@ -111,7 +111,7 @@ export function AttentionTable({
             </thead>
             <tbody>
               {filtered.map((student) => (
-                <tr key={student.warning_id}>
+                <tr key={student.student_id}>
                   <td>
                     <Link
                       className="dash-student-name"
@@ -122,10 +122,11 @@ export function AttentionTable({
                     <small className="dash-student-number">
                       {student.student_number}
                     </small>
+                    <span className="assessment-status">{readable(student.attention_reason)}</span>
                   </td>
                   <td>
                     <strong className="dash-probability">
-                      {percent(student.probability)}
+                      {student.probability === null ? "No current probability" : percent(student.probability)}
                     </strong>
                     <div className="dash-probability-track" aria-hidden="true">
                       <span
@@ -135,16 +136,16 @@ export function AttentionTable({
                             : "dash-risk-medium"
                         }
                         style={{
-                          width: `${Math.max(0, Math.min(1, student.probability)) * 100}%`,
+                          width: `${Math.max(0, Math.min(1, student.probability ?? 0)) * 100}%`,
                         }}
                       />
                     </div>
                   </td>
                   <td>
                     <span
-                      className={`dash-badge ${student.risk_level === "HIGH" ? "is-danger" : student.risk_level === "LOW" ? "is-low" : "is-medium"}`}
+                      className={`dash-badge ${student.risk_level === "HIGH" ? "is-danger" : student.risk_level === "LOW" ? "is-low" : student.risk_level === "MEDIUM" ? "is-medium" : ""}`}
                     >
-                      {readable(student.risk_level)} Risk
+                      {student.risk_level ? `${readable(student.risk_level)} Risk` : "Reassessment required"}
                     </span>
                   </td>
                   <td>
@@ -162,14 +163,14 @@ export function AttentionTable({
                     <span
                       className={`dash-priority ${student.priority === "P1_URGENT" ? "is-urgent" : ""}`}
                     >
-                      {readable(student.priority)}
+                      {student.priority ? readable(student.priority) : "No warning"}
                     </span>
                   </td>
                   <td>
                     <span
                       className={`dash-badge ${student.review_state === "CONFIRMED" ? "is-confirmed" : ""}`}
                     >
-                      {readable(student.review_state)}
+                      {student.review_state ? readable(student.review_state) : "No review"}
                     </span>
                   </td>
                   <td>
@@ -178,7 +179,7 @@ export function AttentionTable({
                     )}
                   </td>
                   <td className="dash-predicted">
-                    <time dateTime={student.predicted_at}>
+                    <time dateTime={student.predicted_at ?? undefined}>
                       {timestamp(student.predicted_at)}
                     </time>
                   </td>

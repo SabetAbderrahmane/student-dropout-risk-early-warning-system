@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.permissions import require_roles
-from app.db.session import get_db
+from app.db.session import get_db, get_read_db
 from app.ml.outcomes.contracts import ModelTargetType, PredictionStage
 from app.models.prediction import RiskLevel
 from app.models.user import User, UserRole
@@ -80,7 +80,7 @@ def student_prediction_history(
     prediction_stage: PredictionStage | None = None,
     model_target_type: ModelTargetType | None = None,
     _: User = Depends(prediction_read_access),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_read_db),
 ) -> PredictionPage:
     return PredictionService(db).student_history(
         student_id,
@@ -117,7 +117,7 @@ def list_predictions(
     ] = "predicted_at",
     order: Literal["asc", "desc"] = "desc",
     _: User = Depends(prediction_read_access),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_read_db),
 ) -> PredictionPage:
     return PredictionService(db).list_predictions(
         page=page,
@@ -137,6 +137,6 @@ def list_predictions(
 def get_prediction(
     prediction_id: UUID,
     _: User = Depends(prediction_read_access),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_read_db),
 ) -> PredictionDetail:
     return PredictionService(db).get_prediction(prediction_id)

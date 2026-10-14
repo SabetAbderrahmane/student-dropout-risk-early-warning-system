@@ -40,8 +40,7 @@ export function ReviewWarningModal({
       <div className="dash-case-context">
         <strong>{student.name}</strong>
         <span>
-          {student.student_number} · {percent(student.probability)} risk
-          probability
+          {student.student_number} · {student.probability === null ? "No current probability" : `${percent(student.probability)} current risk probability`}
         </span>
       </div>
       <p className="dash-subtle">

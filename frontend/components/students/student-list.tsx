@@ -1,5 +1,8 @@
 "use client";
 
+import { AssessmentStatus } from "@/components/predictions/assessment-status";
+import { stageLabel } from "@/types/outcome";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -27,10 +30,13 @@ const INITIAL: StudentRegistryParams = {
   order: "asc",
 };
 const FILTERS = [
+  {key: "assessment_state", label: "Assessment state", options: ["CURRENT", "REASSESSMENT_REQUIRED", "NOT_ASSESSED"]},
+  {key: "prediction_stage", label: "Prediction stage", options: ["ENROLLMENT", "FIRST_SEMESTER"]},
+  {key: "stage_readiness", label: "Selected stage inputs", options: ["READY", "NOT_READY"]},
   {
-    key: "risk_level",
-    label: "Risk level",
-    options: ["LOW", "MEDIUM", "HIGH"],
+    key: "current_risk",
+    label: "Current risk",
+    options: ["LOW", "MEDIUM", "HIGH", "NONE"],
   },
   {
     key: "warning_state",
@@ -50,7 +56,7 @@ const FILTERS = [
   },
   {
     key: "prediction_readiness",
-    label: "Prediction readiness",
+    label: "Input readiness",
     options: ["READY", "NOT_READY"],
   },
 ] as const;
@@ -265,6 +271,7 @@ export function StudentList() {
                   <select
                     aria-label={filter.label}
                     value={params[filter.key] ?? ""}
+                    disabled={filter.key === "stage_readiness" && !params.prediction_stage}
                     onChange={(event) => {
                       const value = filter.options.find(
                         (option) => option === event.target.value,
@@ -273,6 +280,7 @@ export function StudentList() {
                         ...current,
                         page: 1,
                         [filter.key]: value,
+                        ...(filter.key === "prediction_stage" && !value ? { stage_readiness: undefined } : {}),
                       }));
                     }}
                   >
@@ -390,7 +398,7 @@ export function StudentList() {
                 >
                   <option value="student_number">Student ID</option>
                   <option value="name">Student name</option>
-                  <option value="risk_probability">Risk probability</option>
+                  <option value="risk_probability">Current risk</option>
                   <option value="updated_at">Record updated</option>
                 </select>
                 <button
@@ -473,7 +481,7 @@ export function StudentList() {
                       <th scope="col">Course / Admission</th>
                       <th scope="col">Semester 1</th>
                       <th scope="col">Readiness</th>
-                      {sortHeading("Risk probability", "risk_probability")}
+                      {sortHeading("Current risk", "risk_probability")}
                       <th scope="col">Warning</th>
                       <th scope="col">Intervention</th>
                       <th scope="col">Case owner</th>
@@ -535,27 +543,30 @@ export function StudentList() {
                         </td>
                         <td>
                           <RegistryBadge value={row.prediction_readiness} />
+                          <small>Enrollment: {row.enrollment_ready ? "Ready" : "Not ready"} · Semester: {row.first_semester_ready ? "Ready" : "Not ready"}</small>
                         </td>
                         <td>
-                          {row.latest_prediction ? (
+                          <AssessmentStatus assessment={row} compact />
+                          {row.operational_prediction ? (
                             <>
                               <div className="registry-risk">
                                 <strong>
-                                  {percent(row.latest_prediction.probability)}
+                                  {percent(row.operational_prediction.probability)}
                                 </strong>
                                 <RegistryBadge
-                                  value={row.latest_prediction.risk_level}
+                                  value={row.operational_prediction.risk_level}
                                 />
                               </div>
                               <meter
                                 min={0}
                                 max={1}
-                                value={row.latest_prediction.probability}
+                                value={row.operational_prediction.probability}
                                 aria-label={`${row.name} risk probability`}
                               />
+                              <small>{stageLabel(row.operational_prediction.prediction_stage)} · {row.operational_prediction.model_target_type === "BINARY_DROPOUT" ? "Legacy binary" : "Three-class outcome"}</small>
                             </>
                           ) : (
-                            <span className="registry-muted">Not assessed</span>
+                            <span className="registry-muted">No current prediction</span>
                           )}
                         </td>
                         <td>

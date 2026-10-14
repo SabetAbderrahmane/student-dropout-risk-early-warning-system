@@ -1,4 +1,6 @@
 "use client";
+
+import { AssessmentStatus, FreshnessBadge } from "@/components/predictions/assessment-status";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ApiError, fetchStudentProfile } from "@/lib/api";
@@ -143,7 +145,7 @@ export function StudentProfileDrawer({
               </dl>
             </section>
             <section>
-              <h3>Prediction readiness</h3>
+              <h3>Stage input readiness</h3><p>Enrollment: {profile.enrollment_ready ? "Ready" : "Not ready"} · First semester: {profile.first_semester_ready ? "Ready" : "Not ready"}</p><h4>Legacy binary readiness</h4>
               <p>
                 <strong>{readable(profile.prediction_readiness.status)}</strong>{" "}
                 · {profile.prediction_readiness.available_feature_count} /{" "}
@@ -164,20 +166,21 @@ export function StudentProfileDrawer({
               )}
             </section>
             <section>
-              <h3>Latest risk assessment</h3>
-              {profile.latest_prediction ? (
+              <h3>Current risk assessment</h3>
+              <AssessmentStatus assessment={profile} />
+              {profile.operational_prediction ? (
                 <>
                   <div className="registry-profile-risk">
                     <strong>
-                      {percent(profile.latest_prediction.probability)}
+                      {percent(profile.operational_prediction.probability)}
                     </strong>
                     <span>
-                      {readable(profile.latest_prediction.risk_level)} risk
+                      {readable(profile.operational_prediction.risk_level)} risk
                     </span>
                   </div>
                   <p className="registry-muted">
-                    {timestamp(profile.latest_prediction.predicted_at)} · Model{" "}
-                    {profile.latest_prediction.model_version}
+                    {timestamp(profile.operational_prediction.predicted_at)} · Model{" "}
+                    {profile.operational_prediction.model_version}
                   </p>
                 </>
               ) : (
@@ -189,21 +192,21 @@ export function StudentProfileDrawer({
         {profile && tab === "support" && (
           <>
             <section>
-              <h3>Active warning</h3>
-              {profile.active_warning ? (
+              <h3>Open warning workflow ({profile.open_warnings.length})</h3>
+              {profile.open_warnings[0] ? (
                 <>
                   <p>
                     <strong>
-                      {readable(profile.active_warning.review_state)}
+                      {readable(profile.open_warnings[0].review_state)}
                     </strong>{" "}
-                    · {readable(profile.active_warning.priority)}
+                    · {readable(profile.open_warnings[0].priority)}
                   </p>
                   <p>
                     Case owner:{" "}
-                    {profile.active_warning.assigned_advisor?.full_name ??
+                    {profile.open_warnings[0].assigned_advisor?.full_name ??
                       "Unassigned"}
                   </p>
-                  {profile.active_warning.reviews.map((review) => (
+                  {profile.open_warnings[0].reviews.map((review) => (
                     <article className="registry-history-item" key={review.id}>
                       <strong>{readable(review.decision)}</strong>
                       <p>{review.note}</p>
@@ -290,6 +293,7 @@ export function StudentProfileDrawer({
                       {percent(item.probability)} · {readable(item.risk_level)}{" "}
                       risk
                     </strong>
+                    <FreshnessBadge prediction={item} />
                     <small>
                       {timestamp(item.predicted_at)} · {item.model_version}
                     </small>

@@ -56,7 +56,7 @@ export function QuickInterventionModal({
       setError("Target date cannot precede start date.");
       return;
     }
-    if (!student.assigned_advisor || !isWarningPriority(student.priority)) {
+    if (!student.warning_id || !student.assigned_advisor || !isWarningPriority(student.priority)) {
       setError("A valid warning priority and assigned advisor are required.");
       return;
     }
@@ -86,7 +86,7 @@ export function QuickInterventionModal({
       </div>
       <p className="dash-subtle">
         Assigned to <strong>{student.assigned_advisor?.full_name}</strong> ·{" "}
-        {readable(student.priority)}
+        {student.priority ? readable(student.priority) : "No warning priority"}
       </p>
       <form onSubmit={submit}>
         <fieldset disabled={busy}>

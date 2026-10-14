@@ -126,7 +126,7 @@ export function DashboardShell() {
       signOut();
       return "Sign in to continue.";
     }
-    if (!action || !user || !canReview(user, action.student))
+    if (!action || !user || !action.student.warning_id || !canReview(user, action.student))
       return "This warning cannot be reviewed by the current user.";
     try {
       await reviewWarning(token, action.student.warning_id, payload);

@@ -518,9 +518,10 @@ export async function fetchPrediction(
 export async function fetchDashboardOverview(
   token: string,
   signal?: AbortSignal,
+  predictionScope: "OPERATIONAL_CURRENT" | "LEGACY_BINARY_FIRST_SEMESTER" = "OPERATIONAL_CURRENT",
 ): Promise<DashboardOverview> {
   return parseResponse<DashboardOverview>(
-    await apiFetch(`${API_BASE_URL}/dashboard/overview`, {
+    await apiFetch(`${API_BASE_URL}/dashboard/overview?prediction_scope=${predictionScope}`, {
       headers: bearerHeaders(token),
       cache: "no-store",
       signal,

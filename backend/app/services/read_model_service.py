@@ -58,6 +58,12 @@ from app.schemas.read_models import (
     WarningActivity,
     WarningCounts,
 )
+from app.services.assessment_service import (
+    assessment_fields,
+    input_changes,
+    prediction_metadata,
+    projection,
+)
 from app.services.casework_service import CaseworkService
 from app.utils.category_labels import category_label
 
@@ -155,6 +161,7 @@ def _current_interventions():
         else_=3,
     )
     ranked = select(
+        Intervention.id.label("id"),
         Intervention.warning_id.label("warning_id"),
         Intervention.status.label("status"),
         func.row_number()
@@ -164,6 +171,36 @@ def _current_interventions():
                 status_rank,
                 Intervention.created_at.desc(),
                 Intervention.id.desc(),
+            ),
+        )
+        .label("rank"),
+    ).subquery()
+    return select(ranked).where(ranked.c.rank == 1).subquery()
+
+
+def _support_warnings():
+    ongoing = (
+        select(Intervention.id)
+        .where(
+            Intervention.warning_id == Warning.id,
+            Intervention.status.in_(ACTIVE_STATUSES),
+        )
+        .exists()
+    )
+    ranked = select(
+        Warning.id.label("id"),
+        Warning.student_id.label("student_id"),
+        func.row_number()
+        .over(
+            partition_by=Warning.student_id,
+            order_by=(
+                case(
+                    (ongoing, 0),
+                    (Warning.review_state != WarningReviewState.DISMISSED, 1),
+                    else_=2,
+                ),
+                Warning.created_at.desc(),
+                Warning.id.desc(),
             ),
         )
         .label("rank"),
@@ -181,8 +218,12 @@ class ReadModelService:
     def __init__(self, db: Session):
         self.db = db
 
-    def dashboard(self) -> DashboardOverview:
-        latest = _latest_predictions(legacy_only=True)
+    def dashboard(self, prediction_scope="OPERATIONAL_CURRENT") -> DashboardOverview:
+        assessment = projection(self.db)
+        legacy = _latest_predictions(legacy_only=True)
+        latest = (
+            legacy if prediction_scope == "LEGACY_BINARY_FIRST_SEMESTER" else assessment
+        )
         ready = _ready_condition()
         total, ready_count = self.db.execute(
             select(
@@ -195,12 +236,65 @@ class ReadModelService:
             )
         ).one()
         risk_rows = self.db.execute(
-            select(latest.c.risk_level, func.count()).group_by(latest.c.risk_level)
+            select(latest.c.risk_level, func.count())
+            .where(latest.c.risk_level.is_not(None))
+            .group_by(latest.c.risk_level)
         ).all()
         risks = {
             str(level.value if hasattr(level, "value") else level).lower(): count
             for level, count in risk_rows
         }
+        current, reassessment, absent, historically_assessed, stage_ready = (
+            self.db.execute(
+                select(
+                    func.coalesce(
+                        func.sum(
+                            case((assessment.c.operational_id.is_not(None), 1), else_=0)
+                        ),
+                        0,
+                    ),
+                    func.coalesce(
+                        func.sum(
+                            case((assessment.c.reassessment_required, 1), else_=0)
+                        ),
+                        0,
+                    ),
+                    func.coalesce(
+                        func.sum(
+                            case((assessment.c.historical_id.is_(None), 1), else_=0)
+                        ),
+                        0,
+                    ),
+                    func.coalesce(
+                        func.sum(
+                            case((assessment.c.historical_id.is_not(None), 1), else_=0)
+                        ),
+                        0,
+                    ),
+                    func.coalesce(
+                        func.sum(
+                            case(
+                                (
+                                    or_(
+                                        assessment.c.enrollment_ready,
+                                        assessment.c.first_semester_ready,
+                                        assessment.c.legacy_ready,
+                                    ),
+                                    1,
+                                ),
+                                else_=0,
+                            )
+                        ),
+                        0,
+                    ),
+                )
+            ).one()
+        )
+        legacy_risks = dict(
+            self.db.execute(
+                select(legacy.c.risk_level, func.count()).group_by(legacy.c.risk_level)
+            ).all()
+        )
         warning_rows = dict(
             self.db.execute(
                 select(Warning.review_state, func.count()).group_by(
@@ -264,11 +358,12 @@ class ReadModelService:
                 ImportJob.status == ImportStatus.IMPORTED
             )
         )
-        last_prediction = self.db.scalar(
-            select(func.max(PredictionResult.predicted_at)).where(
+        activity = select(func.max(PredictionResult.predicted_at))
+        if prediction_scope == "LEGACY_BINARY_FIRST_SEMESTER":
+            activity = activity.where(
                 PredictionResult.model_target_type == ModelTargetType.BINARY_DROPOUT
             )
-        )
+        last_prediction = self.db.scalar(activity)
         warning_counts = WarningCounts(
             active=sum(
                 count
@@ -282,8 +377,15 @@ class ReadModelService:
         return DashboardOverview(
             students=Counts(
                 total=total,
-                prediction_ready=ready_count,
-                with_latest_prediction=sum(risks.values()),
+                prediction_ready=ready_count
+                if prediction_scope == "LEGACY_BINARY_FIRST_SEMESTER"
+                else stage_ready,
+                with_latest_prediction=sum(risks.values())
+                if prediction_scope == "LEGACY_BINARY_FIRST_SEMESTER"
+                else historically_assessed,
+                current_assessed=current,
+                reassessment_required=reassessment,
+                without_predictions=absent,
             ),
             risk_distribution=RiskCounts(
                 **{level: risks.get(level, 0) for level in ("low", "medium", "high")}
@@ -313,7 +415,14 @@ class ReadModelService:
             ),
             warning_activity=self._warning_activity(today),
             intervention_activity=self._intervention_activity(today),
-            attention_students=self._attention(latest),
+            attention_students=self._attention(assessment),
+            prediction_scope=prediction_scope,
+            legacy_risk_distribution=RiskCounts(
+                **{
+                    k: legacy_risks.get(RiskLevel(k.upper()), 0)
+                    for k in ("low", "medium", "high")
+                }
+            ),
         )
 
     def _warning_activity(self, today: datetime):
@@ -364,77 +473,121 @@ class ReadModelService:
             for day, values in sorted(buckets.items())
         ]
 
-    def _attention(self, latest):
-        priority = case(
-            (Warning.priority == "P1_URGENT", 0),
-            (Warning.priority == "P2_ELEVATED", 1),
-            else_=2,
+    def _attention(self, assessment):
+        support = _support_warnings()
+        overdue = (
+            select(FollowUp.id)
+            .where(
+                FollowUp.student_id == Student.id,
+                FollowUp.status == FollowUpStatus.SCHEDULED,
+                FollowUp.scheduled_for < datetime.now(timezone.utc),
+            )
+            .exists()
         )
-        pending = case(
-            (Warning.review_state == WarningReviewState.PENDING_REVIEW, 0), else_=1
+        priority = case(
+            (assessment.c.risk_level == "HIGH", 0),
+            (assessment.c.risk_level == "MEDIUM", 1),
+            (assessment.c.reassessment_required, 2),
+            else_=3,
         )
         rows = self.db.execute(
-            select(Student, PredictionResult, Warning, User)
-            .join(latest, latest.c.student_id == Student.id)
-            .join(PredictionResult, PredictionResult.id == latest.c.id)
-            .join(Warning, Warning.prediction_id == PredictionResult.id)
-            .outerjoin(User, User.id == Warning.assigned_to)
-            .where(Warning.review_state != WarningReviewState.DISMISSED)
-            .order_by(
-                priority,
-                pending,
-                PredictionResult.probability.desc(),
-                Warning.created_at.desc(),
-                Warning.id.desc(),
+            select(
+                Student,
+                PredictionResult,
+                Warning,
+                User,
+                assessment.c.assessment_status,
+                assessment.c.reassessment_required,
             )
+            .join(assessment, assessment.c.student_id == Student.id)
+            .outerjoin(
+                PredictionResult, PredictionResult.id == assessment.c.operational_id
+            )
+            .outerjoin(support, support.c.student_id == Student.id)
+            .outerjoin(Warning, Warning.id == support.c.id)
+            .outerjoin(User, User.id == Warning.assigned_to)
+            .where(
+                or_(
+                    assessment.c.risk_level.in_(("HIGH", "MEDIUM")),
+                    assessment.c.reassessment_required,
+                    overdue,
+                )
+            )
+            .order_by(priority, Student.student_number, Student.id)
             .limit(10)
         ).all()
         return [
             AttentionStudent(
-                student_id=s.id,
-                student_number=s.student_number,
-                name=s.name,
-                probability=p.probability,
-                risk_level=p.risk_level.value,
-                warning_id=w.id,
-                priority=w.priority.value,
-                review_state=w.review_state.value,
-                assigned_advisor=_advisor(u),
-                predicted_at=p.predicted_at,
-                top_explanation_factors=(p.explanation or [])[:3],
+                student_id=student.id,
+                student_number=student.student_number,
+                name=student.name,
+                probability=pred.probability if pred else None,
+                risk_level=pred.risk_level.value if pred else None,
+                warning_id=warning.id if warning else None,
+                priority=warning.priority.value if warning else None,
+                review_state=warning.review_state.value if warning else None,
+                assigned_advisor=_advisor(owner),
+                predicted_at=pred.predicted_at if pred else None,
+                top_explanation_factors=(pred.explanation or [])[:3] if pred else [],
+                assessment_status=status,
+                attention_reason="CURRENT_RISK"
+                if pred and pred.risk_level != RiskLevel.LOW
+                else "REASSESSMENT_REQUIRED"
+                if reassessment
+                else "OVERDUE_SUPPORT",
+                prediction_stage=pred.prediction_stage if pred else None,
             )
-            for s, p, w, u in rows
+            for student, pred, warning, owner, status, reassessment in rows
         ]
+
+    @staticmethod
+    def _prediction_summary(pred, metadata):
+        if pred is None:
+            return None
+        return PredictionSummary(
+            id=pred.id,
+            probability=pred.probability,
+            risk_level=pred.risk_level.value,
+            predicted_at=pred.predicted_at,
+            prediction_stage=pred.prediction_stage,
+            model_target_type=pred.model_target_type,
+            predicted_outcome=pred.predicted_outcome,
+            class_probabilities=pred.class_probabilities,
+            model_version=pred.model_version.model_version,
+            **metadata.get(pred.id, {}),
+        )
 
     def registry(
         self,
         *,
-        page: int,
-        page_size: int,
-        search: str | None,
-        course_code: int | None,
-        risk_level: RiskLevel | None,
-        warning_state: str | None,
-        intervention_state: InterventionStatus | None,
-        prediction_readiness: str | None,
-        sort: str,
-        order: str,
-    ) -> RegistryPage:
-        latest = _latest_predictions()
+        page,
+        page_size,
+        search,
+        course_code,
+        risk_level,
+        warning_state,
+        intervention_state,
+        prediction_readiness,
+        sort,
+        order,
+        assessment_state=None,
+        prediction_stage=None,
+        stage_readiness=None,
+        current_risk=None,
+    ):
+        assessment = projection(self.db)
+        support = _support_warnings()
         current_intervention = _current_interventions()
         query = (
             select(Student.id)
+            .join(assessment, assessment.c.student_id == Student.id)
             .outerjoin(AdmissionRecord, AdmissionRecord.student_id == Student.id)
-            .outerjoin(
-                FirstSemesterRecord, FirstSemesterRecord.student_id == Student.id
-            )
-            .outerjoin(latest, latest.c.student_id == Student.id)
-            .outerjoin(Warning, Warning.prediction_id == latest.c.id)
+            .outerjoin(support, support.c.student_id == Student.id)
+            .outerjoin(Warning, Warning.id == support.c.id)
             .outerjoin(
                 current_intervention, current_intervention.c.warning_id == Warning.id
             )
         )
-        ready = _ready_condition()
         if search:
             pattern = f"%{search.strip()}%"
             query = query.where(
@@ -442,16 +595,57 @@ class ReadModelService:
             )
         if course_code is not None:
             query = query.where(AdmissionRecord.course_code == course_code)
-        if risk_level is not None:
-            query = query.where(latest.c.risk_level == risk_level)
+        if risk_level is not None or current_risk is not None:
+            risk = current_risk or risk_level.value
+            query = query.where(
+                assessment.c.risk_level.is_(None)
+                if risk == "NONE"
+                else assessment.c.risk_level == risk
+            )
+        if assessment_state:
+            condition = (
+                assessment.c.operational_id.is_not(None)
+                if assessment_state == "CURRENT"
+                else assessment.c.historical_id.is_(None)
+                if assessment_state == "NOT_ASSESSED"
+                else assessment.c.reassessment_required
+            )
+            query = query.where(condition)
+        if prediction_stage and not stage_readiness:
+            selected_stage = case(
+                (assessment.c.operational_id == assessment.c.candidate_2, "ENROLLMENT"),
+                (assessment.c.operational_id.is_not(None), "FIRST_SEMESTER"),
+                else_=None,
+            )
+            query = query.where(selected_stage == prediction_stage.value)
+        if stage_readiness:
+            if prediction_stage is None:
+                raise ApplicationError(
+                    422,
+                    "STAGE_REQUIRED",
+                    "Stage readiness filtering requires prediction_stage.",
+                )
+            stage_ready = (
+                assessment.c.enrollment_ready
+                if prediction_stage == PredictionStage.ENROLLMENT
+                else assessment.c.first_semester_ready
+            )
+            query = query.where(
+                stage_ready if stage_readiness == "READY" else ~stage_ready
+            )
+        elif prediction_readiness:
+            ready = or_(
+                assessment.c.enrollment_ready,
+                assessment.c.first_semester_ready,
+                assessment.c.legacy_ready,
+            )
+            query = query.where(ready if prediction_readiness == "READY" else ~ready)
         if warning_state == "NONE":
             query = query.where(Warning.id.is_(None))
         elif warning_state:
             query = query.where(
                 Warning.review_state == WarningReviewState(warning_state)
             )
-        if prediction_readiness:
-            query = query.where(ready if prediction_readiness == "READY" else ~ready)
         if intervention_state is not None:
             query = query.where(current_intervention.c.status == intervention_state)
         total = (
@@ -460,133 +654,157 @@ class ReadModelService:
             )
             or 0
         )
-        sort_columns = {
+        columns = {
             "student_number": Student.student_number,
             "name": Student.name,
-            "risk_probability": latest.c.probability,
+            "risk_probability": assessment.c.probability,
             "updated_at": Student.updated_at,
         }
-        column = sort_columns[sort]
-        query = query.order_by(
-            column.asc().nulls_last() if order == "asc" else column.desc().nulls_last(),
-            Student.id.asc(),
-        )
+        column = columns[sort]
         ids = self.db.scalars(
-            query.offset((page - 1) * page_size).limit(page_size)
+            query.order_by(
+                column.asc().nulls_last()
+                if order == "asc"
+                else column.desc().nulls_last(),
+                Student.id,
+            )
+            .offset((page - 1) * page_size)
+            .limit(page_size)
         ).all()
         if not ids:
             return RegistryPage.create(
                 items=[], page=page, page_size=page_size, total=total
             )
+        facts = {
+            r["student_id"]: r
+            for r in self.db.execute(
+                select(assessment).where(assessment.c.student_id.in_(ids))
+            ).mappings()
+        }
         students = {
-            s.id: s
-            for s in self.db.scalars(
+            student.id: student
+            for student in self.db.scalars(
                 select(Student)
                 .where(Student.id.in_(ids))
                 .options(
                     selectinload(Student.admission_record),
                     selectinload(Student.first_semester_record),
                 )
-            ).all()
+            )
+        }
+        prediction_ids = {
+            value
+            for fact in facts.values()
+            for value in (fact["operational_id"], fact["historical_id"])
+            if value
         }
         predictions = {
-            p.student_id: p
-            for p in self.db.scalars(
+            pred.id: pred
+            for pred in self.db.scalars(
                 select(PredictionResult)
-                .join(latest, latest.c.id == PredictionResult.id)
-                .where(PredictionResult.student_id.in_(ids))
-            ).all()
+                .where(PredictionResult.id.in_(prediction_ids))
+                .options(selectinload(PredictionResult.model_version))
+            )
         }
+        metadata = prediction_metadata(self.db, prediction_ids, assessment=assessment)
         warnings = {
-            w.prediction_id: w
-            for w in self.db.scalars(
-                select(Warning).where(
-                    Warning.prediction_id.in_([p.id for p in predictions.values()])
-                )
-            ).all()
+            warning.student_id: warning
+            for warning in self.db.scalars(
+                select(Warning)
+                .join(support, support.c.id == Warning.id)
+                .where(Warning.student_id.in_(ids))
+            )
         }
-        interventions = defaultdict(list)
-        if warnings:
+        interventions = {
+            item.warning_id: item
             for item in self.db.scalars(
-                select(Intervention).where(
-                    Intervention.warning_id.in_([w.id for w in warnings.values()])
+                select(Intervention)
+                .join(
+                    current_intervention, current_intervention.c.id == Intervention.id
                 )
-            ):
-                interventions[item.warning_id].append(item)
-        owner_ids = {w.assigned_to for w in warnings.values() if w.assigned_to}
-        owner_ids.update(
-            i.assigned_to for group in interventions.values() for i in group
-        )
+                .where(Intervention.student_id.in_(ids))
+            )
+        }
+        owner_ids = {w.assigned_to for w in warnings.values() if w.assigned_to} | {
+            i.assigned_to for i in interventions.values()
+        }
         users = {
-            u.id: u for u in self.db.scalars(select(User).where(User.id.in_(owner_ids)))
+            user.id: user
+            for user in self.db.scalars(select(User).where(User.id.in_(owner_ids)))
         }
         activities = self._last_activities(ids)
         rows = []
         for student_id in ids:
-            s = students[student_id]
-            a, sem = s.admission_record, s.first_semester_record
-            p = predictions.get(student_id)
-            w = warnings.get(p.id) if p else None
-            i = _current_intervention(interventions[w.id]) if w else None
+            student, fact = students[student_id], facts[student_id]
+            admission, semester = (
+                student.admission_record,
+                student.first_semester_record,
+            )
+            historical = self._prediction_summary(
+                predictions.get(fact["historical_id"]), metadata
+            )
+            operational = self._prediction_summary(
+                predictions.get(fact["operational_id"]), metadata
+            )
+            warning = warnings.get(student_id)
+            intervention = interventions.get(warning.id) if warning else None
             owner = (
                 users.get(
-                    i.assigned_to
-                    if i and i.status in ACTIVE_STATUSES
-                    else w.assigned_to
+                    intervention.assigned_to
+                    if intervention and intervention.status in ACTIVE_STATUSES
+                    else warning.assigned_to
                 )
-                if w
+                if warning
                 else None
             )
             rows.append(
                 RegistryRow(
-                    student_id=s.id,
-                    student_number=s.student_number,
-                    name=s.name,
+                    student_id=student_id,
+                    student_number=student.student_number,
+                    name=student.name,
                     course=Course(
-                        code=a.course_code,
-                        label=category_label("course", a.course_code),
+                        code=admission.course_code,
+                        label=category_label("course", admission.course_code),
                     )
-                    if a and a.course_code is not None
+                    if admission and admission.course_code is not None
                     else None,
                     admission=RegistryAdmission(
-                        method=a.admission_method,
-                        admission_grade=float(a.admission_grade),
+                        method=admission.admission_method,
+                        admission_grade=float(admission.admission_grade),
                     )
-                    if a
+                    if admission
                     else None,
                     semester_one=RegistrySemesterOne(
-                        average_grade=float(sem.average_grade),
-                        enrolled_units=sem.enrolled_units,
-                        approved_units=sem.approved_units,
-                        approval_rate=_rate(sem),
+                        average_grade=float(semester.average_grade),
+                        enrolled_units=semester.enrolled_units,
+                        approved_units=semester.approved_units,
+                        approval_rate=_rate(semester),
                     )
-                    if sem
+                    if semester
                     else None,
                     prediction_readiness="READY"
-                    if assemble_prediction_features(s).ready
+                    if fact["enrollment_ready"]
+                    or fact["first_semester_ready"]
+                    or fact["legacy_ready"]
                     else "NOT_READY",
-                    latest_prediction=PredictionSummary(
-                        id=p.id,
-                        probability=p.probability,
-                        risk_level=p.risk_level.value,
-                        predicted_at=p.predicted_at,
-                        prediction_stage=p.prediction_stage,
-                        model_target_type=p.model_target_type,
-                        predicted_outcome=p.predicted_outcome,
-                        class_probabilities=p.class_probabilities,
-                    )
-                    if p
-                    else None,
+                    latest_prediction=historical,
+                    latest_historical_prediction=historical,
+                    operational_prediction=operational,
                     warning=RegistryWarning(
-                        id=w.id, state=w.review_state.value, priority=w.priority.value
+                        id=warning.id,
+                        state=warning.review_state.value,
+                        priority=warning.priority.value,
                     )
-                    if w
+                    if warning
+                    else None,
+                    intervention=RegistryIntervention(
+                        id=intervention.id, status=intervention.status.value
+                    )
+                    if intervention
                     else None,
                     case_owner=_advisor(owner),
-                    intervention=RegistryIntervention(id=i.id, status=i.status.value)
-                    if i
-                    else None,
                     last_activity_at=activities.get(student_id),
+                    **assessment_fields(fact),
                 )
             )
         return RegistryPage.create(
@@ -630,6 +848,8 @@ class ReadModelService:
         )
 
     def profile(self, student_id: UUID) -> StudentProfile:
+        assessment = projection(self.db, student_ids=[student_id])
+        fact = self.db.execute(select(assessment)).mappings().first()
         s = self.db.scalar(
             select(Student)
             .where(Student.id == student_id)
@@ -677,6 +897,9 @@ class ReadModelService:
         users = {
             u.id: u for u in self.db.scalars(select(User).where(User.id.in_(user_ids)))
         }
+        metadata = prediction_metadata(
+            self.db, [p.id for p in predictions], assessment=assessment
+        )
         pred_rows = [
             ProfilePrediction(
                 id=p.id,
@@ -689,6 +912,12 @@ class ReadModelService:
                 model_target_type=p.model_target_type,
                 predicted_outcome=p.predicted_outcome,
                 class_probabilities=p.class_probabilities,
+                feature_snapshot=p.feature_snapshot,
+                explanation_method=p.model_version.metadata_json.get(
+                    "explanation_method"
+                ),
+                **metadata.get(p.id, {}),
+                **input_changes(s, p),
             )
             for p in predictions
         ]
@@ -812,9 +1041,15 @@ class ReadModelService:
                 missing_features=list(assembly.missing_features),
             ),
             latest_prediction=pred_rows[0] if pred_rows else None,
+            latest_historical_prediction=pred_rows[0] if pred_rows else None,
+            operational_prediction=next(
+                (p for p in pred_rows if p.id == fact["operational_id"]), None
+            ),
+            **assessment_fields(fact),
             prediction_history=pred_rows,
             active_warning=current_warning,
             warning_history=warning_rows,
+            open_warnings=[w for w in warning_rows if w.review_state != "DISMISSED"],
             interventions=intervention_rows,
             follow_ups=follow_rows,
             timeline=self._timeline(
