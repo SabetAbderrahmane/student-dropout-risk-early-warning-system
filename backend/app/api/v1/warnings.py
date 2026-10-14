@@ -11,6 +11,7 @@ from app.models.user import User, UserRole
 from app.models.warning import WarningPriority, WarningReviewState
 from app.schemas.warning import (
     AssignmentRequest,
+    ReconsiderationRequest,
     ReviewRequest,
     WarningDetail,
     WarningPage,
@@ -84,10 +85,10 @@ def get_warning(
 def assign_warning(
     warning_id: UUID,
     payload: AssignmentRequest,
-    _: User = Depends(assign_access),
+    actor: User = Depends(assign_access),
     db: Session = Depends(get_db),
 ) -> WarningDetail:
-    return WarningService(db).assign(warning_id, payload)
+    return WarningService(db).assign(warning_id, payload, actor)
 
 
 @router.post(
@@ -102,3 +103,15 @@ def review_warning(
     db: Session = Depends(get_db),
 ) -> WarningDetail:
     return WarningService(db).review(warning_id, payload, reviewer)
+
+
+@router.post(
+    "/warnings/{warning_id}/reconsider", response_model=WarningDetail, status_code=201
+)
+def reconsider_warning(
+    warning_id: UUID,
+    payload: ReconsiderationRequest,
+    reviewer: User = Depends(review_access),
+    db: Session = Depends(get_db),
+) -> WarningDetail:
+    return WarningService(db).reconsider(warning_id, payload, reviewer)

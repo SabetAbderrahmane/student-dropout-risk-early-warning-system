@@ -1,7 +1,7 @@
 """Phase 8 read models; no domain state is changed by these queries."""
 
 from collections import defaultdict
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy import and_, case, func, or_, select, union_all
@@ -307,8 +307,8 @@ class ReadModelService:
                 select(Intervention.status, func.count()).group_by(Intervention.status)
             ).all()
         )
-        now = datetime.now(timezone.utc)
-        today = datetime(now.year, now.month, now.day, tzinfo=timezone.utc)
+        now = datetime.now(UTC)
+        today = datetime(now.year, now.month, now.day, tzinfo=UTC)
         tomorrow = today + timedelta(days=1)
         due, overdue = self.db.execute(
             select(
@@ -480,7 +480,7 @@ class ReadModelService:
             .where(
                 FollowUp.student_id == Student.id,
                 FollowUp.status == FollowUpStatus.SCHEDULED,
-                FollowUp.scheduled_for < datetime.now(timezone.utc),
+                FollowUp.scheduled_for < datetime.now(UTC),
             )
             .exists()
         )
@@ -525,6 +525,7 @@ class ReadModelService:
                 risk_level=pred.risk_level.value if pred else None,
                 warning_id=warning.id if warning else None,
                 priority=warning.priority.value if warning else None,
+                warning_revision=warning.revision if warning else None,
                 review_state=warning.review_state.value if warning else None,
                 assigned_advisor=_advisor(owner),
                 predicted_at=pred.predicted_at if pred else None,
@@ -928,6 +929,7 @@ class ReadModelService:
                 prediction_id=w.prediction_id,
                 risk_level=w.risk_level.value,
                 priority=w.priority.value,
+                revision=w.revision,
                 review_state=w.review_state.value,
                 assigned_advisor=_advisor(users.get(w.assigned_to)),
                 prediction_stage=prediction_by_id[w.prediction_id].prediction_stage,
@@ -983,7 +985,7 @@ class ReadModelService:
             )
             for i in interventions
         ]
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         follow_rows = [
             ProfileFollowUp(
                 id=f.id,
@@ -1160,7 +1162,7 @@ class ReadModelService:
         return sorted(
             events,
             key=lambda e: (
-                e.occurred_at.replace(tzinfo=timezone.utc)
+                e.occurred_at.replace(tzinfo=UTC)
                 if e.occurred_at.tzinfo is None
                 else e.occurred_at,
                 e.type,

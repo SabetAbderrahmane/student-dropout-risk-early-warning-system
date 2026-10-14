@@ -98,6 +98,7 @@ class AttentionStudent(BaseModel):
     probability: float | None
     risk_level: str | None
     warning_id: UUID | None
+    warning_revision: int | None = None
     priority: str | None
     review_state: str | None
     assigned_advisor: Advisor | None
@@ -279,6 +280,7 @@ class ProfileReview(BaseModel):
 
 
 class ProfileWarning(BaseModel):
+    revision: int = 0
     id: UUID
     prediction_id: UUID
     risk_level: str

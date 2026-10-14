@@ -20,7 +20,9 @@ class ApplicationError(Exception):
         super().__init__(message)
 
 
-def _error_payload(code: str, message: str, details: Any | None = None) -> dict[str, Any]:
+def _error_payload(
+    code: str, message: str, details: Any | None = None
+) -> dict[str, Any]:
     error: dict[str, Any] = {"code": code, "message": message}
     if details is not None:
         error["details"] = details
@@ -57,13 +59,29 @@ async def validation_exception_handler(
     ]
     return JSONResponse(
         status_code=422,
-        content=_error_payload("VALIDATION_ERROR", "Request validation failed.", details),
+        content=_error_payload(
+            "VALIDATION_ERROR", "Request validation failed.", details
+        ),
     )
 
 
-async def application_exception_handler(_: Request, exc: ApplicationError) -> JSONResponse:
+async def application_exception_handler(
+    _: Request, exc: ApplicationError
+) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,
         content=_error_payload(exc.code, exc.message, exc.details),
     )
 
+
+async def database_conflict_handler(request, exc):
+    # Account/password services roll back before reaching this boundary too.
+    from app.services.casework_mutation import retryable_error
+
+    conflict = retryable_error(exc)
+    if conflict:
+        return await application_exception_handler(request, conflict)
+    return JSONResponse(
+        status_code=500,
+        content=_error_payload("DATABASE_ERROR", "The database request failed."),
+    )

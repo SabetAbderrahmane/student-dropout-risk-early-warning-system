@@ -126,11 +126,24 @@ export function DashboardShell() {
       signOut();
       return "Sign in to continue.";
     }
-    if (!action || !user || !action.student.warning_id || !canReview(user, action.student))
+    if (
+      !action ||
+      !user ||
+      !action.student.warning_id ||
+      !canReview(user, action.student)
+    )
       return "This warning cannot be reviewed by the current user.";
     try {
-      await reviewWarning(token, action.student.warning_id, payload);
+      await reviewWarning(token, action.student.warning_id, {
+        ...payload,
+        expected_revision: action.student.warning_revision ?? undefined,
+      });
     } catch (caught) {
+      if (caught instanceof ApiError && caught.status === 409) {
+        setAction(null);
+        await refresh();
+        setError(failureMessage(caught));
+      }
       return failureMessage(caught);
     }
     setAction(null);
@@ -153,6 +166,11 @@ export function DashboardShell() {
     try {
       await createIntervention(token, payload);
     } catch (caught) {
+      if (caught instanceof ApiError && caught.status === 409) {
+        setAction(null);
+        await refresh();
+        setError(failureMessage(caught));
+      }
       return failureMessage(caught);
     }
     setAction(null);

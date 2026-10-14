@@ -1,52 +1,48 @@
 """Real PostgreSQL B2 migration, input, snapshot, paging and concurrency evidence."""
 
-import json
 import os
-from datetime import datetime, timezone, timedelta, date
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from uuid import uuid4
 
 import pytest
 from alembic import command
 from alembic.config import Config
-from sqlalchemy import create_engine, select, text, event, func
-from sqlalchemy.engine import make_url
-from sqlalchemy.orm import Session
-
 from app.core.config import get_settings
 from app.core.security import hash_password
+from app.ml.outcomes.contracts import MODEL_VERSIONS, PredictionStage
 from app.models import (
-    User,
-    UserRole,
+    FollowUp,
+    Intervention,
     ModelVersion,
     PredictionResult,
+    User,
+    UserRole,
     Warning,
-    Intervention,
-    FollowUp,
 )
-from app.models.user import UserLoginIdentifier
 from app.models.casework import (
+    FollowUpMethod,
+    FollowUpStatus,
     InterventionStatus,
     InterventionType,
-    FollowUpStatus,
-    FollowUpMethod,
 )
+from app.models.user import UserLoginIdentifier
 from app.models.warning import (
-    WarningPriority,
-    WarningReviewState,
     ReviewDecision,
     WarningReview,
+    WarningReviewState,
 )
 from app.services.assessment_service import (
-    projection,
     prediction_metadata,
-    _artifact_available,
+    projection,
 )
-from app.services.read_model_service import ReadModelService
 from app.services.model_catalog_service import ModelCatalogService
 from app.services.prediction_service import PredictionService
-from app.ml.outcomes.contracts import PredictionStage, MODEL_VERSIONS
-from tests.api.test_freshness import source_student, add_semester, fact, predict
+from app.services.read_model_service import ReadModelService
+from sqlalchemy import create_engine, event, select, text
+from sqlalchemy.engine import make_url
+from sqlalchemy.orm import Session
+from tests.api.test_freshness import add_semester, fact, predict, source_student
 
 pytestmark = pytest.mark.model_integration
 
@@ -148,7 +144,7 @@ def add_support(db, student, prediction, users):
             intervention_id=intervention.id,
             student_id=student.id,
             assigned_to=users[2].id,
-            scheduled_for=datetime.now(timezone.utc) - timedelta(days=1),
+            scheduled_for=datetime.now(UTC) - timedelta(days=1),
             method=FollowUpMethod.IN_PERSON,
             purpose="Original follow-up",
             status=FollowUpStatus.SCHEDULED,
@@ -178,7 +174,8 @@ def historical_dump(engine):
 
 
 def test_populated_b1_migration_is_index_only_and_roundtrips(freshness_pg):
-    migrate("20261011_0010")
+    # Seed using current ORM, then remove later additive schema before testing B2.
+    migrate()
     with Session(freshness_pg, expire_on_commit=False) as db:
         student, users = seed(db)
         enrollment = predict(db, student, users[1])
@@ -186,8 +183,9 @@ def test_populated_b1_migration_is_index_only_and_roundtrips(freshness_pg):
         add_semester(db, student)
         predict(db, student, users[1], PredictionStage.FIRST_SEMESTER)
         PredictionService(db).predict_student(student.id, created_by=users[1].id)
+    command.downgrade(Config("alembic.ini"), "20261011_0010")
     original = historical_dump(freshness_pg)
-    migrate()
+    migrate("20261013_0011")
     assert historical_dump(freshness_pg) == original
     with freshness_pg.connect() as db:
         assert (

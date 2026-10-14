@@ -46,8 +46,11 @@ class AuthService:
     def change_password(
         self, current_user: User, current_password: str, new_password: str
     ) -> AuthenticationResult:
-        expected_version = current_user.token_version
+        expected_version = self.db.info.get(
+            "presented_auth", (current_user.id, current_user.token_version)
+        )[1]
         try:
+            self.repository.lock_administration()
             user = self.repository.lock_by_id(current_user.id)
             if (
                 user is None

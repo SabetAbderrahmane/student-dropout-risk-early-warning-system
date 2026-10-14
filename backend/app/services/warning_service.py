@@ -1,10 +1,17 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.exceptions import ApplicationError
+from app.models.casework import (
+    FollowUp,
+    FollowUpStatus,
+    Intervention,
+    InterventionStatus,
+)
 from app.models.user import User, UserRole
 from app.models.warning import Warning, WarningReview, WarningReviewState
 from app.repositories.user_repository import UserRepository
@@ -12,6 +19,7 @@ from app.repositories.warning_repository import WarningRepository
 from app.schemas.warning import (
     AdvisorSummary,
     AssignmentRequest,
+    ReconsiderationRequest,
     ReviewRequest,
     ReviewResponse,
     StudentSummary,
@@ -19,6 +27,7 @@ from app.schemas.warning import (
     WarningPage,
     WarningRow,
 )
+from app.services.casework_mutation import guarded
 
 
 class WarningService:
@@ -31,6 +40,7 @@ class WarningService:
         prediction = warning.prediction
         return WarningRow(
             id=warning.id,
+            revision=warning.revision,
             student_id=warning.student_id,
             student_number=warning.student.student_number,
             student_name=warning.student.name,
@@ -122,7 +132,10 @@ class WarningService:
             order="desc",
         )
 
-    def assign(self, warning_id: UUID, payload: AssignmentRequest) -> WarningDetail:
+    @guarded(UserRole.ACADEMIC_ADMIN)
+    def assign(
+        self, warning_id: UUID, payload: AssignmentRequest, actor: User
+    ) -> WarningDetail:
         warning = self._get(warning_id, lock=True)
         if payload.assigned_to is not None:
             user = UserRepository(self.db).lock_by_id(payload.assigned_to)
@@ -137,10 +150,11 @@ class WarningService:
                     "The assignee must be an active Academic Advisor.",
                 )
         warning.assigned_to = payload.assigned_to
-        warning.updated_at = datetime.now(timezone.utc)
-        self.db.commit()
+        warning.updated_at = datetime.now(UTC)
+        self._mutation.commit()
         return self.detail(warning_id)
 
+    @guarded(UserRole.ACADEMIC_ADVISOR)
     def review(
         self, warning_id: UUID, payload: ReviewRequest, reviewer: User
     ) -> WarningDetail:
@@ -155,15 +169,80 @@ class WarningService:
                 "WARNING_ASSIGNED_TO_DIFFERENT_ADVISOR",
                 "Only the assigned advisor may review this warning.",
             )
+        if warning.review_state != WarningReviewState.PENDING_REVIEW:
+            raise ApplicationError(
+                409,
+                "EXPLICIT_RECONSIDERATION_REQUIRED",
+                "Use reconsideration for a reviewed warning.",
+            )
+        return self._record_review(warning, payload, reviewer)
+
+    def _record_review(self, warning, payload, reviewer):
+        if payload.decision.value == "DISMISSED":
+            self._dismissal_gate(warning)
         review = WarningReview(
             warning_id=warning.id,
             reviewer_id=reviewer.id,
             decision=payload.decision,
             note=payload.note,
-            reviewed_at=datetime.now(timezone.utc),
+            reviewed_at=datetime.now(UTC),
         )
         self.db.add(review)
         warning.review_state = WarningReviewState(payload.decision.value)
-        warning.updated_at = datetime.now(timezone.utc)
-        self.db.commit()
-        return self.detail(warning_id)
+        warning.updated_at = datetime.now(UTC)
+        self._mutation.commit()
+        return self.detail(warning.id)
+
+    def _dismissal_gate(self, warning):
+        cases = list(
+            self.db.scalars(
+                select(Intervention.id)
+                .where(
+                    Intervention.warning_id == warning.id,
+                    Intervention.status.not_in(
+                        [InterventionStatus.COMPLETED, InterventionStatus.CANCELLED]
+                    ),
+                )
+                .order_by(Intervention.id)
+            )
+        )
+        contacts = list(
+            self.db.scalars(
+                select(FollowUp.id)
+                .join(FollowUp.intervention)
+                .where(
+                    Intervention.warning_id == warning.id,
+                    FollowUp.status == FollowUpStatus.SCHEDULED,
+                )
+                .order_by(FollowUp.id)
+            )
+        )
+        if cases or contacts:
+            raise ApplicationError(
+                409,
+                "WARNING_HAS_ACTIVE_SUPPORT",
+                "Resolve linked interventions and scheduled follow-ups before dismissal.",
+                {
+                    "interventions": len(cases),
+                    "intervention_ids": [str(item) for item in cases],
+                    "follow_ups": len(contacts),
+                    "follow_up_ids": [str(item) for item in contacts],
+                },
+            )
+
+    @guarded(UserRole.ACADEMIC_ADVISOR)
+    def reconsider(
+        self, warning_id: UUID, payload: ReconsiderationRequest, reviewer: User
+    ) -> WarningDetail:
+        warning = self._get(warning_id, lock=True)
+        if warning.assigned_to != reviewer.id:
+            raise ApplicationError(
+                403,
+                "WARNING_ASSIGNED_TO_DIFFERENT_ADVISOR",
+                "Only the assigned advisor may reconsider this warning.",
+            )
+        if warning.review_state == WarningReviewState.PENDING_REVIEW:
+            raise ApplicationError(
+                409, "WARNING_NOT_REVIEWED", "Use the initial review action first."
+            )
+        return self._record_review(warning, payload, reviewer)

@@ -20,6 +20,7 @@ from app.schemas.casework import (
     InterventionNoteCreate,
     InterventionNoteResponse,
     InterventionPage,
+    InterventionTransfer,
     InterventionUpdate,
 )
 from app.services.casework_service import CaseworkService
@@ -187,3 +188,22 @@ def intervention_follow_ups(
     return CaseworkService(db).intervention_follow_ups(
         intervention_id, page=page, page_size=page_size
     )
+
+
+@router.post(
+    "/interventions/{intervention_id}/transfer", response_model=InterventionDetail
+)
+def transfer_intervention(
+    intervention_id: UUID,
+    payload: InterventionTransfer,
+    actor: User = Depends(require_roles(UserRole.ACADEMIC_ADMIN)),
+    db: Session = Depends(get_db),
+) -> InterventionDetail:
+    return CaseworkService(db).transfer_intervention(intervention_id, payload, actor)
+
+
+@router.get("/casework/integrity", response_model=list[FollowUpRow])
+def integrity_diagnostics(
+    _: User = Depends(read_access), db: Session = Depends(get_db)
+) -> list[FollowUpRow]:
+    return CaseworkService(db).integrity_diagnostics()

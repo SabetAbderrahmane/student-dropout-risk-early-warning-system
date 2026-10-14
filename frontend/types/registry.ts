@@ -8,22 +8,12 @@ import type {
 import type { AssessmentFields, PredictionFreshnessFields } from "./assessment";
 export type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
 export type WarningState =
-  | "PENDING_REVIEW"
-  | "CONFIRMED"
-  | "DISMISSED"
-  | "NONE";
+  "PENDING_REVIEW" | "CONFIRMED" | "DISMISSED" | "NONE";
 export type InterventionState =
-  | "PLANNED"
-  | "IN_PROGRESS"
-  | "ACTION_REQUIRED"
-  | "COMPLETED"
-  | "CANCELLED";
+  "PLANNED" | "IN_PROGRESS" | "ACTION_REQUIRED" | "COMPLETED" | "CANCELLED";
 export type PredictionReadiness = "READY" | "NOT_READY";
 export type RegistrySort =
-  | "student_number"
-  | "name"
-  | "risk_probability"
-  | "updated_at";
+  "student_number" | "name" | "risk_probability" | "updated_at";
 export interface StudentRegistryParams {
   page: number;
   page_size: 25 | 50 | 100;
@@ -90,6 +80,7 @@ export interface ProfilePrediction extends RegistryPrediction {
   explanation_method: string | null;
 }
 export interface ProfileWarning {
+  revision: number;
   id: string;
   prediction_id: string;
   risk_level: string;

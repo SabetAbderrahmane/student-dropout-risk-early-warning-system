@@ -8,6 +8,7 @@ import { FollowUpMetrics } from "./follow-up-metrics";
 import { FollowUpFilters } from "./follow-up-filters";
 import { FollowUpQueue } from "./follow-up-queue";
 import { FollowUpDetailPanel } from "./follow-up-detail-panel";
+import { IntegrityDiagnostics } from "./integrity-diagnostics";
 import { ScheduleFollowUpModal } from "./schedule-follow-up-modal";
 
 export function FollowUpsWorkspace() {
@@ -91,6 +92,14 @@ export function FollowUpsWorkspace() {
             report={state.report}
             onRetry={state.refresh}
           />
+          {state.token && (
+            <IntegrityDiagnostics
+              token={state.token}
+              revision={state.revision}
+              report={state.report}
+              onSelect={state.select}
+            />
+          )}
           <FollowUpFilters
             user={state.user}
             params={state.params}

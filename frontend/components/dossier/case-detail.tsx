@@ -8,6 +8,7 @@ import {
   createCaseFollowUp,
   fetchInterventionDetail,
   updateIntervention,
+  transferIntervention,
 } from "@/lib/api";
 import { readable, timestamp } from "@/lib/dashboard";
 import type { User } from "@/types/auth";
@@ -62,7 +63,7 @@ export function CaseDetail({
   const [error, setError] = useState("");
   const [revision, setRevision] = useState(0);
   const [mode, setMode] = useState<
-    "note" | "edit" | "schedule" | "complete" | "cancel" | null
+    "note" | "edit" | "schedule" | "complete" | "cancel" | "transfer" | null
   >(null);
   useEffect(() => {
     const controller = new AbortController();
@@ -119,7 +120,7 @@ export function CaseDetail({
       {
         key: "assigned_to",
         label: "Assigned advisor",
-        readOnly: user.role !== "ACADEMIC_ADMIN",
+        readOnly: true,
       },
     ];
     initial = { assigned_to: detail.assigned_advisor.id };
@@ -139,9 +140,6 @@ export function CaseDetail({
         type: "date",
         optional: true,
       },
-      ...(user.role === "ACADEMIC_ADMIN"
-        ? [{ key: "assigned_to", label: "Assigned advisor" }]
-        : []),
     ];
     initial = {
       title: detail.title,
@@ -151,36 +149,49 @@ export function CaseDetail({
       assigned_to: detail.assigned_advisor.id,
     };
   }
+  if (mode === "transfer" && detail) {
+    fields = [
+      { key: "assigned_to", label: "New advisor" },
+      { key: "reason", label: "Transfer reason", type: "textarea" },
+    ];
+    initial = { assigned_to: detail.assigned_advisor.id };
+  }
   async function save(values: Record<string, string>) {
     if (!detail || !owned) return "Your account cannot change this case.";
     const result = await mutate(() =>
-      mode === "note"
-        ? addInterventionNote(token, id, values.note)
-        : mode === "complete"
-          ? completeIntervention(
-              token,
-              id,
-              values.outcome as InterventionOutcome,
-              values.completion_notes,
-            )
-          : mode === "cancel"
-            ? cancelIntervention(token, id, values.reason)
-            : mode === "schedule"
-              ? createCaseFollowUp(token, id, {
-                  scheduled_for: new Date(values.scheduled_for).toISOString(),
-                  method: values.method as FollowUpMethod,
-                  purpose: values.purpose,
-                  assigned_to: values.assigned_to,
-                })
-              : updateIntervention(token, id, {
-                  title: values.title,
-                  description: values.description,
-                  priority: values.priority as WarningPriority,
-                  target_date: values.target_date || null,
-                  ...(user.role === "ACADEMIC_ADMIN"
-                    ? { assigned_to: values.assigned_to }
-                    : {}),
-                }),
+      mode === "transfer"
+        ? transferIntervention(token, id, {
+            assigned_to: values.assigned_to,
+            reason: values.reason,
+            expected_revision: detail.revision,
+          })
+        : mode === "note"
+          ? addInterventionNote(token, id, values.note, detail.revision)
+          : mode === "complete"
+            ? completeIntervention(
+                token,
+                id,
+                values.outcome as InterventionOutcome,
+                values.completion_notes,
+                detail.revision,
+              )
+            : mode === "cancel"
+              ? cancelIntervention(token, id, values.reason, detail.revision)
+              : mode === "schedule"
+                ? createCaseFollowUp(token, id, {
+                    scheduled_for: new Date(values.scheduled_for).toISOString(),
+                    method: values.method as FollowUpMethod,
+                    purpose: values.purpose,
+                    assigned_to: detail.assigned_advisor.id,
+                    expected_revision: detail.revision,
+                  })
+                : updateIntervention(token, id, {
+                    expected_revision: detail.revision,
+                    title: values.title,
+                    description: values.description,
+                    priority: values.priority as WarningPriority,
+                    target_date: values.target_date || null,
+                  }),
     );
     if (!result) {
       setError("");
@@ -194,7 +205,10 @@ export function CaseDetail({
     const next =
       detail.status === "IN_PROGRESS" ? "ACTION_REQUIRED" : "IN_PROGRESS";
     const result = await mutate(() =>
-      updateIntervention(token, id, { status: next }),
+      updateIntervention(token, id, {
+        status: next,
+        expected_revision: detail.revision,
+      }),
     );
     if (!result) {
       setError("");
@@ -253,6 +267,15 @@ export function CaseDetail({
               >
                 Add Note
               </button>
+              {mutable && user.role === "ACADEMIC_ADMIN" && (
+                <button
+                  className="dash-button"
+                  disabled={busy}
+                  onClick={() => setMode("transfer")}
+                >
+                  Transfer Intervention
+                </button>
+              )}
               {mutable && (
                 <>
                   <button
@@ -289,7 +312,7 @@ export function CaseDetail({
                   </button>
                 </>
               )}
-              {detail.status !== "CANCELLED" && (
+              {mutable && (
                 <button
                   className="dash-button"
                   disabled={busy}
@@ -303,7 +326,7 @@ export function CaseDetail({
           {mode &&
             owned &&
             (mode === "note" ||
-              (mode === "schedule" && detail.status !== "CANCELLED") ||
+              (mode === "schedule" && mutable) ||
               mutable) && (
               <section className="dossier-subform">
                 <h3>{readable(mode)}</h3>
@@ -322,6 +345,26 @@ export function CaseDetail({
                   onCancel={() => setMode(null)}
                 />
               </section>
+            )}
+          {mode === "transfer" && (
+            <p className="dossier-prose">
+              Transfers{" "}
+              {
+                detail.follow_ups.filter(
+                  (item) => item.stored_status === "SCHEDULED",
+                ).length
+              }{" "}
+              scheduled follow-ups, including due and overdue contacts.
+            </p>
+          )}
+          {mutable &&
+            detail.follow_ups.some(
+              (item) => item.stored_status === "SCHEDULED",
+            ) && (
+              <p className="dossier-prose">
+                Complete or cancel all scheduled follow-ups before closing this
+                intervention.
+              </p>
             )}
           <h3>Advisor notes ({detail.notes.length})</h3>
           {detail.notes.length === 0 ? (

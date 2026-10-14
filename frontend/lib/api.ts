@@ -79,7 +79,24 @@ export class ApiError extends Error {
     public readonly code: string,
     public readonly details?: unknown,
   ) {
-    super(message);
+    const blockers =
+      details && typeof details === "object" && !Array.isArray(details)
+        ? Object.entries(details)
+            .filter(([key]) =>
+              [
+                "interventions",
+                "follow_ups",
+                "intervention_ids",
+                "follow_up_ids",
+              ].includes(key),
+            )
+            .map(
+              ([key, value]) =>
+                `${key.replaceAll("_", " ")}: ${Array.isArray(value) ? value.join(", ") : value}`,
+            )
+            .join("; ")
+        : "";
+    super(blockers ? `${message} ${blockers}` : message);
     this.name = "ApiError";
   }
 }
@@ -249,12 +266,13 @@ export const assignStudentWarning = (
   token: string,
   id: string,
   assigned_to: string | null,
+  expected_revision?: number,
 ) =>
   dossierRequest<WarningDetail>(
     token,
     `/warnings/${encodeURIComponent(id)}/assignment`,
     "PATCH",
-    { assigned_to },
+    { assigned_to, expected_revision },
   );
 export const fetchInterventionDetail = (
   token: string,
@@ -317,31 +335,42 @@ export const updateIntervention = (
     "PATCH",
     payload,
   );
-export const addInterventionNote = (token: string, id: string, note: string) =>
+export const addInterventionNote = (
+  token: string,
+  id: string,
+  note: string,
+  expected_revision?: number,
+) =>
   dossierRequest<InterventionNote>(
     token,
     `/interventions/${encodeURIComponent(id)}/notes`,
     "POST",
-    { note },
+    { note, expected_revision },
   );
 export const completeIntervention = (
   token: string,
   id: string,
   outcome: InterventionOutcome,
   completion_notes: string,
+  expected_revision?: number,
 ) =>
   dossierRequest<InterventionDetail>(
     token,
     `/interventions/${encodeURIComponent(id)}/complete`,
     "POST",
-    { outcome, completion_notes },
+    { outcome, completion_notes, expected_revision },
   );
-export const cancelIntervention = (token: string, id: string, reason: string) =>
+export const cancelIntervention = (
+  token: string,
+  id: string,
+  reason: string,
+  expected_revision?: number,
+) =>
   dossierRequest<InterventionDetail>(
     token,
     `/interventions/${encodeURIComponent(id)}/cancel`,
     "POST",
-    { reason },
+    { reason, expected_revision },
   );
 export const createCaseFollowUp = (
   token: string,
@@ -388,12 +417,17 @@ export const completeCaseFollowUp = (
     "POST",
     payload,
   );
-export const cancelCaseFollowUp = (token: string, id: string, reason: string) =>
+export const cancelCaseFollowUp = (
+  token: string,
+  id: string,
+  reason: string,
+  expected_revision?: number,
+) =>
   dossierRequest<FollowUpDetail>(
     token,
     `/follow-ups/${encodeURIComponent(id)}/cancel`,
     "POST",
-    { reason },
+    { reason, expected_revision },
   );
 
 export async function login(
@@ -518,14 +552,19 @@ export async function fetchPrediction(
 export async function fetchDashboardOverview(
   token: string,
   signal?: AbortSignal,
-  predictionScope: "OPERATIONAL_CURRENT" | "LEGACY_BINARY_FIRST_SEMESTER" = "OPERATIONAL_CURRENT",
+  predictionScope:
+    | "OPERATIONAL_CURRENT"
+    | "LEGACY_BINARY_FIRST_SEMESTER" = "OPERATIONAL_CURRENT",
 ): Promise<DashboardOverview> {
   return parseResponse<DashboardOverview>(
-    await apiFetch(`${API_BASE_URL}/dashboard/overview?prediction_scope=${predictionScope}`, {
-      headers: bearerHeaders(token),
-      cache: "no-store",
-      signal,
-    }),
+    await apiFetch(
+      `${API_BASE_URL}/dashboard/overview?prediction_scope=${predictionScope}`,
+      {
+        headers: bearerHeaders(token),
+        cache: "no-store",
+        signal,
+      },
+    ),
   );
 }
 
@@ -978,3 +1017,51 @@ export async function downloadImportTemplate(token: string): Promise<void> {
   link.click();
   URL.revokeObjectURL(url);
 }
+
+export const transferIntervention = (
+  token: string,
+  id: string,
+  payload: { assigned_to: string; reason: string; expected_revision: number },
+) =>
+  dossierRequest<InterventionDetail>(
+    token,
+    `/interventions/${encodeURIComponent(id)}/transfer`,
+    "POST",
+    payload,
+  );
+export const reconsiderWarning = (
+  token: string,
+  id: string,
+  payload: ReviewWarningInput & { reason: string; expected_revision: number },
+) =>
+  dossierRequest<WarningDetail>(
+    token,
+    `/warnings/${encodeURIComponent(id)}/reconsider`,
+    "POST",
+    payload,
+  );
+export const recoverFollowUp = (
+  token: string,
+  id: string,
+  payload: {
+    action: "ALIGN" | "COMPLETE" | "CANCEL";
+    reason: string;
+    expected_revision: number;
+    outcome?: FollowUpCompletion["outcome"];
+    notes?: string;
+  },
+) =>
+  dossierRequest<FollowUpDetail>(
+    token,
+    `/follow-ups/${encodeURIComponent(id)}/recover`,
+    "POST",
+    payload,
+  );
+export const fetchCaseworkIntegrity = (token: string, signal?: AbortSignal) =>
+  dossierRequest<FollowUpDetail[]>(
+    token,
+    "/casework/integrity",
+    "GET",
+    undefined,
+    signal,
+  );

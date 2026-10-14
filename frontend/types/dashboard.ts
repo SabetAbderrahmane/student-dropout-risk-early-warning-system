@@ -57,6 +57,7 @@ export interface AttentionStudent {
   probability: number | null;
   risk_level: string | null;
   warning_id: string | null;
+  warning_revision: number | null;
   priority: string | null;
   review_state: string | null;
   assigned_advisor: { user_id: string; full_name: string } | null;
@@ -69,6 +70,8 @@ export interface AttentionStudent {
 
 export type ReviewDecision = "CONFIRMED" | "DISMISSED";
 export interface ReviewWarningInput {
+  expected_revision?: number;
+  reason?: string;
   decision: ReviewDecision;
   note: string;
 }

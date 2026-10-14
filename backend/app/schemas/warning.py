@@ -2,7 +2,7 @@ from datetime import datetime
 from math import ceil
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from app.models.prediction import RiskLevel
 from app.models.warning import ReviewDecision, WarningPriority, WarningReviewState
@@ -21,6 +21,7 @@ class StudentSummary(BaseModel):
 
 
 class WarningRow(BaseModel):
+    revision: int
     model_config = ConfigDict(protected_namespaces=())
 
     id: UUID
@@ -77,12 +78,14 @@ class WarningPage(BaseModel):
 
 
 class AssignmentRequest(BaseModel):
+    expected_revision: int | None = Field(default=None, ge=0)
     assigned_to: UUID | None
 
 
 class ReviewRequest(BaseModel):
+    expected_revision: int | None = Field(default=None, ge=0)
     decision: ReviewDecision
-    note: str
+    note: str = Field(max_length=4000)
 
     @field_validator("note")
     @classmethod
@@ -91,3 +94,14 @@ class ReviewRequest(BaseModel):
         if not value:
             raise ValueError("Review note must not be blank.")
         return value
+
+
+class ReconsiderationRequest(ReviewRequest):
+    model_config = ConfigDict(extra="forbid")
+    expected_revision: int = Field(ge=0)
+    reason: str = Field(min_length=1, max_length=4000)
+
+    @field_validator("reason")
+    @classmethod
+    def reason_nonblank(cls, value):
+        return cls.nonblank(value)

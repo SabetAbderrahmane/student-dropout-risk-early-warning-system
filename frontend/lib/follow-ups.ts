@@ -71,6 +71,7 @@ export function canScheduleFollowUp(
 ): boolean {
   return (
     intervention.status !== "CANCELLED" &&
+    intervention.status !== "COMPLETED" &&
     (user.role === "ACADEMIC_ADMIN" ||
       (user.role === "ACADEMIC_ADVISOR" &&
         intervention.assigned_advisor.id === user.id))
@@ -83,6 +84,7 @@ export function canChangeFollowUp(
 ): boolean {
   return (
     followUp.stored_status === "SCHEDULED" &&
+    followUp.integrity_issues.length === 0 &&
     (user.role === "ACADEMIC_ADMIN" ||
       (user.role === "ACADEMIC_ADVISOR" &&
         followUp.assigned_advisor.id === user.id &&

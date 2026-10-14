@@ -78,7 +78,7 @@ export function ScheduleFollowUpModal({
           <p className="follow-muted">
             Choose an existing intervention
             {user.role === "ACADEMIC_ADVISOR" ? " assigned to you" : ""}.
-            Cancelled cases cannot receive follow-ups.
+            Completed and cancelled cases cannot receive follow-ups.
           </p>
           <label className="follow-picker-search">
             Search interventions
@@ -188,6 +188,7 @@ export function ScheduleFollowUpModal({
                   user={user}
                   disabled={detail.loading || !!detail.error}
                   interventionId={selected}
+                  parentRevision={detail.data.revision}
                   advisorId={detail.data.assigned_advisor.id}
                   mutate={mutate}
                   onDone={onClose}

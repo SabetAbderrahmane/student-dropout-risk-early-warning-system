@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy import select
@@ -24,6 +24,7 @@ from app.schemas.casework import (
     FollowUpComplete,
     FollowUpCreate,
     FollowUpPage,
+    FollowUpRecovery,
     FollowUpRow,
     FollowUpUpdate,
     InterventionComplete,
@@ -33,10 +34,12 @@ from app.schemas.casework import (
     InterventionNoteResponse,
     InterventionPage,
     InterventionRow,
+    InterventionTransfer,
     InterventionUpdate,
     StudentSummary,
     WarningLink,
 )
+from app.services.casework_mutation import CASEWORK_ROLES, guarded
 
 
 class CaseworkService:
@@ -46,7 +49,7 @@ class CaseworkService:
 
     @staticmethod
     def _now() -> datetime:
-        return datetime.now(timezone.utc)
+        return datetime.now(UTC)
 
     @staticmethod
     def effective_status(follow_up: FollowUp, now: datetime) -> EffectiveFollowUpStatus:
@@ -56,8 +59,8 @@ class CaseworkService:
             return EffectiveFollowUpStatus.CANCELLED
         scheduled = follow_up.scheduled_for
         if scheduled.tzinfo is None:
-            scheduled = scheduled.replace(tzinfo=timezone.utc)
-        start = datetime(now.year, now.month, now.day, tzinfo=timezone.utc)
+            scheduled = scheduled.replace(tzinfo=UTC)
+        start = datetime(now.year, now.month, now.day, tzinfo=UTC)
         if scheduled < start:
             return EffectiveFollowUpStatus.OVERDUE
         if scheduled < start + timedelta(days=1):
@@ -136,6 +139,10 @@ class CaseworkService:
         student = follow_up.student
         return FollowUpRow(
             id=follow_up.id,
+            revision=follow_up.revision,
+            parent_status=follow_up.intervention.status,
+            parent_assigned_to=follow_up.intervention.assigned_to,
+            integrity_issues=self._integrity_issues(follow_up),
             intervention_id=follow_up.intervention_id,
             warning_id=follow_up.intervention.warning_id,
             prediction_id=follow_up.intervention.warning.prediction_id,
@@ -165,6 +172,7 @@ class CaseworkService:
         warning = intervention.warning
         return InterventionRow(
             id=intervention.id,
+            revision=intervention.revision,
             student=StudentSummary(
                 id=student.id, student_number=student.student_number, name=student.name
             ),
@@ -240,6 +248,7 @@ class CaseworkService:
             order="desc",
         )
 
+    @guarded(*CASEWORK_ROLES)
     def create_intervention(
         self, payload: InterventionCreate, actor: User
     ) -> InterventionDetail:
@@ -285,9 +294,10 @@ class CaseworkService:
             updated_at=self._now(),
         )
         self.db.add(intervention)
-        self.db.commit()
+        self._mutation.commit()
         return self.intervention_detail(intervention.id)
 
+    @guarded(*CASEWORK_ROLES)
     def update_intervention(
         self, intervention_id: UUID, payload: InterventionUpdate, actor: User
     ) -> InterventionDetail:
@@ -304,10 +314,6 @@ class CaseworkService:
             )
         fields = payload.model_fields_set
         if "assigned_to" in fields:
-            if payload.assigned_to is None:
-                raise ApplicationError(
-                    422, "INVALID_INTERVENTION_ASSIGNEE", "An advisor is required."
-                )
             if (
                 actor.role != UserRole.ACADEMIC_ADMIN
                 and payload.assigned_to != actor.id
@@ -315,10 +321,13 @@ class CaseworkService:
                 raise ApplicationError(
                     403,
                     "INTERVENTION_ASSIGNED_TO_DIFFERENT_ADVISOR",
-                    "Only Academic Admin may reassign a case.",
+                    "Only Academic Admin may transfer a case.",
                 )
-            self._advisor(payload.assigned_to, "INVALID_INTERVENTION_ASSIGNEE")
-            intervention.assigned_to = payload.assigned_to
+            raise ApplicationError(
+                409,
+                "EXPLICIT_TRANSFER_REQUIRED",
+                "Use the reasoned intervention transfer action.",
+            )
         if "status" in fields:
             allowed = {
                 InterventionStatus.PLANNED: {InterventionStatus.IN_PROGRESS},
@@ -354,9 +363,10 @@ class CaseworkService:
                 )
             intervention.target_date = payload.target_date
         intervention.updated_at = self._now()
-        self.db.commit()
+        self._mutation.commit()
         return self.intervention_detail(intervention_id)
 
+    @guarded(*CASEWORK_ROLES)
     def add_note(
         self, intervention_id: UUID, payload: InterventionNoteCreate, actor: User
     ) -> InterventionNoteResponse:
@@ -369,7 +379,7 @@ class CaseworkService:
             created_at=self._now(),
         )
         self.db.add(note)
-        self.db.commit()
+        self._mutation.commit()
         return self._note_row(note)
 
     def list_notes(self, intervention_id: UUID) -> list[InterventionNoteResponse]:
@@ -383,6 +393,7 @@ class CaseworkService:
             )
         ]
 
+    @guarded(*CASEWORK_ROLES)
     def complete_intervention(
         self, intervention_id: UUID, payload: InterventionComplete, actor: User
     ) -> InterventionDetail:
@@ -397,14 +408,16 @@ class CaseworkService:
                 "INVALID_INTERVENTION_TRANSITION",
                 "This intervention is already terminal.",
             )
+        self._closure_gate(intervention)
         intervention.status = InterventionStatus.COMPLETED
         intervention.completed_at = self._now()
         intervention.completion_outcome = payload.outcome
         intervention.completion_notes = payload.completion_notes
         intervention.updated_at = self._now()
-        self.db.commit()
+        self._mutation.commit()
         return self.intervention_detail(intervention_id)
 
+    @guarded(*CASEWORK_ROLES)
     def cancel_intervention(
         self, intervention_id: UUID, payload: CancellationRequest, actor: User
     ) -> InterventionDetail:
@@ -419,10 +432,11 @@ class CaseworkService:
                 "INVALID_INTERVENTION_TRANSITION",
                 "This intervention is already terminal.",
             )
+        self._closure_gate(intervention)
         intervention.status = InterventionStatus.CANCELLED
         intervention.completion_notes = payload.reason
         intervention.updated_at = self._now()
-        self.db.commit()
+        self._mutation.commit()
         return self.intervention_detail(intervention_id)
 
     def follow_up_detail(self, follow_up_id: UUID) -> FollowUpRow:
@@ -456,24 +470,21 @@ class CaseworkService:
             order="desc",
         )
 
+    @guarded(*CASEWORK_ROLES)
     def create_follow_up(
         self, intervention_id: UUID, payload: FollowUpCreate, actor: User
     ) -> FollowUpRow:
         intervention = self._intervention(intervention_id, lock=True)
         self._intervention_owner(intervention, actor)
-        if intervention.status == InterventionStatus.CANCELLED:
+        self._scheduling_gate(intervention)
+        self._advisor(payload.assigned_to, "INVALID_FOLLOW_UP_ASSIGNEE")
+        if payload.assigned_to != intervention.assigned_to:
             raise ApplicationError(
                 409,
-                "INVALID_FOLLOW_UP_TRANSITION",
-                "Cancelled interventions cannot receive follow-ups.",
+                "INDEPENDENT_FOLLOW_UP_DELEGATION",
+                "Scheduled follow-ups must use the intervention owner.",
             )
-        self._advisor(payload.assigned_to, "INVALID_FOLLOW_UP_ASSIGNEE")
-        if actor.role == UserRole.ACADEMIC_ADVISOR and payload.assigned_to != actor.id:
-            raise ApplicationError(
-                403,
-                "FOLLOW_UP_ASSIGNED_TO_DIFFERENT_ADVISOR",
-                "An advisor may schedule only their own follow-up.",
-            )
+        self._advisor(intervention.assigned_to, "INVALID_FOLLOW_UP_ASSIGNEE")
         follow_up = FollowUp(
             intervention_id=intervention.id,
             student_id=intervention.student_id,
@@ -487,14 +498,16 @@ class CaseworkService:
             updated_at=self._now(),
         )
         self.db.add(follow_up)
-        self.db.commit()
+        self._mutation.commit()
         return self.follow_up_detail(follow_up.id)
 
+    @guarded(*CASEWORK_ROLES)
     def update_follow_up(
         self, follow_up_id: UUID, payload: FollowUpUpdate, actor: User
     ) -> FollowUpRow:
         follow_up = self._follow_up(follow_up_id, lock=True)
         self._follow_up_owner(follow_up, actor)
+        self._regular_child_gate(follow_up)
         if follow_up.status != FollowUpStatus.SCHEDULED:
             raise ApplicationError(
                 409,
@@ -511,10 +524,6 @@ class CaseworkService:
                     )
                 setattr(follow_up, field, value)
         if "assigned_to" in fields:
-            if payload.assigned_to is None:
-                raise ApplicationError(
-                    422, "INVALID_FOLLOW_UP_ASSIGNEE", "An advisor is required."
-                )
             if (
                 actor.role != UserRole.ACADEMIC_ADMIN
                 and payload.assigned_to != actor.id
@@ -522,24 +531,36 @@ class CaseworkService:
                 raise ApplicationError(
                     403,
                     "FOLLOW_UP_ASSIGNED_TO_DIFFERENT_ADVISOR",
-                    "Only Academic Admin may reassign a follow-up.",
+                    "Independent delegation is forbidden.",
                 )
-            self._advisor(payload.assigned_to, "INVALID_FOLLOW_UP_ASSIGNEE")
-            follow_up.assigned_to = payload.assigned_to
+            raise ApplicationError(
+                409,
+                "EXPLICIT_RECOVERY_REQUIRED",
+                "Use transfer or the explicit integrity recovery action.",
+            )
         follow_up.updated_at = self._now()
-        self.db.commit()
+        self._mutation.commit()
         return self.follow_up_detail(follow_up_id)
 
+    @guarded(*CASEWORK_ROLES)
     def complete_follow_up(
         self, follow_up_id: UUID, payload: FollowUpComplete, actor: User
     ) -> FollowUpRow:
         follow_up = self._follow_up(follow_up_id, lock=True)
         self._follow_up_owner(follow_up, actor)
+        if payload.next_follow_up_at is not None:
+            self._scheduling_gate(follow_up.intervention)
+        self._regular_child_gate(follow_up)
         if follow_up.status != FollowUpStatus.SCHEDULED:
             raise ApplicationError(
                 409,
                 "INVALID_FOLLOW_UP_TRANSITION",
                 "This follow-up is already terminal.",
+            )
+        if payload.next_follow_up_at is not None:
+            self._scheduling_gate(follow_up.intervention)
+            self._advisor(
+                follow_up.intervention.assigned_to, "INVALID_FOLLOW_UP_ASSIGNEE"
             )
         follow_up.status = FollowUpStatus.COMPLETED
         follow_up.outcome = payload.outcome
@@ -562,17 +583,19 @@ class CaseworkService:
                 )
             )
         try:
-            self.db.commit()
+            self._mutation.commit()
         except Exception:
             self.db.rollback()
             raise
         return self.follow_up_detail(follow_up_id)
 
+    @guarded(*CASEWORK_ROLES)
     def cancel_follow_up(
         self, follow_up_id: UUID, payload: CancellationRequest, actor: User
     ) -> FollowUpRow:
         follow_up = self._follow_up(follow_up_id, lock=True)
         self._follow_up_owner(follow_up, actor)
+        self._regular_child_gate(follow_up)
         if follow_up.status != FollowUpStatus.SCHEDULED:
             raise ApplicationError(
                 409,
@@ -582,5 +605,150 @@ class CaseworkService:
         follow_up.status = FollowUpStatus.CANCELLED
         follow_up.notes = payload.reason
         follow_up.updated_at = self._now()
-        self.db.commit()
+        self._mutation.commit()
         return self.follow_up_detail(follow_up_id)
+
+    @staticmethod
+    def _integrity_issues(follow_up: FollowUp) -> list[str]:
+        if follow_up.status != FollowUpStatus.SCHEDULED:
+            return []
+        issues = []
+        if follow_up.assigned_to != follow_up.intervention.assigned_to:
+            issues.append("OWNER_MISMATCH")
+        if follow_up.intervention.status in (
+            InterventionStatus.COMPLETED,
+            InterventionStatus.CANCELLED,
+        ):
+            issues.append("TERMINAL_PARENT")
+        return issues
+
+    @staticmethod
+    def _scheduling_gate(intervention: Intervention) -> None:
+        if intervention.status in (
+            InterventionStatus.COMPLETED,
+            InterventionStatus.CANCELLED,
+        ):
+            raise ApplicationError(
+                409,
+                "INVALID_FOLLOW_UP_TRANSITION",
+                "Terminal interventions cannot receive follow-ups or successors.",
+            )
+
+    def _regular_child_gate(self, follow_up: FollowUp) -> None:
+        issues = self._integrity_issues(follow_up)
+        if issues:
+            raise ApplicationError(
+                409,
+                "CASEWORK_RECOVERY_REQUIRED",
+                "Academic Admin must explicitly recover this historical obligation.",
+                {"issues": issues, "follow_up_id": str(follow_up.id)},
+            )
+
+    def _closure_gate(self, intervention: Intervention) -> None:
+        ids = list(
+            self.db.scalars(
+                select(FollowUp.id)
+                .where(
+                    FollowUp.intervention_id == intervention.id,
+                    FollowUp.status == FollowUpStatus.SCHEDULED,
+                )
+                .order_by(FollowUp.id)
+            )
+        )
+        if ids:
+            raise ApplicationError(
+                409,
+                "INTERVENTION_HAS_SCHEDULED_FOLLOW_UPS",
+                "Complete or cancel scheduled follow-ups before closing the intervention.",
+                {"follow_ups": len(ids), "follow_up_ids": [str(item) for item in ids]},
+            )
+
+    @guarded(UserRole.ACADEMIC_ADMIN)
+    def transfer_intervention(
+        self, intervention_id: UUID, payload: InterventionTransfer, actor: User
+    ) -> InterventionDetail:
+        intervention = self._intervention(intervention_id, lock=True)
+        self._scheduling_gate(intervention)
+        self._advisor(payload.assigned_to, "INVALID_INTERVENTION_ASSIGNEE")
+        if intervention.assigned_to == payload.assigned_to:
+            raise ApplicationError(
+                409,
+                "INTERVENTION_ALREADY_ASSIGNED",
+                "The selected advisor already owns this intervention.",
+            )
+        intervention.assigned_to = payload.assigned_to
+        intervention.updated_at = self._now()
+        children = list(
+            self.db.scalars(
+                select(FollowUp)
+                .where(
+                    FollowUp.intervention_id == intervention.id,
+                    FollowUp.status == FollowUpStatus.SCHEDULED,
+                )
+                .order_by(FollowUp.id)
+                .with_for_update()
+            )
+        )
+        for child in children:
+            child.assigned_to = payload.assigned_to
+            child.updated_at = self._now()
+        self._mutation.commit()
+        return self.intervention_detail(intervention_id)
+
+    @guarded(UserRole.ACADEMIC_ADMIN)
+    def recover_follow_up(
+        self, follow_up_id: UUID, payload: FollowUpRecovery, actor: User
+    ) -> FollowUpRow:
+        follow_up = self._follow_up(follow_up_id, lock=True)
+        issues = self._integrity_issues(follow_up)
+        if not issues:
+            raise ApplicationError(
+                409,
+                "NO_CASEWORK_INCONSISTENCY",
+                "This record does not require integrity recovery.",
+            )
+        if payload.action == "ALIGN":
+            self._scheduling_gate(follow_up.intervention)
+            self._advisor(
+                follow_up.intervention.assigned_to, "INVALID_FOLLOW_UP_ASSIGNEE"
+            )
+            follow_up.assigned_to = follow_up.intervention.assigned_to
+        else:
+            if "TERMINAL_PARENT" not in issues:
+                raise ApplicationError(
+                    409,
+                    "INVALID_RECOVERY_ACTION",
+                    "Align this contact with its nonterminal parent first.",
+                )
+            if payload.action == "COMPLETE":
+                if payload.outcome is None or payload.notes is None:
+                    raise ApplicationError(
+                        422,
+                        "RECOVERY_OUTCOME_REQUIRED",
+                        "A genuine outcome and notes are required.",
+                    )
+                follow_up.status = FollowUpStatus.COMPLETED
+                follow_up.outcome = payload.outcome
+                follow_up.notes = payload.notes
+                follow_up.completed_at = self._now()
+            else:
+                follow_up.status = FollowUpStatus.CANCELLED
+                follow_up.notes = payload.reason
+        follow_up.updated_at = self._now()
+        self._mutation.commit()
+        return self.follow_up_detail(follow_up_id)
+
+    def integrity_diagnostics(self) -> list[FollowUpRow]:
+        rows = self.db.scalars(
+            select(FollowUp)
+            .join(FollowUp.intervention)
+            .where(
+                FollowUp.status == FollowUpStatus.SCHEDULED,
+                (FollowUp.assigned_to != Intervention.assigned_to)
+                | Intervention.status.in_(
+                    [InterventionStatus.COMPLETED, InterventionStatus.CANCELLED]
+                ),
+            )
+            .order_by(FollowUp.id)
+        )
+        return [self.follow_up_detail(item.id) for item in rows]

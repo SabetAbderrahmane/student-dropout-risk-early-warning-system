@@ -9,7 +9,6 @@ import {
   updateCaseFollowUp,
 } from "@/lib/api";
 import { readable } from "@/lib/dashboard";
-import { AdvisorSelect } from "@/components/users/advisor-select";
 import {
   FOLLOW_UP_METHODS,
   FOLLOW_UP_OUTCOMES,
@@ -28,6 +27,7 @@ export function FollowUpForm({
   detail,
   interventionId,
   advisorId,
+  parentRevision,
   mutate,
   onDone,
   onCancel,
@@ -39,6 +39,7 @@ export function FollowUpForm({
   detail?: FollowUpDetail;
   interventionId?: string;
   advisorId?: string;
+  parentRevision?: number;
   mutate: FollowUpMutation;
   onDone: () => void;
   onCancel: () => void;
@@ -99,20 +100,26 @@ export function FollowUpForm({
         try {
           let failure: FollowUpFailure | null;
           if (mode === "schedule" || mode === "edit") {
-            const payload: FollowUpInput = {
+            const payload = {
               scheduled_for: followUpInstant(scheduled),
               method,
               purpose: purpose.trim(),
-              assigned_to: assigned.trim(),
+              ...(mode === "schedule" ? { assigned_to: assigned.trim() } : {}),
+              expected_revision:
+                mode === "schedule" ? parentRevision : detail!.revision,
             };
             failure = await mutate(() =>
               mode === "schedule"
-                ? createCaseFollowUp(token, interventionId!, payload)
+                ? createCaseFollowUp(token, interventionId!, {
+                    ...payload,
+                    assigned_to: assigned.trim(),
+                  })
                 : updateCaseFollowUp(token, detail!.id, payload),
             );
           } else if (mode === "complete") {
             failure = await mutate(() =>
               completeCaseFollowUp(token, detail!.id, {
+                expected_revision: detail!.revision,
                 outcome: outcome as NonNullable<FollowUpDetail["outcome"]>,
                 notes: notes.trim(),
                 ...(another
@@ -122,7 +129,12 @@ export function FollowUpForm({
             );
           } else
             failure = await mutate(() =>
-              cancelCaseFollowUp(token, detail!.id, notes.trim()),
+              cancelCaseFollowUp(
+                token,
+                detail!.id,
+                notes.trim(),
+                detail!.revision,
+              ),
             );
           if (failure) setError(failure);
           else onDone();
@@ -180,28 +192,11 @@ export function FollowUpForm({
               Assigned advisor
               {user.role === "ACADEMIC_ADMIN" ? "" : ` — ${user.full_name}`}
             </label>
-            {user.role === "ACADEMIC_ADMIN" ? (
-              <AdvisorSelect
-                id={`${prefix}-assigned_to`}
-                value={assigned}
-                onChange={setAssigned}
-              />
-            ) : (
-              <input
-                id={`${prefix}-assigned_to`}
-                required
-                readOnly
-                value={assigned}
-                onChange={(e) => setAssigned(e.target.value)}
-                {...invalid("assigned_to")}
-              />
-            )}
-            {fieldError("assigned_to")}
-            {user.role === "ACADEMIC_ADMIN" && (
-              <p className="follow-muted">
-                Choose an active academic advisor from the directory.
-              </p>
-            )}
+            <input id={`${prefix}-assigned_to`} readOnly value={assigned} />
+            <p className="follow-muted">
+              Scheduled follow-ups use the intervention owner. Use case transfer
+              to change ownership.
+            </p>
           </>
         )}
         {mode === "complete" && (

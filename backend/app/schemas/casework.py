@@ -4,7 +4,7 @@ from math import ceil
 from typing import Annotated
 from uuid import UUID
 
-from pydantic import AfterValidator, BaseModel, Field, model_validator
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, model_validator
 
 from app.models.casework import (
     FollowUpMethod,
@@ -47,6 +47,7 @@ class InterventionCreate(BaseModel):
 
 
 class InterventionUpdate(BaseModel):
+    expected_revision: int | None = Field(default=None, ge=0)
     title: NonBlank | None = Field(default=None, max_length=250)
     description: NonBlank | None = Field(default=None, max_length=4000)
     priority: WarningPriority | None = None
@@ -56,15 +57,18 @@ class InterventionUpdate(BaseModel):
 
 
 class InterventionComplete(BaseModel):
+    expected_revision: int | None = Field(default=None, ge=0)
     outcome: InterventionOutcome
     completion_notes: NonBlank = Field(max_length=4000)
 
 
 class CancellationRequest(BaseModel):
+    expected_revision: int | None = Field(default=None, ge=0)
     reason: NonBlank = Field(max_length=4000)
 
 
 class InterventionNoteCreate(BaseModel):
+    expected_revision: int | None = Field(default=None, ge=0)
     note: NonBlank = Field(max_length=4000)
 
 
@@ -84,6 +88,7 @@ class WarningLink(BaseModel):
 
 
 class InterventionRow(BaseModel):
+    revision: int
     id: UUID
     student: StudentSummary
     warning: WarningLink
@@ -129,6 +134,7 @@ class InterventionPage(BaseModel):
 
 
 class FollowUpCreate(BaseModel):
+    expected_revision: int | None = Field(default=None, ge=0)
     scheduled_for: datetime
     method: FollowUpMethod
     purpose: NonBlank = Field(max_length=2000)
@@ -142,6 +148,7 @@ class FollowUpCreate(BaseModel):
 
 
 class FollowUpUpdate(BaseModel):
+    expected_revision: int | None = Field(default=None, ge=0)
     scheduled_for: datetime | None = None
     method: FollowUpMethod | None = None
     purpose: NonBlank | None = Field(default=None, max_length=2000)
@@ -157,6 +164,7 @@ class FollowUpUpdate(BaseModel):
 
 
 class FollowUpComplete(BaseModel):
+    expected_revision: int | None = Field(default=None, ge=0)
     outcome: FollowUpOutcome
     notes: NonBlank = Field(max_length=4000)
     next_follow_up_at: datetime | None = None
@@ -180,10 +188,14 @@ class EffectiveFollowUpStatus(str, enum.Enum):
 
 
 class FollowUpRow(BaseModel):
+    revision: int
     id: UUID
     intervention_id: UUID
     warning_id: UUID
     prediction_id: UUID
+    parent_status: InterventionStatus
+    parent_assigned_to: UUID
+    integrity_issues: list[str]
     student: StudentSummary
     assigned_advisor: AdvisorSummary
     scheduled_for: datetime
@@ -216,3 +228,19 @@ class FollowUpPage(BaseModel):
             total=total,
             total_pages=ceil(total / page_size) if total else 0,
         )
+
+
+class InterventionTransfer(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    assigned_to: UUID
+    reason: NonBlank = Field(max_length=4000)
+    expected_revision: int = Field(ge=0)
+
+
+class FollowUpRecovery(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    action: str = Field(pattern="^(ALIGN|COMPLETE|CANCEL)$")
+    reason: NonBlank = Field(max_length=4000)
+    expected_revision: int = Field(ge=0)
+    outcome: FollowUpOutcome | None = None
+    notes: NonBlank | None = Field(default=None, max_length=4000)

@@ -13,6 +13,7 @@ from app.schemas.casework import (
     EffectiveFollowUpStatus,
     FollowUpComplete,
     FollowUpPage,
+    FollowUpRecovery,
     FollowUpRow,
     FollowUpUpdate,
 )
@@ -93,3 +94,13 @@ def cancel_follow_up(
     db: Session = Depends(get_db),
 ) -> FollowUpRow:
     return CaseworkService(db).cancel_follow_up(follow_up_id, payload, actor)
+
+
+@router.post("/{follow_up_id}/recover", response_model=FollowUpRow)
+def recover_follow_up(
+    follow_up_id: UUID,
+    payload: FollowUpRecovery,
+    actor: User = Depends(require_roles(UserRole.ACADEMIC_ADMIN)),
+    db: Session = Depends(get_db),
+) -> FollowUpRow:
+    return CaseworkService(db).recover_follow_up(follow_up_id, payload, actor)

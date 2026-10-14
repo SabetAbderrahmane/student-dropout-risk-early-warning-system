@@ -8,6 +8,7 @@ from sqlalchemy import (
     Enum,
     ForeignKey,
     ForeignKeyConstraint,
+    Integer,
     String,
     UniqueConstraint,
     func,
@@ -44,6 +45,7 @@ def enum_column(enum_type: type[enum.Enum], name: str):
 class Warning(Base):
     __tablename__ = "warnings"
     __table_args__ = (
+        CheckConstraint("revision >= 0", name="revision_nonnegative"),
         CheckConstraint("risk_level <> 'LOW'", name="qualifying_risk"),
         UniqueConstraint("id", "student_id", name="uq_warnings_intervention_identity"),
         ForeignKeyConstraint(
@@ -58,6 +60,7 @@ class Warning(Base):
         ),
     )
 
+    revision: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     prediction_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("prediction_results.id", ondelete="RESTRICT"), unique=True

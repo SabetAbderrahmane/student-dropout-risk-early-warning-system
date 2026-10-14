@@ -4,18 +4,21 @@ import type { ReviewDecision, ReviewWarningInput } from "@/types/dashboard";
 export function WarningReviewForm({
   onSubmit,
   onBusy,
+  reconsider = false,
 }: {
   onSubmit: (payload: ReviewWarningInput) => Promise<string | null>;
   onBusy: (busy: boolean) => void;
+  reconsider?: boolean;
 }) {
   const [decision, setDecision] = useState<ReviewDecision>("CONFIRMED");
+  const [reason, setReason] = useState("");
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy) return;
-    if (!note.trim()) {
+    if (!note.trim() || (reconsider && !reason.trim())) {
       setError("A nonblank review note is required for either decision.");
       return;
     }
@@ -23,7 +26,11 @@ export function WarningReviewForm({
     onBusy(true);
     setError("");
     try {
-      const message = await onSubmit({ decision, note: note.trim() });
+      const message = await onSubmit({
+        decision,
+        note: note.trim(),
+        ...(reconsider ? { reason: reason.trim() } : {}),
+      });
       if (message) setError(message);
     } finally {
       setBusy(false);
@@ -32,7 +39,9 @@ export function WarningReviewForm({
   }
   return (
     <section className="warning-review-section">
-      <h3>Advisor Review Decision</h3>
+      <h3>
+        {reconsider ? "Reconsider Reviewed Warning" : "Advisor Review Decision"}
+      </h3>
       <p className="warning-muted">
         Record your rationale for this individual warning. Support planning is a
         separate next step.
@@ -60,6 +69,20 @@ export function WarningReviewForm({
               Dismiss Warning
             </label>
           </div>
+          {reconsider && (
+            <>
+              <label htmlFor="warning-reconsider-reason">
+                Reconsideration reason · Required
+              </label>
+              <textarea
+                id="warning-reconsider-reason"
+                required
+                maxLength={4000}
+                value={reason}
+                onChange={(event) => setReason(event.target.value)}
+              />
+            </>
+          )}
           <label htmlFor="warning-review-note">
             Review note <span>Required</span>
           </label>
@@ -81,7 +104,7 @@ export function WarningReviewForm({
           <button
             type="submit"
             className="dash-button dash-button-primary"
-            disabled={busy || !note.trim()}
+            disabled={busy || !note.trim() || (reconsider && !reason.trim())}
           >
             {busy
               ? "Saving review…"

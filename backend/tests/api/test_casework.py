@@ -1,14 +1,12 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
 import pytest
+from app.ml.runtime import ModelRuntime
+from app.models import FollowUp, Intervention, InterventionNote, UserRole, Warning
 from fastapi.testclient import TestClient
 from sqlalchemy import event, func, select
 from sqlalchemy.orm import Session
-
-from app.ml.runtime import ModelRuntime
-from app.models import FollowUp, Intervention, InterventionNote, UserRole, Warning
-from app.services.casework_service import CaseworkService
 from tests.api.test_predictions import create_ready_student
 
 
@@ -79,7 +77,7 @@ def create_intervention(client, student, warning, accounts, headers, role="acade
 def follow_up_payload(assignee, scheduled_for=None):
     return {
         "scheduled_for": (
-            scheduled_for or datetime.now(timezone.utc) + timedelta(days=2)
+            scheduled_for or datetime.now(UTC) + timedelta(days=2)
         ).isoformat(),
         "method": "IN_PERSON",
         "purpose": "  Review progress  ",
@@ -342,9 +340,13 @@ def test_admin_reassignment_changes_case_owner(
     confirm(client, warning, headers)
     intervention = create_intervention(client, student, warning, accounts, headers)
     url = f"/api/v1/interventions/{intervention['id']}"
-    changed = client.patch(
-        url,
-        json={"assigned_to": str(accounts["other"].id)},
+    changed = client.post(
+        url + "/transfer",
+        json={
+            "assigned_to": str(accounts["other"].id),
+            "reason": "New support owner",
+            "expected_revision": intervention["revision"],
+        },
         headers=headers["academic"],
     )
     assert changed.status_code == 200, changed.text
@@ -436,8 +438,8 @@ def test_follow_up_creation_status_and_filters(
         403,
         "INSUFFICIENT_PERMISSIONS",
     )
-    now = datetime.now(timezone.utc)
-    day_start = datetime(now.year, now.month, now.day, tzinfo=timezone.utc)
+    now = datetime.now(UTC)
+    day_start = datetime(now.year, now.month, now.day, tzinfo=UTC)
     dates = (day_start - timedelta(seconds=1), day_start, day_start + timedelta(days=1))
     statuses = []
     ids = []
@@ -538,7 +540,7 @@ def test_follow_up_update_complete_next_and_terminal(
         422,
         "VALIDATION_ERROR",
     )
-    next_at = (datetime.now(timezone.utc) + timedelta(days=5)).isoformat()
+    next_at = (datetime.now(UTC) + timedelta(days=5)).isoformat()
     completed = client.post(
         endpoint + "/complete",
         json={
@@ -614,7 +616,7 @@ def test_next_follow_up_failure_rolls_back_completion(
                     "outcome": "PROGRESS_OBSERVED",
                     "notes": "Reviewed",
                     "next_follow_up_at": (
-                        datetime.now(timezone.utc) + timedelta(days=3)
+                        datetime.now(UTC) + timedelta(days=3)
                     ).isoformat(),
                 },
                 headers=headers["advisor"],
@@ -688,7 +690,7 @@ def test_intervention_read_filters_and_pagination(
     )
     confirm(client, warning, headers)
     first = create_intervention(client, student, warning, accounts, headers)
-    second = create_intervention(client, student, warning, accounts, headers)
+    create_intervention(client, student, warning, accounts, headers)
     assert (
         client.patch(
             f"/api/v1/interventions/{first['id']}",

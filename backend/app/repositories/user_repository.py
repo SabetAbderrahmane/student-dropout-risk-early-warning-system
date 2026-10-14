@@ -25,6 +25,7 @@ class UserRepository:
         # Serialize account mutations, including the last-active-admin invariant.
         # Namespace uniqueness is also enforced independently by database keys.
         if self.db.get_bind().dialect.name == "postgresql":
+            self.db.execute(text("SET LOCAL lock_timeout = '5s'"))
             self.db.execute(text("SELECT pg_advisory_xact_lock(610110009)"))
 
     def get_by_username_or_email(self, identifier: str) -> User | None:

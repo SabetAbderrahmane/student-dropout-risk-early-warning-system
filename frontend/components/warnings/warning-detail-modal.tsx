@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ApiError, fetchWarning, reviewWarning } from "@/lib/api";
+import {
+  ApiError,
+  fetchWarning,
+  reviewWarning,
+  reconsiderWarning,
+} from "@/lib/api";
 import {
   canReviewWarning,
+  canReconsiderWarning,
   canCreateWarningIntervention,
   warningError,
 } from "@/lib/warnings";
@@ -61,10 +67,23 @@ export function WarningDetailModal({
     return () => controller.abort();
   }, [token, row.id, retry]);
   async function submit(payload: ReviewWarningInput): Promise<string | null> {
-    if (!detail || !canReviewWarning(user, detail))
+    if (
+      !detail ||
+      !(canReviewWarning(user, detail) || canReconsiderWarning(user, detail))
+    )
       return "Only the assigned academic advisor may review a pending warning.";
     try {
-      const result = await reviewWarning(token, detail.id, payload);
+      const result =
+        detail.review_state === "PENDING_REVIEW"
+          ? await reviewWarning(token, detail.id, {
+              ...payload,
+              expected_revision: detail.revision,
+            })
+          : await reconsiderWarning(token, detail.id, {
+              ...payload,
+              reason: payload.reason!,
+              expected_revision: detail.revision,
+            });
       setDetail(result);
       setSuccess(
         `Warning ${readable(result.review_state).toLowerCase()} successfully. Intervention creation remains a separate action.`,
@@ -74,6 +93,14 @@ export function WarningDetailModal({
       return null;
     } catch (caught) {
       if (caught instanceof ApiError && caught.status === 401) onUnauthorized();
+      if (caught instanceof ApiError && caught.status === 409) {
+        try {
+          setDetail(await fetchWarning(token, row.id));
+        } catch (refreshError) {
+          setDetail(null);
+          setError(warningError(refreshError));
+        }
+      }
       return warningError(caught);
     }
   }
@@ -126,7 +153,7 @@ export function WarningDetailModal({
           <div className="warning-detail-risk">
             <div>
               <strong>{percent(detail.probability)}</strong>
-              <span>Risk probability</span>
+              <span>Historical warning risk probability</span>
             </div>
             <div>
               <WarningBadge value={detail.risk_level} />
@@ -176,8 +203,13 @@ export function WarningDetailModal({
               </ol>
             )}
           </section>
-          {canReviewWarning(user, detail) ? (
-            <WarningReviewForm onSubmit={submit} onBusy={setBusy} />
+          {canReviewWarning(user, detail) ||
+          canReconsiderWarning(user, detail) ? (
+            <WarningReviewForm
+              onSubmit={submit}
+              onBusy={setBusy}
+              reconsider={detail.review_state !== "PENDING_REVIEW"}
+            />
           ) : (
             <div className="warning-readonly">
               <strong>

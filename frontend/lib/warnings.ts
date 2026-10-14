@@ -80,3 +80,11 @@ export function exportWarningPage(rows: readonly WarningRow[]): void {
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+
+export function canReconsiderWarning(user: User, warning: WarningRow): boolean {
+  return (
+    user.role === "ACADEMIC_ADVISOR" &&
+    warning.review_state !== "PENDING_REVIEW" &&
+    warning.assigned_advisor?.id === user.id
+  );
+}

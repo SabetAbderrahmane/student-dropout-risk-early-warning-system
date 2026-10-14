@@ -1,15 +1,14 @@
 from uuid import uuid4
 
 import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import func, select
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
-
 from app.ml.runtime import ModelRuntime
 from app.models import PredictionResult, UserRole, Warning, WarningReview
 from app.models.warning import WarningPriority
 from app.services.prediction_service import PredictionService
+from fastapi.testclient import TestClient
+from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 from tests.api.test_predictions import create_ready_student
 
 
@@ -263,8 +262,24 @@ def test_assignment_review_rbac_and_append_only(
     )
     for decision in ("CONFIRMED", "DISMISSED"):
         response = client.post(
-            review,
-            json={"decision": decision, "note": f"Review {decision}"},
+            review
+            if decision == "CONFIRMED"
+            else f"/api/v1/warnings/{warning_id}/reconsider",
+            json={
+                "decision": decision,
+                "note": f"Review {decision}",
+                **(
+                    {
+                        "reason": "New evidence",
+                        "expected_revision": client.get(
+                            f"/api/v1/warnings/{warning_id}",
+                            headers=headers["academic"],
+                        ).json()["revision"],
+                    }
+                    if decision == "DISMISSED"
+                    else {}
+                ),
+            },
             headers=headers["advisor"],
         )
         assert response.status_code == 201, response.text

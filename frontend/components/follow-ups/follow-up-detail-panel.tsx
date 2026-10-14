@@ -12,6 +12,7 @@ import { DossierBadge } from "@/components/dossier/dossier-records";
 import { CaseworkPagination } from "@/components/casework/pagination";
 import type { User } from "@/types/auth";
 import { useFollowUpResource } from "./use-follow-up-resource";
+import { IntegrityRecovery } from "./integrity-recovery";
 import { FollowUpForm, type FollowUpFormMode } from "./follow-up-form";
 
 export function FollowUpDetailPanel({
@@ -155,6 +156,14 @@ export function FollowUpDetailPanel({
               <dd>{readable(record.stored_status)}</dd>
             </div>
           </dl>
+          <IntegrityRecovery
+            record={record}
+            token={token}
+            user={user}
+            busy={busy}
+            mutate={async (work) => (await mutate(work))?.message ?? null}
+            onDone={onRetry}
+          />
           {record.outcome && (
             <section className="follow-recorded-outcome">
               <h3>Recorded outcome</h3>

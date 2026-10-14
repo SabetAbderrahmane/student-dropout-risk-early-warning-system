@@ -40,6 +40,8 @@ def get_current_user(
     user = UserRepository(db).get_by_id(user_id)
     if user is None or payload.get("ver", 0) != user.token_version:
         raise _authentication_error()
+    # Immutable presented claims survive populate_existing on the ORM actor.
+    db.info["presented_auth"] = (user_id, payload.get("ver", 0))
     return user
 
 

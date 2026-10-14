@@ -8,6 +8,7 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     ForeignKeyConstraint,
+    Integer,
     String,
     UniqueConstraint,
     func,
@@ -69,6 +70,7 @@ class FollowUpOutcome(str, enum.Enum):
 class Intervention(Base):
     __tablename__ = "interventions"
     __table_args__ = (
+        CheckConstraint("revision >= 0", name="revision_nonnegative"),
         UniqueConstraint(
             "id", "student_id", name="uq_interventions_follow_up_identity"
         ),
@@ -89,6 +91,7 @@ class Intervention(Base):
         ),
     )
 
+    revision: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     student_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("students.id", ondelete="RESTRICT"), index=True
@@ -174,6 +177,7 @@ class InterventionNote(Base):
 class FollowUp(Base):
     __tablename__ = "follow_ups"
     __table_args__ = (
+        CheckConstraint("revision >= 0", name="revision_nonnegative"),
         ForeignKeyConstraint(
             ["intervention_id", "student_id"],
             ["interventions.id", "interventions.student_id"],
@@ -187,6 +191,7 @@ class FollowUp(Base):
         ),
     )
 
+    revision: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     intervention_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("interventions.id", ondelete="RESTRICT"), index=True

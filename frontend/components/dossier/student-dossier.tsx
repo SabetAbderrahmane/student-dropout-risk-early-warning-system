@@ -11,6 +11,7 @@ import {
   createIntervention,
   predictStudent,
   reviewWarning,
+  reconsiderWarning,
 } from "@/lib/api";
 import { percent, readable, timestamp } from "@/lib/dashboard";
 import type { ProfileWarning } from "@/types/registry";
@@ -80,7 +81,9 @@ export function StudentDossier({ studentId }: { studentId: string }) {
             disabled={state.busy}
             onClick={() => setDialog({ kind: "review", warning })}
           >
-            Review Warning
+            {warning.review_state === "PENDING_REVIEW"
+              ? "Review Warning"
+              : "Reconsider Warning"}
           </button>
         )}
       {owned(warning.assigned_advisor?.user_id) &&
@@ -119,7 +122,9 @@ export function StudentDossier({ studentId }: { studentId: string }) {
       }
       onClick={() => {
         setPredictionStage(
-          p?.recommended_target_type === "BINARY_DROPOUT" ? "LEGACY" : p?.recommended_stage ?? "ENROLLMENT",
+          p?.recommended_target_type === "BINARY_DROPOUT"
+            ? "LEGACY"
+            : (p?.recommended_stage ?? "ENROLLMENT"),
         );
         setDialog({ kind: "predict" });
       }}
@@ -200,7 +205,9 @@ export function StudentDossier({ studentId }: { studentId: string }) {
                       {p.student.student_number}
                     </span>
                     {p.operational_prediction && (
-                      <DossierBadge value={p.operational_prediction.risk_level} />
+                      <DossierBadge
+                        value={p.operational_prediction.risk_level}
+                      />
                     )}
                   </div>
                   <p>
@@ -230,7 +237,9 @@ export function StudentDossier({ studentId }: { studentId: string }) {
                   <span>
                     {p.operational_prediction
                       ? timestamp(p.operational_prediction.predicted_at)
-                      : p.latest_historical_prediction ? "Reassessment required" : "Not assessed"}
+                      : p.latest_historical_prediction
+                        ? "Reassessment required"
+                        : "Not assessed"}
                   </span>
                 </div>
               </section>
@@ -551,9 +560,11 @@ export function StudentDossier({ studentId }: { studentId: string }) {
                   state.token,
                   dialog.warning.id,
                   values.assigned_to || null,
+                  dialog.warning.revision,
                 ),
               );
-              if (!result) setDialog(null);
+              if (!result || result.includes("This record changed"))
+                setDialog(null);
               return result;
             }}
           />
@@ -569,12 +580,23 @@ export function StudentDossier({ studentId }: { studentId: string }) {
             onClose={close}
           >
             <WarningReviewForm
+              reconsider={dialog.warning.review_state !== "PENDING_REVIEW"}
               onBusy={setReviewBusy}
               onSubmit={async (input) => {
                 const result = await state.mutate(() =>
-                  reviewWarning(state.token, dialog.warning.id, input),
+                  dialog.warning.review_state === "PENDING_REVIEW"
+                    ? reviewWarning(state.token, dialog.warning.id, {
+                        ...input,
+                        expected_revision: dialog.warning.revision,
+                      })
+                    : reconsiderWarning(state.token, dialog.warning.id, {
+                        ...input,
+                        reason: input.reason!,
+                        expected_revision: dialog.warning.revision,
+                      }),
                 );
-                if (!result) setDialog(null);
+                if (!result || result.includes("This record changed"))
+                  setDialog(null);
                 return result;
               }}
             />

@@ -28,8 +28,12 @@ export interface InterventionNote {
   created_at: string;
 }
 export interface FollowUpDetail {
+  revision: number;
   id: string;
   intervention_id: string;
+  parent_status: InterventionState;
+  parent_assigned_to: string;
+  integrity_issues: string[];
   warning_id: string;
   prediction_id: string;
   student: { id: string; student_number: string; name: string };
@@ -48,6 +52,7 @@ export interface FollowUpDetail {
   updated_at: string;
 }
 export interface InterventionDetail {
+  revision: number;
   id: string;
   student: FollowUpDetail["student"];
   warning: {
@@ -73,6 +78,7 @@ export interface InterventionDetail {
   follow_ups: FollowUpDetail[];
 }
 export interface InterventionUpdate {
+  expected_revision?: number;
   title?: string;
   description?: string;
   priority?: WarningPriority;
@@ -81,12 +87,14 @@ export interface InterventionUpdate {
   status?: "IN_PROGRESS" | "ACTION_REQUIRED";
 }
 export interface FollowUpInput {
+  expected_revision?: number;
   scheduled_for: string;
   method: FollowUpMethod;
   purpose: string;
   assigned_to: string;
 }
 export interface FollowUpCompletion {
+  expected_revision?: number;
   outcome: FollowUpOutcome;
   notes: string;
   next_follow_up_at?: string | null;

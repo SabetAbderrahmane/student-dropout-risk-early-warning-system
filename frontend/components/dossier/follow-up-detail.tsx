@@ -16,6 +16,7 @@ import type { User } from "@/types/auth";
 import { DossierForm, type DossierField } from "./dossier-form";
 import { DossierBadge, RecordValues } from "./dossier-records";
 import { dossierError } from "./use-dossier";
+import { IntegrityRecovery } from "@/components/follow-ups/integrity-recovery";
 import { FOLLOW_METHODS } from "./case-detail";
 const outcomes: FollowUpOutcome[] = [
   "COMPLETED",
@@ -81,7 +82,10 @@ export function FollowUpDetail({
     canCase &&
     (user.role === "ACADEMIC_ADMIN" ||
       (caseOwned && detail.assigned_advisor.id === user.id));
-  const editable = owned && detail?.stored_status === "SCHEDULED";
+  const editable =
+    owned &&
+    detail?.stored_status === "SCHEDULED" &&
+    detail.integrity_issues.length === 0;
   const fields: DossierField[] =
     mode === "cancel"
       ? [{ key: "reason", label: "Cancellation reason", type: "textarea" }]
@@ -109,9 +113,6 @@ export function FollowUpDetail({
               type: "textarea",
               maxLength: 2000,
             },
-            ...(user.role === "ACADEMIC_ADMIN"
-              ? [{ key: "assigned_to", label: "Assigned advisor" }]
-              : []),
           ];
   const initial: Record<string, string> =
     mode === "edit" && detail
@@ -146,6 +147,14 @@ export function FollowUpDetail({
       )}
       {detail && (
         <>
+          <IntegrityRecovery
+            record={detail}
+            token={token}
+            user={user}
+            busy={busy}
+            mutate={mutate}
+            onDone={() => setRevision((r) => r + 1)}
+          />
           <DossierBadge value={detail.effective_status} />
           <p className="dossier-prose">{detail.purpose}</p>
           <RecordValues
@@ -200,9 +209,15 @@ export function FollowUpDetail({
               onSubmit={async (values) => {
                 const result = await mutate(() =>
                   mode === "cancel"
-                    ? cancelCaseFollowUp(token, id, values.reason)
+                    ? cancelCaseFollowUp(
+                        token,
+                        id,
+                        values.reason,
+                        detail.revision,
+                      )
                     : mode === "complete"
                       ? completeCaseFollowUp(token, id, {
+                          expected_revision: detail.revision,
                           outcome: values.outcome as FollowUpOutcome,
                           notes: values.notes,
                           next_follow_up_at: values.next_follow_up_at
@@ -210,14 +225,12 @@ export function FollowUpDetail({
                             : null,
                         })
                       : updateCaseFollowUp(token, id, {
+                          expected_revision: detail.revision,
                           scheduled_for: new Date(
                             values.scheduled_for,
                           ).toISOString(),
                           method: values.method as FollowUpMethod,
                           purpose: values.purpose,
-                          ...(user.role === "ACADEMIC_ADMIN"
-                            ? { assigned_to: values.assigned_to }
-                            : {}),
                         }),
                 );
                 if (!result) {

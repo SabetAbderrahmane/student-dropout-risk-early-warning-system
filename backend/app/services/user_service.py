@@ -40,10 +40,15 @@ class UserService:
             )
         return user
 
-    def _administrator(self, actor: User) -> User:
-        expected_version = actor.token_version
+    def _administrator(self, actor: User, target_id: UUID | None = None) -> User:
+        expected_version = self.db.info.get(
+            "presented_auth", (actor.id, actor.token_version)
+        )[1]
         self.repository.lock_administration()
-        actor = self.get(actor.id, lock=True)
+        actor_id = actor.id
+        for identifier in sorted({actor_id, target_id} - {None}, key=str):
+            self.get(identifier, lock=True)
+        actor = self.get(actor_id, lock=True)
         if actor.token_version != expected_version or not actor.is_active:
             raise ApplicationError(
                 401, "AUTHENTICATION_REQUIRED", "Sign in again to continue."
@@ -218,7 +223,7 @@ class UserService:
 
     def update(self, actor: User, user_id: UUID, payload: UserUpdate) -> User:
         try:
-            actor = self._administrator(actor)
+            actor = self._administrator(actor, user_id)
             target = self.get(user_id, lock=True)
             values = payload.model_dump(exclude_unset=True)
             self._safeguards(
@@ -264,7 +269,7 @@ class UserService:
 
     def set_active(self, actor: User, user_id: UUID, active: bool) -> User:
         try:
-            actor = self._administrator(actor)
+            actor = self._administrator(actor, user_id)
             target = self.get(user_id, lock=True)
             self._safeguards(actor, target, role=target.role, active=active)
             if target.is_active != active:
@@ -288,7 +293,7 @@ class UserService:
         self, actor: User, user_id: UUID, temporary_password: str
     ) -> User:
         try:
-            actor = self._administrator(actor)
+            actor = self._administrator(actor, user_id)
             target = self.get(user_id, lock=True)
             if verify_password(temporary_password, target.password_hash):
                 raise ApplicationError(

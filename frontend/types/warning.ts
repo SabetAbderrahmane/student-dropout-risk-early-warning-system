@@ -27,6 +27,7 @@ export interface ExplanationFactor {
   contribution: number;
 }
 export interface WarningRow {
+  revision: number;
   id: string;
   student_id: string;
   student_number: string;

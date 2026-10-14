@@ -135,6 +135,8 @@ export function CaseworkWorkspace() {
       setRevision((r) => r + 1);
       return null;
     } catch (caught) {
+      if (caught instanceof ApiError && caught.status === 409)
+        setRevision((r) => r + 1);
       return report(caught);
     } finally {
       lock.current = false;

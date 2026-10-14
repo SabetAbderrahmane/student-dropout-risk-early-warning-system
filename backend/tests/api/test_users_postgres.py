@@ -350,7 +350,9 @@ def test_supported_bootstrap_provisioning_and_assignment_race(
                     barrier.wait(timeout=10)
                     try:
                         WarningService(db).assign(
-                            warning_id, AssignmentRequest(assigned_to=advisor_id)
+                            warning_id,
+                            AssignmentRequest(assigned_to=advisor_id),
+                            db.get(User, UUID(accounts["academic"]["id"])),
                         )
                         return "saved"
                     except ApplicationError as exc:

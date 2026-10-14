@@ -48,7 +48,7 @@ def test_migrated_postgres_real_prediction_and_warning(monkeypatch):
         with engine.connect() as connection:
             assert (
                 connection.scalar(text("SELECT version_num FROM alembic_version"))
-                == "20261013_0011"
+                == "20261014_0012"
             )
         with Session(engine) as db:
             db.add(

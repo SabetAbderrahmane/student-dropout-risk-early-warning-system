@@ -171,14 +171,16 @@ def test_populated_binary_migration_preserves_decisions_and_roundtrips(pg_outcom
             prediction["class_probabilities"] is None
             and prediction["predicted_outcome"] is None
         )
-        assert (
-            dict(
-                db.execute(text("SELECT * FROM warnings WHERE id=:warning"), ids)
-                .mappings()
-                .one()
+        assert {
+            key: value
+            for key, value in db.execute(
+                text("SELECT * FROM warnings WHERE id=:warning"), ids
             )
-            == old_warning
-        )
+            .mappings()
+            .one()
+            .items()
+            if key in old_warning
+        } == old_warning
         assert (
             db.scalar(text("SELECT note FROM warning_reviews WHERE id=:review"), ids)
             == "Historical academic decision"
