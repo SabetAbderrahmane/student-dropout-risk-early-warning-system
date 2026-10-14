@@ -391,3 +391,86 @@ Branch: `feat/phase-b2-prediction-freshness`, based on the expected B1 commit
 rewrite or Phase C1 work is included. Local `main` remains
 `c2487d5948d07f4a48bff07798250cda47bf25bb`; cached `origin/main` remains
 `385f62f27901fdf5f294a8d19fc995d49de38667`. Neither ref was changed by this task.
+
+## Docker verification follow-up (14 October 2026)
+
+**The final-image verification gap remains open.** This follow-up started with a
+clean working tree on `feat/phase-b2-prediction-freshness` at the exact original
+implementation commit `6727cac3f1aa619e02d384e21a6fe38a44005032`. No application,
+migration, artifact, contract or threshold changes were made. This report update
+is delivered in a separate documentation commit.
+
+Docker management has not recovered. It now fails immediately because the
+configured Linux engine pipe is absent, rather than timing out as in the earlier
+run. `docker context ls` and `docker context show` confirmed the existing selected
+context `desktop-linux`, endpoint
+`npipe:////./pipe/dockerDesktopLinuxEngine`; the context was not changed.
+The Docker client is version 29.5.3, API 1.54; no server version was obtainable.
+All engine operations returned exit code 1 with:
+
+```text
+failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine;
+check if the path is correct and if the daemon is running:
+open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+```
+
+These actual commands were run from the repository root. Engine operations were
+launched as hidden child processes with `WaitForExit` deadlines; only an owned
+CLI process and its owned Compose child would be stopped on timeout. All the
+valid engine requests below failed before their deadlines. An initial formatted
+version invocation failed locally due to Windows argument quoting and was
+replaced by the plain `docker version` command shown here.
+
+| Actual command | Bound | Result |
+| --- | --- | --- |
+| `git status --short` | Ordinary local command | Clean before the report edit. |
+| `git branch --show-current` | Ordinary local command | `feat/phase-b2-prediction-freshness`. |
+| `git rev-parse HEAD` | Ordinary local command | Exact implementation SHA above. |
+| `docker context ls` / `docker context show` | Local context metadata | Existing `desktop-linux` context confirmed. |
+| `docker version` | 10 seconds | Exit 1; client details only; missing engine pipe. |
+| `docker compose -f .venv/b2-compose.yaml -p b2-verification build backend frontend` | 15 seconds | Exit 1; neither image rebuilt. |
+| `docker compose -f .venv/b2-compose.yaml -p b2-verification ps -a --format json` | 10 seconds | Exit 1; resource inventory unavailable. |
+| `docker compose -f .venv/b2-compose.yaml -p b2-verification down --volumes` | 10 seconds | Exit 1; disposable-stack cleanup not completed. |
+
+Image provenance for this attempted rebuild:
+
+| Component | Source commit | Requested image | Final image ID / container image ID |
+| --- | --- | --- | --- |
+| Backend runtime target | `6727cac3f1aa619e02d384e21a6fe38a44005032` | `zak-b2-verification` | Unavailable; build failed and engine inspection unavailable. |
+| Frontend, API URL `http://localhost:8001/api/v1` | `6727cac3f1aa619e02d384e21a6fe38a44005032` | `zak-b2-ui-verification` | Unavailable; build failed and engine inspection unavailable. |
+| Disposable database | External image; no application source commit | `postgres:16-alpine` | Unavailable; no new stack started. |
+
+The existing ignored Compose file still identifies only the dedicated
+`b2-verification` project: backend/frontend test images, PostgreSQL database
+`b2_verification`, database data in tmpfs, and loopback ports 8001/3001. No normal
+development or production database was targeted. No new container stack was
+started after the failed rebuild, and no old image was substituted as evidence
+for the final source.
+
+Consequently, the following **were not reverified in final-source containers**:
+
+- Migrated runtime revision `20261013_0011`.
+- Real enrollment → input correction → reassessment → semester progression →
+  semester assessment workflow.
+- Historical `NOT_SELECTED`, accurate binary fallback blocker reasons, and the
+  final freshness labels.
+- Agreement among dashboard, registry, dossier and prediction detail.
+- Visibility and preservation of original warning/support records.
+- Advisor and System Admin execution returning HTTP 403.
+
+The earlier native final-source checks and older-image container checks above
+remain their original results; they do not close this Docker gap. No fresh
+inference, browser or migration result is claimed in this follow-up.
+
+Cleanup was restricted to the explicitly named Compose project using `down
+--volumes`, without image removal, pruning or shared-daemon restart. Since the
+request failed before reaching an engine, this follow-up removed no resources.
+Remaining container/network/resource IDs and whether the old disposable stack
+still exists cannot be established while engine management is unavailable;
+cleanup remains unconfirmed. When Docker is available again, inspect the project
+labels/resource IDs, rebuild and record both image IDs, run the final-source
+checks, then remove only the identified disposable project resources.
+
+The original implementation commit is unchanged. Local `main` and cached
+`origin/main` retain the SHAs recorded in Delivery scope. No PR, merge, model
+retraining or Phase C1 work was performed.
