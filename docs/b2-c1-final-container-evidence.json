@@ -1,0 +1,1301 @@
+{
+  "report_date": "2026-10-15",
+  "scope": "Targeted real HTTP/browser workflows on rebuilt combined B2/C1 implementation; not a full container test suite",
+  "provenance": {
+    "source_sha": "9cd8abd63131d5a6d63931045a8796c45475c6ab",
+    "project": "b2-c1-final-6601ccc2",
+    "containers": {
+      "backend": {
+        "container_id": "dd034812c63f1f23688400771595dce1412e4de3466d64794940224556f13f30",
+        "image_id": "sha256:458d46dd7e4da7ccf095ab765fb1fceb73b7f5a53db711a9fd4aca81304c611e",
+        "source_revision": "9cd8abd63131d5a6d63931045a8796c45475c6ab",
+        "tmpfs": null,
+        "mounts": []
+      },
+      "frontend": {
+        "container_id": "b2dc4d0714e4c24bd5f6ff59005b7a09c0f56c64f669cfb4e565130657dcd83c",
+        "image_id": "sha256:34fff4669fb9aabef907414716e2d1c36a9711a416d0a2d7e911ca7499d3c256",
+        "source_revision": "9cd8abd63131d5a6d63931045a8796c45475c6ab",
+        "tmpfs": null,
+        "mounts": []
+      },
+      "database": {
+        "container_id": "b7740488ffcab319174981c0272c15d164c7dd1c7b84c14ac8b1b448f209e3ed",
+        "image_id": "sha256:4e6e670bb069649261c9c18031f0aded7bb249a5b6664ddec29c013a89310d50",
+        "source_revision": null,
+        "tmpfs": {
+          "/var/lib/postgresql/data": ""
+        },
+        "mounts": []
+      }
+    },
+    "matched_runtime_files": 136
+  },
+  "named_assertion_count": 126,
+  "named_assertions": [
+    "Real model validated and activated: enrollment-outcome-v1",
+    "Real model validated and activated: first-semester-outcome-v1",
+    "Genuine enrollment model output matches verified fixture",
+    "Enrollment current with ongoing support: dossier/registry freshness agrees",
+    "Enrollment current with ongoing support: selected operational prediction agrees",
+    "Enrollment current with ongoing support: dashboard current-risk invariant",
+    "Enrollment current with ongoing support: dashboard coverage invariant",
+    "Enrollment current with ongoing support: attention probability uses operational facts",
+    "Enrollment current with ongoing support: prediction detail agrees",
+    "Enrollment current with ongoing support: original warning/review/case/contact history preserved",
+    "Enrollment current with ongoing support: registry retains original ongoing support independently of risk",
+    "advisor: all prediction execution scopes denied with HTTP 403",
+    "system: all prediction execution scopes denied with HTTP 403",
+    "Admission correction invalidates current risk: dossier/registry freshness agrees",
+    "Admission correction invalidates current risk: selected operational prediction agrees",
+    "Admission correction invalidates current risk: dashboard current-risk invariant",
+    "Admission correction invalidates current risk: dashboard coverage invariant",
+    "Admission correction invalidates current risk: attention probability uses operational facts",
+    "Admission correction invalidates current risk: original warning/review/case/contact history preserved",
+    "Admission correction invalidates current risk: registry retains original ongoing support independently of risk",
+    "Detail reports exact changed feature without changing saved probability",
+    "Enrollment reassessment restores current risk: dossier/registry freshness agrees",
+    "Enrollment reassessment restores current risk: selected operational prediction agrees",
+    "Enrollment reassessment restores current risk: dashboard current-risk invariant",
+    "Enrollment reassessment restores current risk: dashboard coverage invariant",
+    "Enrollment reassessment restores current risk: attention probability uses operational facts",
+    "Enrollment reassessment restores current risk: prediction detail agrees",
+    "Enrollment reassessment restores current risk: original warning/review/case/contact history preserved",
+    "Enrollment reassessment restores current risk: registry retains original ongoing support independently of risk",
+    "No resurrection of older matching enrollment attempt: dossier/registry freshness agrees",
+    "No resurrection of older matching enrollment attempt: selected operational prediction agrees",
+    "No resurrection of older matching enrollment attempt: dashboard current-risk invariant",
+    "No resurrection of older matching enrollment attempt: dashboard coverage invariant",
+    "No resurrection of older matching enrollment attempt: attention probability uses operational facts",
+    "No resurrection of older matching enrollment attempt: original warning/review/case/contact history preserved",
+    "No resurrection of older matching enrollment attempt: registry retains original ongoing support independently of risk",
+    "Restore latest enrollment inputs: dossier/registry freshness agrees",
+    "Restore latest enrollment inputs: selected operational prediction agrees",
+    "Restore latest enrollment inputs: dashboard current-risk invariant",
+    "Restore latest enrollment inputs: dashboard coverage invariant",
+    "Restore latest enrollment inputs: attention probability uses operational facts",
+    "Restore latest enrollment inputs: prediction detail agrees",
+    "Restore latest enrollment inputs: original warning/review/case/contact history preserved",
+    "Restore latest enrollment inputs: registry retains original ongoing support independently of risk",
+    "Semester progression requires advanced assessment: dossier/registry freshness agrees",
+    "Semester progression requires advanced assessment: selected operational prediction agrees",
+    "Semester progression requires advanced assessment: dashboard current-risk invariant",
+    "Semester progression requires advanced assessment: dashboard coverage invariant",
+    "Semester progression requires advanced assessment: attention probability uses operational facts",
+    "Semester progression requires advanced assessment: original warning/review/case/contact history preserved",
+    "Semester progression requires advanced assessment: registry retains original ongoing support independently of risk",
+    "Progression cannot display enrollment probability as current semester risk",
+    "Semester risk wins over newer enrollment: dossier/registry freshness agrees",
+    "Semester risk wins over newer enrollment: selected operational prediction agrees",
+    "Semester risk wins over newer enrollment: dashboard current-risk invariant",
+    "Semester risk wins over newer enrollment: dashboard coverage invariant",
+    "Semester risk wins over newer enrollment: attention probability uses operational facts",
+    "Semester risk wins over newer enrollment: prediction detail agrees",
+    "Semester risk wins over newer enrollment: original warning/review/case/contact history preserved",
+    "Semester risk wins over newer enrollment: registry retains original ongoing support independently of risk",
+    "Genuine semester LOW and later historical enrollment remain distinct",
+    "Final-source NOT_SELECTED qualification for matching historical enrollment",
+    "advisor: current semester risk and original case readable",
+    "system: current semester risk and original case readable",
+    "Verified same-stage binary fallback: dossier/registry freshness agrees",
+    "Verified same-stage binary fallback: selected operational prediction agrees",
+    "Verified same-stage binary fallback: dashboard current-risk invariant",
+    "Verified same-stage binary fallback: dashboard coverage invariant",
+    "Verified same-stage binary fallback: attention probability uses operational facts",
+    "Verified same-stage binary fallback: prediction detail agrees",
+    "Verified same-stage binary fallback: original warning/review/case/contact history preserved",
+    "Binary fallback does not invent multiclass probabilities",
+    "Changed binary fallback reports real blocker: dossier/registry freshness agrees",
+    "Changed binary fallback reports real blocker: selected operational prediction agrees",
+    "Changed binary fallback reports real blocker: dashboard current-risk invariant",
+    "Changed binary fallback reports real blocker: dashboard coverage invariant",
+    "Changed binary fallback reports real blocker: attention probability uses operational facts",
+    "Changed binary fallback reports real blocker: original warning/review/case/contact history preserved",
+    "Binary fallback blocker is input change, not model supersession",
+    "Restore binary fallback without new inference: dossier/registry freshness agrees",
+    "Restore binary fallback without new inference: selected operational prediction agrees",
+    "Restore binary fallback without new inference: dashboard current-risk invariant",
+    "Restore binary fallback without new inference: dashboard coverage invariant",
+    "Restore binary fallback without new inference: attention probability uses operational facts",
+    "Restore binary fallback without new inference: prediction detail agrees",
+    "Restore binary fallback without new inference: original warning/review/case/contact history preserved",
+    "Semester multiclass supersedes eligible binary selection: dossier/registry freshness agrees",
+    "Semester multiclass supersedes eligible binary selection: selected operational prediction agrees",
+    "Semester multiclass supersedes eligible binary selection: dashboard current-risk invariant",
+    "Semester multiclass supersedes eligible binary selection: dashboard coverage invariant",
+    "Semester multiclass supersedes eligible binary selection: prediction detail agrees",
+    "Semester multiclass supersedes eligible binary selection: original warning/review/case/contact history preserved",
+    "Matching lower-priority binary is historical NOT_SELECTED",
+    "Missing semester input never regresses to enrollment: dossier/registry freshness agrees",
+    "Missing semester input never regresses to enrollment: selected operational prediction agrees",
+    "Missing semester input never regresses to enrollment: dashboard current-risk invariant",
+    "Missing semester input never regresses to enrollment: dashboard coverage invariant",
+    "Missing semester input never regresses to enrollment: attention probability uses operational facts",
+    "Missing semester input never regresses to enrollment: original warning/review/case/contact history preserved",
+    "Restore preferred semester inputs without new inference: dossier/registry freshness agrees",
+    "Restore preferred semester inputs without new inference: selected operational prediction agrees",
+    "Restore preferred semester inputs without new inference: dashboard current-risk invariant",
+    "Restore preferred semester inputs without new inference: dashboard coverage invariant",
+    "Restore preferred semester inputs without new inference: prediction detail agrees",
+    "Restore preferred semester inputs without new inference: original warning/review/case/contact history preserved",
+    "Explicit C1 reschedule provides future, due and overdue stored scheduled obligations",
+    "Browser transfer assigned canonical case owner",
+    "Atomic transfer included scheduled, due and overdue obligations",
+    "Completed contact ownership, creator, evidence and revision preserved",
+    "Warning triage assignment remains independent",
+    "New owner may atomically complete contact and create canonical successor",
+    "Contact outcome does not implicitly close intervention",
+    "C1 transfer/contact mutations do not change B2 current risk: dossier/registry freshness agrees",
+    "C1 transfer/contact mutations do not change B2 current risk: selected operational prediction agrees",
+    "C1 transfer/contact mutations do not change B2 current risk: dashboard current-risk invariant",
+    "C1 transfer/contact mutations do not change B2 current risk: dashboard coverage invariant",
+    "C1 transfer/contact mutations do not change B2 current risk: prediction detail agrees",
+    "Old-owner denial, delegation/patch/dismissal/closure blockers exercised in final containers",
+    "Browser explicit closure follows resolution of every contact",
+    "Explicit reconsideration preserves attributed original decision",
+    "Closed historical support stays separate from current semester risk: dossier/registry freshness agrees",
+    "Closed historical support stays separate from current semester risk: selected operational prediction agrees",
+    "Closed historical support stays separate from current semester risk: dashboard current-risk invariant",
+    "Closed historical support stays separate from current semester risk: dashboard coverage invariant",
+    "Closed historical support stays separate from current semester risk: prediction detail agrees",
+    "New support graph has no ownership or terminal-pending inconsistencies"
+  ],
+  "checkpoints": [
+    {
+      "name": "Enrollment current with ongoing support",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "status": "CURRENT",
+      "operational_id": "09e19ba5-4ee8-4340-be9e-bef945ce49aa",
+      "probability": 0.2497711730787302,
+      "risk": "MEDIUM",
+      "recommended_stage": "ENROLLMENT",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 2,
+        "prediction_ready": 2,
+        "with_latest_prediction": 1,
+        "current_assessed": 1,
+        "reassessment_required": 0,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 0,
+        "medium": 1,
+        "high": 0
+      }
+    },
+    {
+      "name": "Admission correction invalidates current risk",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "status": "INPUTS_CHANGED",
+      "operational_id": null,
+      "probability": null,
+      "risk": null,
+      "recommended_stage": "ENROLLMENT",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 2,
+        "prediction_ready": 2,
+        "with_latest_prediction": 1,
+        "current_assessed": 0,
+        "reassessment_required": 1,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 0,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "Enrollment reassessment restores current risk",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "status": "CURRENT",
+      "operational_id": "bd21fed4-a103-4319-b40d-779e828af8fd",
+      "probability": 0.2606749370181211,
+      "risk": "MEDIUM",
+      "recommended_stage": "ENROLLMENT",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 2,
+        "prediction_ready": 2,
+        "with_latest_prediction": 1,
+        "current_assessed": 1,
+        "reassessment_required": 0,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 0,
+        "medium": 1,
+        "high": 0
+      }
+    },
+    {
+      "name": "No resurrection of older matching enrollment attempt",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "status": "INPUTS_CHANGED",
+      "operational_id": null,
+      "probability": null,
+      "risk": null,
+      "recommended_stage": "ENROLLMENT",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 2,
+        "prediction_ready": 2,
+        "with_latest_prediction": 1,
+        "current_assessed": 0,
+        "reassessment_required": 1,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 0,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "Restore latest enrollment inputs",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "status": "CURRENT",
+      "operational_id": "bd21fed4-a103-4319-b40d-779e828af8fd",
+      "probability": 0.2606749370181211,
+      "risk": "MEDIUM",
+      "recommended_stage": "ENROLLMENT",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 2,
+        "prediction_ready": 2,
+        "with_latest_prediction": 1,
+        "current_assessed": 1,
+        "reassessment_required": 0,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 0,
+        "medium": 1,
+        "high": 0
+      }
+    },
+    {
+      "name": "Semester progression requires advanced assessment",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "status": "STAGE_REASSESSMENT_REQUIRED",
+      "operational_id": null,
+      "probability": null,
+      "risk": null,
+      "recommended_stage": "FIRST_SEMESTER",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 2,
+        "prediction_ready": 2,
+        "with_latest_prediction": 1,
+        "current_assessed": 0,
+        "reassessment_required": 1,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 0,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "Semester risk wins over newer enrollment",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "status": "CURRENT",
+      "operational_id": "a4078738-5c4f-41a1-a1c6-666db4a92dac",
+      "probability": 0.1819989821172857,
+      "risk": "LOW",
+      "recommended_stage": "FIRST_SEMESTER",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 2,
+        "prediction_ready": 2,
+        "with_latest_prediction": 1,
+        "current_assessed": 1,
+        "reassessment_required": 0,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 1,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "Verified same-stage binary fallback",
+      "student_id": "5aef070d-c397-4cde-a596-31fb476187a3",
+      "status": "CURRENT",
+      "operational_id": "b15e27ee-be83-46f5-a361-754c20889591",
+      "probability": 0.3447925421468906,
+      "risk": "MEDIUM",
+      "recommended_stage": "FIRST_SEMESTER",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 3,
+        "prediction_ready": 3,
+        "with_latest_prediction": 2,
+        "current_assessed": 2,
+        "reassessment_required": 0,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 1,
+        "medium": 1,
+        "high": 0
+      }
+    },
+    {
+      "name": "Changed binary fallback reports real blocker",
+      "student_id": "5aef070d-c397-4cde-a596-31fb476187a3",
+      "status": "INPUTS_CHANGED",
+      "operational_id": null,
+      "probability": null,
+      "risk": null,
+      "recommended_stage": "FIRST_SEMESTER",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 3,
+        "prediction_ready": 3,
+        "with_latest_prediction": 2,
+        "current_assessed": 1,
+        "reassessment_required": 1,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 1,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "Restore binary fallback without new inference",
+      "student_id": "5aef070d-c397-4cde-a596-31fb476187a3",
+      "status": "CURRENT",
+      "operational_id": "b15e27ee-be83-46f5-a361-754c20889591",
+      "probability": 0.3447925421468906,
+      "risk": "MEDIUM",
+      "recommended_stage": "FIRST_SEMESTER",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 3,
+        "prediction_ready": 3,
+        "with_latest_prediction": 2,
+        "current_assessed": 2,
+        "reassessment_required": 0,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 1,
+        "medium": 1,
+        "high": 0
+      }
+    },
+    {
+      "name": "Semester multiclass supersedes eligible binary selection",
+      "student_id": "5aef070d-c397-4cde-a596-31fb476187a3",
+      "status": "CURRENT",
+      "operational_id": "9ceda81e-82a8-4936-9fb2-2a4cf5d731ec",
+      "probability": 0.18011547285576907,
+      "risk": "LOW",
+      "recommended_stage": "FIRST_SEMESTER",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 3,
+        "prediction_ready": 3,
+        "with_latest_prediction": 2,
+        "current_assessed": 2,
+        "reassessment_required": 0,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 2,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "Missing semester input never regresses to enrollment",
+      "student_id": "5aef070d-c397-4cde-a596-31fb476187a3",
+      "status": "INPUTS_INCOMPLETE",
+      "operational_id": null,
+      "probability": null,
+      "risk": null,
+      "recommended_stage": "FIRST_SEMESTER",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 3,
+        "prediction_ready": 3,
+        "with_latest_prediction": 2,
+        "current_assessed": 1,
+        "reassessment_required": 1,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 1,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "Restore preferred semester inputs without new inference",
+      "student_id": "5aef070d-c397-4cde-a596-31fb476187a3",
+      "status": "CURRENT",
+      "operational_id": "9ceda81e-82a8-4936-9fb2-2a4cf5d731ec",
+      "probability": 0.18011547285576907,
+      "risk": "LOW",
+      "recommended_stage": "FIRST_SEMESTER",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 3,
+        "prediction_ready": 3,
+        "with_latest_prediction": 2,
+        "current_assessed": 2,
+        "reassessment_required": 0,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 2,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "C1 transfer/contact mutations do not change B2 current risk",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "status": "CURRENT",
+      "operational_id": "a4078738-5c4f-41a1-a1c6-666db4a92dac",
+      "probability": 0.1819989821172857,
+      "risk": "LOW",
+      "recommended_stage": "FIRST_SEMESTER",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 3,
+        "prediction_ready": 3,
+        "with_latest_prediction": 2,
+        "current_assessed": 2,
+        "reassessment_required": 0,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 2,
+        "medium": 0,
+        "high": 0
+      }
+    },
+    {
+      "name": "Closed historical support stays separate from current semester risk",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "status": "CURRENT",
+      "operational_id": "a4078738-5c4f-41a1-a1c6-666db4a92dac",
+      "probability": 0.1819989821172857,
+      "risk": "LOW",
+      "recommended_stage": "FIRST_SEMESTER",
+      "recommended_target": "MULTICLASS_OUTCOME",
+      "dashboard": {
+        "total": 3,
+        "prediction_ready": 3,
+        "with_latest_prediction": 2,
+        "current_assessed": 2,
+        "reassessment_required": 0,
+        "without_predictions": 1
+      },
+      "risk_distribution": {
+        "low": 2,
+        "medium": 0,
+        "high": 0
+      }
+    }
+  ],
+  "immutable_prediction_records": {
+    "09e19ba5-4ee8-4340-be9e-bef945ce49aa": {
+      "id": "09e19ba5-4ee8-4340-be9e-bef945ce49aa",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "probability": 0.2497711730787302,
+      "risk_level": "MEDIUM",
+      "predicted_at": "2026-10-14T18:17:20.644339Z",
+      "prediction_stage": "ENROLLMENT",
+      "model_target_type": "MULTICLASS_OUTCOME",
+      "predicted_outcome": "ENROLLED",
+      "class_probabilities": {
+        "DROPOUT": 0.2497711730787302,
+        "ENROLLED": 0.44325227593179495,
+        "GRADUATE": 0.3069765509894749
+      },
+      "model_version": "enrollment-outcome-v1",
+      "feature_snapshot": {
+        "marital_status_code": 1,
+        "application_mode_code": 17,
+        "application_order": 1,
+        "course_code": 9254,
+        "daytime_evening_attendance": 1,
+        "previous_qualification_code": 1,
+        "previous_qualification_grade": 120.0,
+        "nationality_code": 1,
+        "mother_qualification_code": 19,
+        "father_qualification_code": 19,
+        "mother_occupation_code": 4,
+        "father_occupation_code": 4,
+        "admission_grade": 125.5,
+        "displaced": 0,
+        "educational_special_needs": 0,
+        "debtor": 0,
+        "tuition_fees_up_to_date": 1,
+        "gender_code": 1,
+        "scholarship_holder": 0,
+        "age_at_enrollment": 18,
+        "international_student": 0
+      },
+      "explanation_method": "Model-agnostic single-feature reference perturbation of calibrated P(Dropout): observed probability minus probability after replacing one feature with its fitting-partition median (numeric) or mode (categorical). Non-causal; not SHAP.",
+      "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+      "top_explanation_factors": [
+        {
+          "feature": "application_mode_code",
+          "label": "Application mode",
+          "value": 17.0,
+          "contribution": 0.06054055053964699,
+          "reference_value": 1.0
+        },
+        {
+          "feature": "father_qualification_code",
+          "label": "Father's qualification",
+          "value": 19.0,
+          "contribution": -0.05916720933587183,
+          "reference_value": 37.0
+        },
+        {
+          "feature": "father_occupation_code",
+          "label": "Father's occupation",
+          "value": 4.0,
+          "contribution": -0.0568661671081912,
+          "reference_value": 9.0
+        },
+        {
+          "feature": "mother_occupation_code",
+          "label": "Mother's occupation",
+          "value": 4.0,
+          "contribution": -0.05625109999048894,
+          "reference_value": 9.0
+        },
+        {
+          "feature": "course_code",
+          "label": "Course",
+          "value": 9254.0,
+          "contribution": 0.04149644867075017,
+          "reference_value": 9500.0
+        }
+      ]
+    },
+    "bd21fed4-a103-4319-b40d-779e828af8fd": {
+      "id": "bd21fed4-a103-4319-b40d-779e828af8fd",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "probability": 0.2606749370181211,
+      "risk_level": "MEDIUM",
+      "predicted_at": "2026-10-14T18:19:36.752228Z",
+      "prediction_stage": "ENROLLMENT",
+      "model_target_type": "MULTICLASS_OUTCOME",
+      "predicted_outcome": "ENROLLED",
+      "class_probabilities": {
+        "DROPOUT": 0.2606749370181211,
+        "ENROLLED": 0.4289599078536351,
+        "GRADUATE": 0.3103651551282439
+      },
+      "model_version": "enrollment-outcome-v1",
+      "feature_snapshot": {
+        "marital_status_code": 1,
+        "application_mode_code": 17,
+        "application_order": 1,
+        "course_code": 9254,
+        "daytime_evening_attendance": 1,
+        "previous_qualification_code": 1,
+        "previous_qualification_grade": 120.0,
+        "nationality_code": 1,
+        "mother_qualification_code": 19,
+        "father_qualification_code": 19,
+        "mother_occupation_code": 4,
+        "father_occupation_code": 4,
+        "admission_grade": 124.25,
+        "displaced": 0,
+        "educational_special_needs": 0,
+        "debtor": 0,
+        "tuition_fees_up_to_date": 1,
+        "gender_code": 1,
+        "scholarship_holder": 0,
+        "age_at_enrollment": 18,
+        "international_student": 0
+      },
+      "explanation_method": "Model-agnostic single-feature reference perturbation of calibrated P(Dropout): observed probability minus probability after replacing one feature with its fitting-partition median (numeric) or mode (categorical). Non-causal; not SHAP.",
+      "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+      "top_explanation_factors": [
+        {
+          "feature": "application_mode_code",
+          "label": "Application mode",
+          "value": 17.0,
+          "contribution": 0.06614825973566898,
+          "reference_value": 1.0
+        },
+        {
+          "feature": "mother_occupation_code",
+          "label": "Mother's occupation",
+          "value": 4.0,
+          "contribution": -0.05519344912208185,
+          "reference_value": 9.0
+        },
+        {
+          "feature": "father_occupation_code",
+          "label": "Father's occupation",
+          "value": 4.0,
+          "contribution": -0.055011513423742386,
+          "reference_value": 9.0
+        },
+        {
+          "feature": "father_qualification_code",
+          "label": "Father's qualification",
+          "value": 19.0,
+          "contribution": -0.049484355570741434,
+          "reference_value": 37.0
+        },
+        {
+          "feature": "course_code",
+          "label": "Course",
+          "value": 9254.0,
+          "contribution": 0.03869660931853286,
+          "reference_value": 9500.0
+        }
+      ]
+    },
+    "a4078738-5c4f-41a1-a1c6-666db4a92dac": {
+      "id": "a4078738-5c4f-41a1-a1c6-666db4a92dac",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "probability": 0.1819989821172857,
+      "risk_level": "LOW",
+      "predicted_at": "2026-10-15T16:01:15.378936Z",
+      "prediction_stage": "FIRST_SEMESTER",
+      "model_target_type": "MULTICLASS_OUTCOME",
+      "predicted_outcome": "GRADUATE",
+      "class_probabilities": {
+        "DROPOUT": 0.1819989821172857,
+        "ENROLLED": 0.17362861782369443,
+        "GRADUATE": 0.6443724000590199
+      },
+      "model_version": "first-semester-outcome-v1",
+      "feature_snapshot": {
+        "marital_status_code": 1,
+        "application_mode_code": 17,
+        "application_order": 1,
+        "course_code": 9254,
+        "daytime_evening_attendance": 1,
+        "previous_qualification_code": 1,
+        "previous_qualification_grade": 120.0,
+        "nationality_code": 1,
+        "mother_qualification_code": 19,
+        "father_qualification_code": 19,
+        "mother_occupation_code": 4,
+        "father_occupation_code": 4,
+        "admission_grade": 124.25,
+        "displaced": 0,
+        "educational_special_needs": 0,
+        "debtor": 0,
+        "tuition_fees_up_to_date": 1,
+        "gender_code": 1,
+        "scholarship_holder": 0,
+        "age_at_enrollment": 18,
+        "international_student": 0,
+        "first_semester_credited_units": 0,
+        "first_semester_enrolled_units": 5,
+        "first_semester_evaluations": 6,
+        "first_semester_approved_units": 5,
+        "first_semester_average_grade": 12.0,
+        "first_semester_without_evaluations": 0
+      },
+      "explanation_method": "Model-agnostic single-feature reference perturbation of calibrated P(Dropout): observed probability minus probability after replacing one feature with its fitting-partition median (numeric) or mode (categorical). Non-causal; not SHAP.",
+      "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+      "top_explanation_factors": [
+        {
+          "feature": "gender_code",
+          "label": "Gender",
+          "value": 1.0,
+          "contribution": 0.06859979276458018,
+          "reference_value": 0.0
+        },
+        {
+          "feature": "first_semester_enrolled_units",
+          "label": "Curricular units 1st sem (enrolled)",
+          "value": 5.0,
+          "contribution": -0.06446284153546206,
+          "reference_value": 6.0
+        },
+        {
+          "feature": "application_mode_code",
+          "label": "Application mode",
+          "value": 17.0,
+          "contribution": 0.051041658056711375,
+          "reference_value": 1.0
+        },
+        {
+          "feature": "displaced",
+          "label": "Displaced",
+          "value": 0.0,
+          "contribution": -0.04202448078887219,
+          "reference_value": 1.0
+        },
+        {
+          "feature": "course_code",
+          "label": "Course",
+          "value": 9254.0,
+          "contribution": 0.041520660394149145,
+          "reference_value": 9500.0
+        }
+      ]
+    },
+    "63ad2bb1-ec25-410e-86ab-1f416f1a7aae": {
+      "id": "63ad2bb1-ec25-410e-86ab-1f416f1a7aae",
+      "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+      "probability": 0.2606749370181211,
+      "risk_level": "MEDIUM",
+      "predicted_at": "2026-10-15T16:01:16.077357Z",
+      "prediction_stage": "ENROLLMENT",
+      "model_target_type": "MULTICLASS_OUTCOME",
+      "predicted_outcome": "ENROLLED",
+      "class_probabilities": {
+        "DROPOUT": 0.2606749370181211,
+        "ENROLLED": 0.4289599078536351,
+        "GRADUATE": 0.3103651551282439
+      },
+      "model_version": "enrollment-outcome-v1",
+      "feature_snapshot": {
+        "marital_status_code": 1,
+        "application_mode_code": 17,
+        "application_order": 1,
+        "course_code": 9254,
+        "daytime_evening_attendance": 1,
+        "previous_qualification_code": 1,
+        "previous_qualification_grade": 120.0,
+        "nationality_code": 1,
+        "mother_qualification_code": 19,
+        "father_qualification_code": 19,
+        "mother_occupation_code": 4,
+        "father_occupation_code": 4,
+        "admission_grade": 124.25,
+        "displaced": 0,
+        "educational_special_needs": 0,
+        "debtor": 0,
+        "tuition_fees_up_to_date": 1,
+        "gender_code": 1,
+        "scholarship_holder": 0,
+        "age_at_enrollment": 18,
+        "international_student": 0
+      },
+      "explanation_method": "Model-agnostic single-feature reference perturbation of calibrated P(Dropout): observed probability minus probability after replacing one feature with its fitting-partition median (numeric) or mode (categorical). Non-causal; not SHAP.",
+      "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+      "top_explanation_factors": [
+        {
+          "feature": "application_mode_code",
+          "label": "Application mode",
+          "value": 17.0,
+          "contribution": 0.06614825973566898,
+          "reference_value": 1.0
+        },
+        {
+          "feature": "mother_occupation_code",
+          "label": "Mother's occupation",
+          "value": 4.0,
+          "contribution": -0.05519344912208185,
+          "reference_value": 9.0
+        },
+        {
+          "feature": "father_occupation_code",
+          "label": "Father's occupation",
+          "value": 4.0,
+          "contribution": -0.055011513423742386,
+          "reference_value": 9.0
+        },
+        {
+          "feature": "father_qualification_code",
+          "label": "Father's qualification",
+          "value": 19.0,
+          "contribution": -0.049484355570741434,
+          "reference_value": 37.0
+        },
+        {
+          "feature": "course_code",
+          "label": "Course",
+          "value": 9254.0,
+          "contribution": 0.03869660931853286,
+          "reference_value": 9500.0
+        }
+      ]
+    },
+    "0637ca54-f5af-4fbb-b29d-a9f18ee1bfd1": {
+      "id": "0637ca54-f5af-4fbb-b29d-a9f18ee1bfd1",
+      "student_id": "5aef070d-c397-4cde-a596-31fb476187a3",
+      "probability": 0.2497711730787302,
+      "risk_level": "MEDIUM",
+      "predicted_at": "2026-10-15T16:02:18.851016Z",
+      "prediction_stage": "ENROLLMENT",
+      "model_target_type": "MULTICLASS_OUTCOME",
+      "predicted_outcome": "ENROLLED",
+      "class_probabilities": {
+        "DROPOUT": 0.2497711730787302,
+        "ENROLLED": 0.44325227593179495,
+        "GRADUATE": 0.3069765509894749
+      },
+      "model_version": "enrollment-outcome-v1",
+      "feature_snapshot": {
+        "marital_status_code": 1,
+        "application_mode_code": 17,
+        "application_order": 1,
+        "course_code": 9254,
+        "daytime_evening_attendance": 1,
+        "previous_qualification_code": 1,
+        "previous_qualification_grade": 120.0,
+        "nationality_code": 1,
+        "mother_qualification_code": 19,
+        "father_qualification_code": 19,
+        "mother_occupation_code": 4,
+        "father_occupation_code": 4,
+        "admission_grade": 125.5,
+        "displaced": 0,
+        "educational_special_needs": 0,
+        "debtor": 0,
+        "tuition_fees_up_to_date": 1,
+        "gender_code": 1,
+        "scholarship_holder": 0,
+        "age_at_enrollment": 18,
+        "international_student": 0
+      },
+      "explanation_method": "Model-agnostic single-feature reference perturbation of calibrated P(Dropout): observed probability minus probability after replacing one feature with its fitting-partition median (numeric) or mode (categorical). Non-causal; not SHAP.",
+      "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+      "top_explanation_factors": [
+        {
+          "feature": "application_mode_code",
+          "label": "Application mode",
+          "value": 17.0,
+          "contribution": 0.06054055053964699,
+          "reference_value": 1.0
+        },
+        {
+          "feature": "father_qualification_code",
+          "label": "Father's qualification",
+          "value": 19.0,
+          "contribution": -0.05916720933587183,
+          "reference_value": 37.0
+        },
+        {
+          "feature": "father_occupation_code",
+          "label": "Father's occupation",
+          "value": 4.0,
+          "contribution": -0.0568661671081912,
+          "reference_value": 9.0
+        },
+        {
+          "feature": "mother_occupation_code",
+          "label": "Mother's occupation",
+          "value": 4.0,
+          "contribution": -0.05625109999048894,
+          "reference_value": 9.0
+        },
+        {
+          "feature": "course_code",
+          "label": "Course",
+          "value": 9254.0,
+          "contribution": 0.04149644867075017,
+          "reference_value": 9500.0
+        }
+      ]
+    },
+    "b15e27ee-be83-46f5-a361-754c20889591": {
+      "id": "b15e27ee-be83-46f5-a361-754c20889591",
+      "student_id": "5aef070d-c397-4cde-a596-31fb476187a3",
+      "probability": 0.3447925421468906,
+      "risk_level": "MEDIUM",
+      "predicted_at": "2026-10-15T16:02:19.252114Z",
+      "prediction_stage": "FIRST_SEMESTER",
+      "model_target_type": "BINARY_DROPOUT",
+      "predicted_outcome": null,
+      "class_probabilities": null,
+      "model_version": "dropout-logistic-regression-v1",
+      "feature_snapshot": {
+        "marital_status_code": 1,
+        "application_mode_code": 17,
+        "application_order": 1,
+        "course_code": 9254,
+        "daytime_evening_attendance": 1,
+        "previous_qualification_code": 1,
+        "previous_qualification_grade": 120.0,
+        "nationality_code": 1,
+        "mother_qualification_code": 19,
+        "father_qualification_code": 19,
+        "mother_occupation_code": 4,
+        "father_occupation_code": 4,
+        "admission_grade": 125.5,
+        "displaced": 0,
+        "educational_special_needs": 0,
+        "debtor": 0,
+        "tuition_fees_up_to_date": 1,
+        "gender_code": 1,
+        "scholarship_holder": 0,
+        "age_at_enrollment": 18,
+        "international_student": 0,
+        "first_semester_credited_units": 0,
+        "first_semester_enrolled_units": 5,
+        "first_semester_evaluations": 6,
+        "first_semester_approved_units": 5,
+        "first_semester_average_grade": 12.0,
+        "first_semester_without_evaluations": 0,
+        "unemployment_rate": 12.7,
+        "inflation_rate": 3.7,
+        "gdp": -1.7
+      },
+      "explanation_method": "Model-agnostic single-feature reference perturbation: contribution is the change in dropout probability when one observed feature is replaced by its development-set median (numeric) or mode (categorical).",
+      "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+      "top_explanation_factors": [
+        {
+          "feature": "course_code",
+          "label": "Course",
+          "value": 9254.0,
+          "contribution": 0.1769611725344338,
+          "reference_value": null
+        },
+        {
+          "feature": "gender_code",
+          "label": "Gender",
+          "value": 1.0,
+          "contribution": 0.09783972555036122,
+          "reference_value": null
+        },
+        {
+          "feature": "first_semester_enrolled_units",
+          "label": "Curricular units 1st sem (enrolled)",
+          "value": 5.0,
+          "contribution": -0.09056381038240013,
+          "reference_value": null
+        },
+        {
+          "feature": "displaced",
+          "label": "Displaced",
+          "value": 0.0,
+          "contribution": -0.0820380340641721,
+          "reference_value": null
+        },
+        {
+          "feature": "application_mode_code",
+          "label": "Application mode",
+          "value": 17.0,
+          "contribution": 0.07801526646462414,
+          "reference_value": null
+        }
+      ]
+    },
+    "9ceda81e-82a8-4936-9fb2-2a4cf5d731ec": {
+      "id": "9ceda81e-82a8-4936-9fb2-2a4cf5d731ec",
+      "student_id": "5aef070d-c397-4cde-a596-31fb476187a3",
+      "probability": 0.18011547285576907,
+      "risk_level": "LOW",
+      "predicted_at": "2026-10-15T16:03:18.890361Z",
+      "prediction_stage": "FIRST_SEMESTER",
+      "model_target_type": "MULTICLASS_OUTCOME",
+      "predicted_outcome": "GRADUATE",
+      "class_probabilities": {
+        "DROPOUT": 0.18011547285576907,
+        "ENROLLED": 0.17247123803895922,
+        "GRADUATE": 0.6474132891052717
+      },
+      "model_version": "first-semester-outcome-v1",
+      "feature_snapshot": {
+        "marital_status_code": 1,
+        "application_mode_code": 17,
+        "application_order": 1,
+        "course_code": 9254,
+        "daytime_evening_attendance": 1,
+        "previous_qualification_code": 1,
+        "previous_qualification_grade": 120.0,
+        "nationality_code": 1,
+        "mother_qualification_code": 19,
+        "father_qualification_code": 19,
+        "mother_occupation_code": 4,
+        "father_occupation_code": 4,
+        "admission_grade": 125.5,
+        "displaced": 0,
+        "educational_special_needs": 0,
+        "debtor": 0,
+        "tuition_fees_up_to_date": 1,
+        "gender_code": 1,
+        "scholarship_holder": 0,
+        "age_at_enrollment": 18,
+        "international_student": 0,
+        "first_semester_credited_units": 0,
+        "first_semester_enrolled_units": 5,
+        "first_semester_evaluations": 6,
+        "first_semester_approved_units": 5,
+        "first_semester_average_grade": 12.0,
+        "first_semester_without_evaluations": 0
+      },
+      "explanation_method": "Model-agnostic single-feature reference perturbation of calibrated P(Dropout): observed probability minus probability after replacing one feature with its fitting-partition median (numeric) or mode (categorical). Non-causal; not SHAP.",
+      "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+      "top_explanation_factors": [
+        {
+          "feature": "gender_code",
+          "label": "Gender",
+          "value": 1.0,
+          "contribution": 0.06792248031844297,
+          "reference_value": 0.0
+        },
+        {
+          "feature": "first_semester_enrolled_units",
+          "label": "Curricular units 1st sem (enrolled)",
+          "value": 5.0,
+          "contribution": -0.06392017563553262,
+          "reference_value": 6.0
+        },
+        {
+          "feature": "application_mode_code",
+          "label": "Application mode",
+          "value": 17.0,
+          "contribution": 0.05054996097437331,
+          "reference_value": 1.0
+        },
+        {
+          "feature": "displaced",
+          "label": "Displaced",
+          "value": 0.0,
+          "contribution": -0.04167127275366864,
+          "reference_value": 1.0
+        },
+        {
+          "feature": "course_code",
+          "label": "Course",
+          "value": 9254.0,
+          "contribution": 0.04113169782791298,
+          "reference_value": 9500.0
+        }
+      ]
+    }
+  },
+  "transfer_effective_contact_states": [
+    "SCHEDULED",
+    "DUE",
+    "OVERDUE"
+  ],
+  "database_audit": {
+    "migration": "20261014_0012",
+    "postgres": "16.13",
+    "action_counts": {
+      "ADD_NOTE": 1,
+      "ASSIGN": 1,
+      "COMPLETE_FOLLOW_UP": 11,
+      "COMPLETE_INTERVENTION": 1,
+      "CREATE_FOLLOW_UP": 8,
+      "CREATE_INTERVENTION": 2,
+      "RECONSIDER": 1,
+      "REVIEW": 1,
+      "TRANSFER_INTERVENTION": 4,
+      "UPDATE_FOLLOW_UP": 2
+    },
+    "transfer_events": [
+      {
+        "id": "766fa386-6d87-4ec1-b34c-f0ad3a710286",
+        "actor_id": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+        "action": "TRANSFER_INTERVENTION",
+        "warning_id": "db89ab88-05fc-4d39-b06f-5bb815dc7484",
+        "intervention_id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+        "follow_up_id": "6844cee3-84d9-4c15-b552-5716144bea8f",
+        "created_at": "2026-10-15 16:05:28.501206+00:00",
+        "reason": "Final-source container verification transfer",
+        "before_values": {
+          "revision": 1,
+          "id": "6844cee3-84d9-4c15-b552-5716144bea8f",
+          "intervention_id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+          "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+          "assigned_to": "cbb511b9-db28-4db9-b2a1-3686f2861df4",
+          "scheduled_for": "2026-10-17 12:00:00+00:00",
+          "method": "IN_PERSON",
+          "purpose": "Container obligation 3",
+          "status": "SCHEDULED",
+          "outcome": null,
+          "notes": null,
+          "completed_at": null,
+          "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+          "created_at": "2026-10-14 18:17:45.104410+00:00",
+          "updated_at": "2026-10-14 18:17:45.105766+00:00"
+        },
+        "after_values": {
+          "revision": 2,
+          "id": "6844cee3-84d9-4c15-b552-5716144bea8f",
+          "intervention_id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+          "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+          "assigned_to": "3a7afe4c-5561-4f2a-9f0b-d995fb3921cc",
+          "scheduled_for": "2026-10-17 12:00:00+00:00",
+          "method": "IN_PERSON",
+          "purpose": "Container obligation 3",
+          "status": "SCHEDULED",
+          "outcome": null,
+          "notes": null,
+          "completed_at": null,
+          "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+          "created_at": "2026-10-14 18:17:45.104410+00:00",
+          "updated_at": "2026-10-15 16:05:28.538517+00:00"
+        },
+        "correlation_id": "e517678b-ae2f-441a-ac13-cb81cd56a6f9"
+      },
+      {
+        "id": "8dca5d99-5b10-4117-a0aa-eb86a077593c",
+        "actor_id": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+        "action": "TRANSFER_INTERVENTION",
+        "warning_id": "db89ab88-05fc-4d39-b06f-5bb815dc7484",
+        "intervention_id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+        "follow_up_id": "b99acafd-a576-4ebe-b5d1-3b7872050f31",
+        "created_at": "2026-10-15 16:05:28.501206+00:00",
+        "reason": "Final-source container verification transfer",
+        "before_values": {
+          "revision": 1,
+          "id": "b99acafd-a576-4ebe-b5d1-3b7872050f31",
+          "intervention_id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+          "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+          "assigned_to": "cbb511b9-db28-4db9-b2a1-3686f2861df4",
+          "scheduled_for": "2026-10-12 12:00:00+00:00",
+          "method": "IN_PERSON",
+          "purpose": "Container obligation -2",
+          "status": "SCHEDULED",
+          "outcome": null,
+          "notes": null,
+          "completed_at": null,
+          "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+          "created_at": "2026-10-14 18:17:36.344641+00:00",
+          "updated_at": "2026-10-14 18:17:36.348046+00:00"
+        },
+        "after_values": {
+          "revision": 2,
+          "id": "b99acafd-a576-4ebe-b5d1-3b7872050f31",
+          "intervention_id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+          "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+          "assigned_to": "3a7afe4c-5561-4f2a-9f0b-d995fb3921cc",
+          "scheduled_for": "2026-10-12 12:00:00+00:00",
+          "method": "IN_PERSON",
+          "purpose": "Container obligation -2",
+          "status": "SCHEDULED",
+          "outcome": null,
+          "notes": null,
+          "completed_at": null,
+          "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+          "created_at": "2026-10-14 18:17:36.344641+00:00",
+          "updated_at": "2026-10-15 16:05:28.538750+00:00"
+        },
+        "correlation_id": "e517678b-ae2f-441a-ac13-cb81cd56a6f9"
+      },
+      {
+        "id": "8e2df54e-8744-4a96-9683-718470658896",
+        "actor_id": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+        "action": "TRANSFER_INTERVENTION",
+        "warning_id": "db89ab88-05fc-4d39-b06f-5bb815dc7484",
+        "intervention_id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+        "follow_up_id": null,
+        "created_at": "2026-10-15 16:05:28.501206+00:00",
+        "reason": "Final-source container verification transfer",
+        "before_values": {
+          "revision": 7,
+          "id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+          "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+          "warning_id": "db89ab88-05fc-4d39-b06f-5bb815dc7484",
+          "type": "ACADEMIC_TUTORING",
+          "title": "Original container support plan",
+          "description": "Keep support independent of later operational risk",
+          "priority": "P2_ELEVATED",
+          "status": "PLANNED",
+          "assigned_to": "cbb511b9-db28-4db9-b2a1-3686f2861df4",
+          "start_date": "2026-10-14",
+          "target_date": null,
+          "completed_at": null,
+          "completion_outcome": null,
+          "completion_notes": null,
+          "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+          "created_at": "2026-10-14 18:17:31.738644+00:00",
+          "updated_at": "2026-10-15 16:04:08.239631+00:00"
+        },
+        "after_values": {
+          "revision": 8,
+          "id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+          "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+          "warning_id": "db89ab88-05fc-4d39-b06f-5bb815dc7484",
+          "type": "ACADEMIC_TUTORING",
+          "title": "Original container support plan",
+          "description": "Keep support independent of later operational risk",
+          "priority": "P2_ELEVATED",
+          "status": "PLANNED",
+          "assigned_to": "3a7afe4c-5561-4f2a-9f0b-d995fb3921cc",
+          "start_date": "2026-10-14",
+          "target_date": null,
+          "completed_at": null,
+          "completion_outcome": null,
+          "completion_notes": null,
+          "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+          "created_at": "2026-10-14 18:17:31.738644+00:00",
+          "updated_at": "2026-10-15 16:05:28.538842+00:00"
+        },
+        "correlation_id": "e517678b-ae2f-441a-ac13-cb81cd56a6f9"
+      },
+      {
+        "id": "a0016035-b188-45bc-922e-01dad795a12a",
+        "actor_id": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+        "action": "TRANSFER_INTERVENTION",
+        "warning_id": "db89ab88-05fc-4d39-b06f-5bb815dc7484",
+        "intervention_id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+        "follow_up_id": "af1559da-5345-473b-9eaa-d3b61323f315",
+        "created_at": "2026-10-15 16:05:28.501206+00:00",
+        "reason": "Final-source container verification transfer",
+        "before_values": {
+          "revision": 2,
+          "id": "af1559da-5345-473b-9eaa-d3b61323f315",
+          "intervention_id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+          "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+          "assigned_to": "cbb511b9-db28-4db9-b2a1-3686f2861df4",
+          "scheduled_for": "2026-10-15 12:00:00+00:00",
+          "method": "IN_PERSON",
+          "purpose": "Container obligation 0",
+          "status": "SCHEDULED",
+          "outcome": null,
+          "notes": null,
+          "completed_at": null,
+          "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+          "created_at": "2026-10-14 18:17:40.686595+00:00",
+          "updated_at": "2026-10-15 16:04:08.239508+00:00"
+        },
+        "after_values": {
+          "revision": 3,
+          "id": "af1559da-5345-473b-9eaa-d3b61323f315",
+          "intervention_id": "d21947ce-bb25-46a4-b48a-c6430f91c1fc",
+          "student_id": "731e4bb0-993f-4a9f-980b-da8f52171d8c",
+          "assigned_to": "3a7afe4c-5561-4f2a-9f0b-d995fb3921cc",
+          "scheduled_for": "2026-10-15 12:00:00+00:00",
+          "method": "IN_PERSON",
+          "purpose": "Container obligation 0",
+          "status": "SCHEDULED",
+          "outcome": null,
+          "notes": null,
+          "completed_at": null,
+          "created_by": "1d0847e7-8055-44ce-a52d-95cf71743de9",
+          "created_at": "2026-10-14 18:17:40.686595+00:00",
+          "updated_at": "2026-10-15 16:05:28.538662+00:00"
+        },
+        "correlation_id": "e517678b-ae2f-441a-ac13-cb81cd56a6f9"
+      }
+    ]
+  },
+  "cleanup": [
+    {
+      "project": "b2-c1-final-6601ccc2",
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    },
+    {
+      "project": "b2-verification",
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  ],
+  "verification_port_listeners_after_cleanup": [],
+  "browser_session_closed": true,
+  "images_and_build_cache_retained": true
+}

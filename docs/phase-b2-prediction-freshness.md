@@ -474,3 +474,20 @@ checks, then remove only the identified disposable project resources.
 The original implementation commit is unchanged. Local `main` and cached
 `origin/main` retain the SHAs recorded in Delivery scope. No PR, merge, model
 retraining or Phase C1 work was performed.
+
+## 2026-10-15: final-source Docker gap closed on combined B2/C1 source
+
+Docker became available. A fresh build and real API/browser workflows on
+`9cd8abd63131d5a6d63931045a8796c45475c6ab` verified B2 freshness and stage
+progression alongside C1 ownership and explicit closure, with PostgreSQL 16.13
+at migration `20261014_0012`. The targeted workflow passed 126 named assertions
+across 15 checkpoints plus browser/audit checks. Both rebuilt image IDs,
+source provenance, scoped cleanup and limitations are recorded in the separate
+[final container verification report](b2-c1-final-container-verification.md)
+and its machine-readable evidence.
+
+The earlier failed Docker follow-up above remains historical; the new result
+verifies the combined final application source, not a retroactive rebuild of
+the standalone B2 commit. Both identified disposable projects, including the
+previously unconfirmed old B2 resources, are now confirmed removed. C1 smoke
+results alone were not used to close this gap.

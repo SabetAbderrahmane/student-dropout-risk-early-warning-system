@@ -318,3 +318,18 @@ serialization; no exhaustive stress/production-data audit or distributed
 idempotency facility is claimed. Existing warnings in synthetic model tests are
 unchanged. The B2 final-source container freshness workflow remains unverified by
 this C1 delivery, despite successful C1 image smoke checks.
+
+## 2026-10-15: combined final-source container workflow follow-up
+
+After pushing implementation commit
+`9cd8abd63131d5a6d63931045a8796c45475c6ab` unchanged, a separate verification
+follow-up rebuilt both runtime images and exercised B2 freshness/stage
+progression together with C1 atomic ownership transfer and explicit closure.
+It confirmed migration `20261014_0012`, immutable prediction/support history,
+four correlated transfer audit events, permission/conflict blockers and an empty
+final integrity diagnostic. The targeted B2 final-source Docker gap is now
+closed for this combined application source. See the
+[final container verification report](b2-c1-final-container-verification.md)
+for exact image IDs, 126 named HTTP assertions, browser evidence, cleanup and
+remaining limits. This follow-up is separate from the earlier C1 smoke evidence
+and makes no new full-suite-in-containers claim.
