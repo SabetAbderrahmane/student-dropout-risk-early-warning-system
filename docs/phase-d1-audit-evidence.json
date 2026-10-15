@@ -1,0 +1,865 @@
+{
+  "audit_date": "2026-10-15",
+  "source_sha": "68faf1d62cc37acf9074fcff00f61ac0aa420698",
+  "branch": "codex/phase-d1-release-readiness-audit",
+  "production_behavior_changed": false,
+  "checks": {
+    "backend_install": "fresh Python 3.11.9 venv; pip install -r backend/requirements-dev.txt; pip check passed",
+    "frontend_install": "npm ci passed; Node 24.14.0/npm 11.9.0; production Dockerfile uses Node 22 (not freshly reverified after Docker stopped)",
+    "backend_existing_suite": {
+      "passed": 370,
+      "skipped": 0,
+      "warnings": 238,
+      "seconds": 443.97,
+      "runtime": "native PostgreSQL 18.3; all six existing PostgreSQL URL variables and RUN_MODEL_INTEGRATION=1; D1 modules excluded because separately exercised"
+    },
+    "d1_added_tests": {
+      "passed": 17,
+      "skipped": 0,
+      "seconds": 12.02,
+      "authorization_race_cases": 6,
+      "race_database_runtime": "dedicated postgres:16-alpine disposable Docker service, before engine loss",
+      "meaning": "characterization tests reproduce unresolved behavior; positive authentication boundary tests also included"
+    },
+    "missing_ci_env_probe": {
+      "module": "test_casework_integrity_audit_postgres.py",
+      "exit_code": 0,
+      "skipped": 81,
+      "seconds": 0.5
+    },
+    "frontend_typecheck": "passed",
+    "frontend_production_build": "passed; 12 application page routes plus generated framework routes",
+    "lint": "Ruff 0.17.1 focused E9,F63,F7,F82 scan passed; added D1 modules also passed F/E9 and were formatted",
+    "model_provisioning": "legacy absent in fresh checkout, installed once from operator-retained trusted artifact through supported verifier; tracked enrollment/semester artifacts verified; no retraining or artifact replacement",
+    "migration_head": "20261014_0012",
+    "docker_rebuild": "attempted; engine became unavailable before final image export/verifiers; canceled owned CLI; no successful D1 image ID or container smoke claimed",
+    "docker_initial_version": "29.5.3 client/server; existing desktop-linux context"
+  },
+  "python_environment": [
+    {
+      "name": "alembic",
+      "version": "1.20.0"
+    },
+    {
+      "name": "annotated-doc",
+      "version": "0.0.5"
+    },
+    {
+      "name": "annotated-types",
+      "version": "0.8.0"
+    },
+    {
+      "name": "anyio",
+      "version": "4.15.1"
+    },
+    {
+      "name": "argon2-cffi",
+      "version": "25.1.0"
+    },
+    {
+      "name": "argon2-cffi-bindings",
+      "version": "26.1.0"
+    },
+    {
+      "name": "certifi",
+      "version": "2026.7.22"
+    },
+    {
+      "name": "cffi",
+      "version": "2.1.1"
+    },
+    {
+      "name": "click",
+      "version": "8.5.0"
+    },
+    {
+      "name": "cloudpickle",
+      "version": "3.1.2"
+    },
+    {
+      "name": "colorama",
+      "version": "0.4.6"
+    },
+    {
+      "name": "coverage",
+      "version": "7.16.2"
+    },
+    {
+      "name": "dnspython",
+      "version": "2.9.0"
+    },
+    {
+      "name": "email-validator",
+      "version": "2.3.0"
+    },
+    {
+      "name": "fastapi",
+      "version": "0.143.2"
+    },
+    {
+      "name": "h11",
+      "version": "0.16.0"
+    },
+    {
+      "name": "httpcore2",
+      "version": "2.13.1"
+    },
+    {
+      "name": "httptools",
+      "version": "0.9.0"
+    },
+    {
+      "name": "httpx2",
+      "version": "2.13.1"
+    },
+    {
+      "name": "idna",
+      "version": "3.20"
+    },
+    {
+      "name": "iniconfig",
+      "version": "2.3.1"
+    },
+    {
+      "name": "joblib",
+      "version": "1.6.0"
+    },
+    {
+      "name": "Mako",
+      "version": "1.4.3"
+    },
+    {
+      "name": "MarkupSafe",
+      "version": "3.0.4"
+    },
+    {
+      "name": "numpy",
+      "version": "2.4.6"
+    },
+    {
+      "name": "opentelemetry-api",
+      "version": "1.45.1"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3"
+    },
+    {
+      "name": "pandas",
+      "version": "2.3.3"
+    },
+    {
+      "name": "pip",
+      "version": "24.0"
+    },
+    {
+      "name": "pluggy",
+      "version": "1.7.0"
+    },
+    {
+      "name": "psycopg",
+      "version": "3.3.6"
+    },
+    {
+      "name": "psycopg-binary",
+      "version": "3.3.6"
+    },
+    {
+      "name": "pwdlib",
+      "version": "0.3.1"
+    },
+    {
+      "name": "pycparser",
+      "version": "3.11"
+    },
+    {
+      "name": "pydantic",
+      "version": "2.14.1"
+    },
+    {
+      "name": "pydantic_core",
+      "version": "2.50.1"
+    },
+    {
+      "name": "pydantic-settings",
+      "version": "2.16.0"
+    },
+    {
+      "name": "Pygments",
+      "version": "2.21.0"
+    },
+    {
+      "name": "PyJWT",
+      "version": "2.15.1"
+    },
+    {
+      "name": "pytest",
+      "version": "9.1.1"
+    },
+    {
+      "name": "pytest-cov",
+      "version": "7.1.0"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "2.9.0.post0"
+    },
+    {
+      "name": "python-dotenv",
+      "version": "1.2.4"
+    },
+    {
+      "name": "python-multipart",
+      "version": "0.0.32"
+    },
+    {
+      "name": "pytz",
+      "version": "2026.5"
+    },
+    {
+      "name": "PyYAML",
+      "version": "6.0.3"
+    },
+    {
+      "name": "scikit-learn",
+      "version": "1.7.2"
+    },
+    {
+      "name": "scipy",
+      "version": "1.17.1"
+    },
+    {
+      "name": "setuptools",
+      "version": "65.5.0"
+    },
+    {
+      "name": "six",
+      "version": "1.17.0"
+    },
+    {
+      "name": "SQLAlchemy",
+      "version": "2.1.4"
+    },
+    {
+      "name": "starlette",
+      "version": "1.8.0"
+    },
+    {
+      "name": "threadpoolctl",
+      "version": "3.7.0"
+    },
+    {
+      "name": "truststore",
+      "version": "0.10.5"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0"
+    },
+    {
+      "name": "typing-inspection",
+      "version": "0.4.4"
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.5"
+    },
+    {
+      "name": "ucimlrepo",
+      "version": "0.0.7"
+    },
+    {
+      "name": "uvicorn",
+      "version": "0.54.0"
+    },
+    {
+      "name": "watchfiles",
+      "version": "1.3.0"
+    },
+    {
+      "name": "websockets",
+      "version": "17.2"
+    },
+    {
+      "name": "xgboost",
+      "version": "3.2.0"
+    }
+  ],
+  "dependency_scan": {
+    "pip_audit_version": "2.10.1",
+    "installed_distributions_scanned": 62,
+    "python_raw_vulnerability_records": 20,
+    "python_unique_advisories": 10,
+    "python_affected_packages": {
+      "pip": "24.0",
+      "setuptools": "65.5.0"
+    },
+    "python_package_scan_skips": 0,
+    "npm_affected_packages": {
+      "next": "16.3.7",
+      "source-map-js": "1.2.1"
+    },
+    "npm_unique_advisories": 7,
+    "npm_high_aggregate_package_count": 2,
+    "normalized_authoritative_advisories": [
+      {
+        "ghsa_id": "GHSA-39w2-rjm5-chcv",
+        "cve_id": "CVE-2026-94486",
+        "summary": "Next.js has information disclosure in development server's Model Context Protocol endpoint",
+        "severity": "low",
+        "published_at": "2026-10-07T20:31:51Z",
+        "updated_at": "2026-10-07T20:31:52Z",
+        "html_url": "https://github.com/advisories/GHSA-39w2-rjm5-chcv",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "next"
+            },
+            "vulnerable_version_range": ">= 16.0.0, < 16.3.8",
+            "first_patched_version": "16.3.8",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-3w37-wq28-93x7",
+        "cve_id": "CVE-2026-94544",
+        "summary": "Next.js: Pending `use cache` fill can leak Draft Mode content into regular responses and persisted pages",
+        "severity": "medium",
+        "published_at": "2026-10-07T20:32:13Z",
+        "updated_at": "2026-10-07T20:32:15Z",
+        "html_url": "https://github.com/advisories/GHSA-3w37-wq28-93x7",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "next"
+            },
+            "vulnerable_version_range": ">= 16.3.0, < 16.3.8",
+            "first_patched_version": "16.3.8",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-4jqv-mc3x-m676",
+        "cve_id": "CVE-2026-94543",
+        "summary": "Next.js has cache poisoning of SSG and ISR pages in self-hosted applications",
+        "severity": "medium",
+        "published_at": "2026-10-07T20:32:06Z",
+        "updated_at": "2026-10-07T20:32:07Z",
+        "html_url": "https://github.com/advisories/GHSA-4jqv-mc3x-m676",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "next"
+            },
+            "vulnerable_version_range": ">= 15.0.0, < 15.5.27",
+            "first_patched_version": "15.5.27",
+            "vulnerable_functions": []
+          },
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "next"
+            },
+            "vulnerable_version_range": ">= 16.0.0, < 16.3.8",
+            "first_patched_version": "16.3.8",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-4xh5-x5gv-qwph",
+        "cve_id": "CVE-2025-8869",
+        "summary": "pip's fallback tar extraction doesn't check symbolic links point to extraction directory",
+        "severity": "medium",
+        "published_at": "2025-09-24T15:31:14Z",
+        "updated_at": "2025-12-19T16:46:02Z",
+        "html_url": "https://github.com/advisories/GHSA-4xh5-x5gv-qwph",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "pip"
+            },
+            "vulnerable_version_range": "<= 25.2",
+            "first_patched_version": "25.3",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-58qw-9mgm-455v",
+        "cve_id": "CVE-2026-3219",
+        "summary": "pip has an interpretation conflict due to handling both concatenated tar and ZIP files as ZIP files",
+        "severity": "medium",
+        "published_at": "2026-04-20T18:31:48Z",
+        "updated_at": "2026-05-20T20:54:26Z",
+        "html_url": "https://github.com/advisories/GHSA-58qw-9mgm-455v",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "pip"
+            },
+            "vulnerable_version_range": "<= 26.0.1",
+            "first_patched_version": "26.1",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-5rjg-fvgr-3xxf",
+        "cve_id": "CVE-2025-47273",
+        "summary": "setuptools has a path traversal vulnerability in PackageIndex.download that leads to Arbitrary File Write",
+        "severity": "high",
+        "published_at": "2025-05-19T16:52:43Z",
+        "updated_at": "2025-06-13T04:13:22Z",
+        "html_url": "https://github.com/advisories/GHSA-5rjg-fvgr-3xxf",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "setuptools"
+            },
+            "vulnerable_version_range": "< 78.1.1",
+            "first_patched_version": "78.1.1",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-68fv-2mgg-jv7q",
+        "cve_id": "CVE-2026-93749",
+        "summary": "source-map-js allows event-loop denial of service through indexed source-map section offsets",
+        "severity": "high",
+        "published_at": "2026-09-18T18:31:44Z",
+        "updated_at": "2026-10-05T23:31:22Z",
+        "html_url": "https://github.com/advisories/GHSA-68fv-2mgg-jv7q",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "source-map-js"
+            },
+            "vulnerable_version_range": ">= 1.0.0, < 1.2.2",
+            "first_patched_version": "1.2.2",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-6vgw-5pg2-w6jp",
+        "cve_id": "CVE-2026-1703",
+        "summary": "pip Path Traversal vulnerability",
+        "severity": "low",
+        "published_at": "2026-02-02T15:30:34Z",
+        "updated_at": "2026-02-02T22:08:55Z",
+        "html_url": "https://github.com/advisories/GHSA-6vgw-5pg2-w6jp",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "pip"
+            },
+            "vulnerable_version_range": "< 26.0",
+            "first_patched_version": "26.0",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-cjq9-62q9-8jv4",
+        "cve_id": "CVE-2026-94483",
+        "summary": "Next.js has Server-Side Request Forgery in Image Optimization",
+        "severity": "high",
+        "published_at": "2026-10-07T20:30:55Z",
+        "updated_at": "2026-10-07T20:30:56Z",
+        "html_url": "https://github.com/advisories/GHSA-cjq9-62q9-8jv4",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "next"
+            },
+            "vulnerable_version_range": ">= 16.0.0, < 16.3.8",
+            "first_patched_version": "16.3.8",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-cx63-2mw6-8hw5",
+        "cve_id": "CVE-2024-6345",
+        "summary": "setuptools vulnerable to Command Injection via package URL",
+        "severity": "high",
+        "published_at": "2024-07-15T03:30:57Z",
+        "updated_at": "2025-11-04T19:47:21Z",
+        "html_url": "https://github.com/advisories/GHSA-cx63-2mw6-8hw5",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "setuptools"
+            },
+            "vulnerable_version_range": "< 70.0.0",
+            "first_patched_version": "70.0.0",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-f87g-xv8r-7p7x",
+        "cve_id": "CVE-2026-94485",
+        "summary": "Next.js has information disclosure in App Router metadata image routes via dynamicParams bypass",
+        "severity": "medium",
+        "published_at": "2026-10-07T20:31:33Z",
+        "updated_at": "2026-10-07T20:31:35Z",
+        "html_url": "https://github.com/advisories/GHSA-f87g-xv8r-7p7x",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "next"
+            },
+            "vulnerable_version_range": ">= 16.0.0, < 16.3.8",
+            "first_patched_version": "16.3.8",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-h35f-9h28-mq5c",
+        "cve_id": "CVE-2026-59890",
+        "summary": "setuptools: MANIFEST.in exclusion bypass in sdist via Unicode normalization collision (NFC/NFD) on macOS APFS/HFS+",
+        "severity": "medium",
+        "published_at": "2026-07-21T19:09:21Z",
+        "updated_at": "2026-07-21T19:09:21Z",
+        "html_url": "https://github.com/advisories/GHSA-h35f-9h28-mq5c",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "setuptools"
+            },
+            "vulnerable_version_range": "< 83.0.0",
+            "first_patched_version": "83.0.0",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-jp4c-xjxw-mgf9",
+        "cve_id": "CVE-2026-6357",
+        "summary": "pip Vulnerable to Inclusion of Functionality from Untrusted Control Sphere",
+        "severity": "medium",
+        "published_at": "2026-04-27T15:30:52Z",
+        "updated_at": "2026-05-05T22:05:47Z",
+        "html_url": "https://github.com/advisories/GHSA-jp4c-xjxw-mgf9",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "pip"
+            },
+            "vulnerable_version_range": "< 26.1",
+            "first_patched_version": "26.1",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-mcj8-r9mp-w47p",
+        "cve_id": "CVE-2026-94484",
+        "summary": "Next.js has cache poisoning in SSG/ISR rendering that leads to cross-user content substitution and persistent denial of service",
+        "severity": "medium",
+        "published_at": "2026-10-07T20:31:13Z",
+        "updated_at": "2026-10-07T20:31:15Z",
+        "html_url": "https://github.com/advisories/GHSA-mcj8-r9mp-w47p",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "next"
+            },
+            "vulnerable_version_range": ">= 16.0.0, < 16.3.8",
+            "first_patched_version": "16.3.8",
+            "vulnerable_functions": []
+          },
+          {
+            "package": {
+              "ecosystem": "npm",
+              "name": "next"
+            },
+            "vulnerable_version_range": ">= 15.0.0, < 15.5.27",
+            "first_patched_version": "15.5.27",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-qwm4-qh6w-59xr",
+        "cve_id": "CVE-2026-13346",
+        "summary": "pip would incorrectly handle doubly-encoded package URLs from indexes",
+        "severity": "medium",
+        "published_at": "2026-07-29T21:30:59Z",
+        "updated_at": "2026-09-01T18:57:44Z",
+        "html_url": "https://github.com/advisories/GHSA-qwm4-qh6w-59xr",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "pip"
+            },
+            "vulnerable_version_range": "< 26.2.0",
+            "first_patched_version": "26.2.0",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-r9hx-vwmv-q579",
+        "cve_id": "CVE-2022-40897",
+        "summary": "pypa/setuptools vulnerable to Regular Expression Denial of Service (ReDoS)",
+        "severity": "high",
+        "published_at": "2022-12-23T00:30:23Z",
+        "updated_at": "2025-11-04T19:37:01Z",
+        "html_url": "https://github.com/advisories/GHSA-r9hx-vwmv-q579",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "setuptools"
+            },
+            "vulnerable_version_range": "< 65.5.1",
+            "first_patched_version": "65.5.1",
+            "vulnerable_functions": []
+          }
+        ]
+      },
+      {
+        "ghsa_id": "GHSA-wf93-45jw-7689",
+        "cve_id": "CVE-2026-8643",
+        "summary": " pip: Path traversal in console_scripts/gui_scripts\u00a0entry point names allows installing scripts outside of target directory",
+        "severity": "medium",
+        "published_at": "2026-06-01T18:31:53Z",
+        "updated_at": "2026-07-10T12:31:50Z",
+        "html_url": "https://github.com/advisories/GHSA-wf93-45jw-7689",
+        "vulnerabilities": [
+          {
+            "package": {
+              "ecosystem": "pip",
+              "name": "pip"
+            },
+            "vulnerable_version_range": "< 26.1.2",
+            "first_patched_version": "26.1.2",
+            "vulnerable_functions": []
+          }
+        ]
+      }
+    ],
+    "caveat": "Affected versions are established. Individual runtime exploit preconditions/applicability are analyzed in the report; scanner aggregate severities are not remote-exploit proof."
+  },
+  "clean_install_http": {
+    "source_sha": "68faf1d62cc37acf9074fcff00f61ac0aa420698",
+    "runtime": "fresh Python 3.11.9 environment, native production-mode Uvicorn, disposable PostgreSQL 18.3",
+    "checks": [
+      "GET /health/ready: 200",
+      "POST /auth/login: 200",
+      "GET /students: 403 PASSWORD_CHANGE_REQUIRED",
+      "POST /auth/change-password: 200",
+      "GET /students: 401 AUTHENTICATION_REQUIRED",
+      "POST /users: 201",
+      "POST /auth/login: 200",
+      "GET /students: 403 PASSWORD_CHANGE_REQUIRED",
+      "POST /auth/change-password: 200",
+      "GET /students: 401 AUTHENTICATION_REQUIRED",
+      "POST /users: 201",
+      "POST /auth/login: 200",
+      "GET /students: 403 PASSWORD_CHANGE_REQUIRED",
+      "POST /auth/change-password: 200",
+      "GET /students: 401 AUTHENTICATION_REQUIRED",
+      "POST /users: 403 INSUFFICIENT_PERMISSIONS",
+      "GET /imports/staged: 403 INSUFFICIENT_PERMISSIONS",
+      "POST /imports/csv: 200",
+      "GET /students: 200",
+      "GET /models: 200",
+      "POST /models/enrollment-outcome-v1/validate: 403 INSUFFICIENT_PERMISSIONS",
+      "POST /models/enrollment-outcome-v1/validate: 200",
+      "POST /models/enrollment-outcome-v1/activate: 200",
+      "POST /models/first-semester-outcome-v1/validate: 403 INSUFFICIENT_PERMISSIONS",
+      "POST /models/first-semester-outcome-v1/validate: 200",
+      "POST /models/first-semester-outcome-v1/activate: 200",
+      "GET /students/b19e32f4-ae65-4730-b7de-162a676362b3/predictions: 200",
+      "POST /students/b19e32f4-ae65-4730-b7de-162a676362b3/predictions?prediction_stage=ENROLLMENT: 403 INSUFFICIENT_PERMISSIONS",
+      "POST /students/b19e32f4-ae65-4730-b7de-162a676362b3/predictions?prediction_stage=ENROLLMENT: 403 INSUFFICIENT_PERMISSIONS",
+      "POST /students/b19e32f4-ae65-4730-b7de-162a676362b3/predictions?prediction_stage=ENROLLMENT: 201",
+      "POST /students/b19e32f4-ae65-4730-b7de-162a676362b3/predictions?prediction_stage=FIRST_SEMESTER: 201",
+      "POST /students/b19e32f4-ae65-4730-b7de-162a676362b3/predictions: 201",
+      "GET /students/b19e32f4-ae65-4730-b7de-162a676362b3/warnings: 200",
+      "PATCH /warnings/6d5dd5a0-8323-48fc-8cd5-832445e8aa1a/assignment: 200",
+      "POST /warnings/6d5dd5a0-8323-48fc-8cd5-832445e8aa1a/reviews: 201",
+      "POST /interventions: 201",
+      "POST /interventions/51153988-3983-4bf7-8366-e447939dc958/follow-ups: 201",
+      "POST /interventions/51153988-3983-4bf7-8366-e447939dc958/complete: 409 INTERVENTION_HAS_SCHEDULED_FOLLOW_UPS",
+      "POST /follow-ups/6767b304-e1bd-4c44-8df1-fce38bc277cc/complete: 200",
+      "GET /interventions/51153988-3983-4bf7-8366-e447939dc958: 200",
+      "POST /interventions/51153988-3983-4bf7-8366-e447939dc958/complete: 200",
+      "GET /students/b19e32f4-ae65-4730-b7de-162a676362b3/profile: 200",
+      "GET /casework/integrity: 200",
+      "GET /predictions/915b55a0-25d8-434d-8188-61304187d376: 200"
+    ],
+    "database": "d1_clean_install_868bbe5579c248479b6e50c0578ec963",
+    "student_id": "b19e32f4-ae65-4730-b7de-162a676362b3",
+    "case_id": "51153988-3983-4bf7-8366-e447939dc958",
+    "case_status": "COMPLETED",
+    "prediction_results": {
+      "enrollment": {
+        "id": "915b55a0-25d8-434d-8188-61304187d376",
+        "model_version": "enrollment-outcome-v1",
+        "probability": 0.2497711730787302,
+        "risk_level": "MEDIUM",
+        "prediction_stage": "ENROLLMENT"
+      },
+      "semester": {
+        "id": "018a91d0-b6fd-441b-b4de-f62430c7ee42",
+        "model_version": "first-semester-outcome-v1",
+        "probability": 0.18011547285576907,
+        "risk_level": "LOW",
+        "prediction_stage": "FIRST_SEMESTER"
+      },
+      "legacy": {
+        "id": "58470778-4694-4946-9a44-6d3fe4814477",
+        "model_version": "dropout-logistic-regression-v1",
+        "probability": 0.3447925421468906,
+        "risk_level": "MEDIUM",
+        "prediction_stage": "FIRST_SEMESTER"
+      }
+    },
+    "selected_prediction_id": "018a91d0-b6fd-441b-b4de-f62430c7ee42",
+    "integrity_issues": [],
+    "original_review_recorded": true
+  },
+  "recovery": {
+    "postgres": "18.3",
+    "source_database": "d1_clean_install_868bbe5579c248479b6e50c0578ec963",
+    "restored_database": "d1_restore_d41a690064194d778cc3551417fbb746",
+    "dump_bytes": 106966,
+    "tables": {
+      "admission_records": {
+        "rows": 1,
+        "sha256": "454f7803880c1cca497d0ff05d6f45fb36ba5b59a82356a761f6b8384dead755"
+      },
+      "alembic_version": {
+        "rows": 1,
+        "sha256": "e4164cb26c270d1d1f7a24c86bacbe70d056dd49cd5e548565aea8485ae71162"
+      },
+      "casework_action_audit": {
+        "rows": 9,
+        "sha256": "5a7be2853a567728945a57823ff2c199a5edefefdedb032fe77ddecb3da661bd"
+      },
+      "first_semester_records": {
+        "rows": 1,
+        "sha256": "50ae72d78847f6bac19181762fb1d7a0ac29108f157a953aafa24714fcc2f9ce"
+      },
+      "follow_ups": {
+        "rows": 1,
+        "sha256": "2f7fc2bfe5abbf1608cdfcef4d2f3ab78654bef1c78f9203833d2c8a4a9a2378"
+      },
+      "import_errors": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "import_jobs": {
+        "rows": 1,
+        "sha256": "5f1675f52360bb3b54b4a3a47b2b26c2b7b94b5eab902a3dcb119febf1b59c8f"
+      },
+      "intervention_notes": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "interventions": {
+        "rows": 1,
+        "sha256": "be2783968b0164f7481fe4abf8def1d797b68a9d6bbc7d85da87734d1afeb12b"
+      },
+      "model_activation_events": {
+        "rows": 2,
+        "sha256": "dc9710a3edf43ac6da909a97a56f1ca88aca2bf90ad162f765fcf98e368aeea6"
+      },
+      "model_validations": {
+        "rows": 2,
+        "sha256": "b99b158ab532178dd9de78df95612314f657ff5f824d1292f8b362bff5048617"
+      },
+      "model_versions": {
+        "rows": 3,
+        "sha256": "477c48def9ec3d1aa99d655e03a2c833b65dd051b279194e33d9868cc023ab91"
+      },
+      "prediction_results": {
+        "rows": 3,
+        "sha256": "d3eefa4aac68d5dabea9923dbb0334a53711412b6dd8b2bc6e0c895611d33a97"
+      },
+      "staged_import_actions": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "staged_import_batches": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "staged_import_rows": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "students": {
+        "rows": 1,
+        "sha256": "7fc3ac213d11e68811aedd32f48803ece89fb8c9d239422ec728280ea583d9df"
+      },
+      "user_administration_audit": {
+        "rows": 6,
+        "sha256": "0b9f6cf230297caeab8e90a68243c49cd2797f374cd56bb02a926541796295f4"
+      },
+      "user_login_identifiers": {
+        "rows": 6,
+        "sha256": "268b7137c2d31df1b3703260ce71b10975d2e16653de26c1a9e938d7e9e80f71"
+      },
+      "users": {
+        "rows": 3,
+        "sha256": "c8d4cb19684fc7c83531036ccbf6163d570efaf3d4c6111f397bd944a37a1393"
+      },
+      "warning_reviews": {
+        "rows": 1,
+        "sha256": "6d2f3ab66320cd220b3384bbb78b82b4600931e01dbe9301f9c30fa14557cbc3"
+      },
+      "warnings": {
+        "rows": 2,
+        "sha256": "31a2c2e8410fc821f3238a884b879d4a99677a85d972572a36ef46acc1e788be"
+      }
+    },
+    "all_table_rows_and_hashes_match": true,
+    "restore_database_removed": true,
+    "scope": "Disposable data only; operator-devised pg_dump/pg_restore experiment, no existing recovery runbook to follow"
+  },
+  "cleanup": {
+    "owned_data_directory_verified": true,
+    "removed_application_databases": [
+      "d1_clean_install_868bbe5579c248479b6e50c0578ec963",
+      "d1_clean_install_a38b8c6840aa4aba86e6e5a87b6babb3"
+    ],
+    "remaining_nondefault_databases": [],
+    "other_client_connections": 0,
+    "native_cluster_stopped": true,
+    "docker_project": "d1-audit-8ff43a5b",
+    "docker_cleanup_confirmed": false,
+    "docker_limitation": "Docker Desktop reported stopped after the fresh build attempt; no shared-daemon lifecycle change was made.",
+    "native_cluster_data_retained": true,
+    "disposable_dump_retained": true,
+    "native_api_stopped": true,
+    "native_verification_listeners_remaining": [],
+    "docker_proxy_listener_remaining": 55469,
+    "file_cleanup_rejected": "Recursive removal of the stopped owned cluster and accompanying file cleanup was rejected by tool policy; files retained."
+  },
+  "prior_b2_container_gap": "closed for combined final source; unchanged by D1 runtime limitation"
+}

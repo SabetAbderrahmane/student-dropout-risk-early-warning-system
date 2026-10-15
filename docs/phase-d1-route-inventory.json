@@ -1,0 +1,894 @@
+{
+  "source_sha": "68faf1d62cc37acf9074fcff00f61ac0aa420698",
+  "frontend_pages": [
+    "/admin/users",
+    "/change-password",
+    "/dashboard",
+    "/follow-ups",
+    "/imports",
+    "/interventions",
+    "/login",
+    "/",
+    "/predictions",
+    "/students/{id}",
+    "/students",
+    "/warnings"
+  ],
+  "backend_endpoint_count": 77,
+  "backend_endpoints": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "source": "backend/app/api/v1/auth.py",
+      "line": 19,
+      "function": "login",
+      "dependencies": [
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/me",
+      "source": "backend/app/api/v1/auth.py",
+      "line": 40,
+      "function": "read_current_user",
+      "dependencies": [
+        "get_active_user_allow_password_change"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/change-password",
+      "source": "backend/app/api/v1/auth.py",
+      "line": 47,
+      "function": "change_password",
+      "dependencies": [
+        "get_active_user_allow_password_change",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/follow-ups",
+      "source": "backend/app/api/v1/follow_ups.py",
+      "line": 30,
+      "function": "list_follow_ups",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/follow-ups/{follow_up_id}",
+      "source": "backend/app/api/v1/follow_ups.py",
+      "line": 63,
+      "function": "follow_up_detail",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/follow-ups/{follow_up_id}",
+      "source": "backend/app/api/v1/follow_ups.py",
+      "line": 70,
+      "function": "update_follow_up",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/follow-ups/{follow_up_id}/complete",
+      "source": "backend/app/api/v1/follow_ups.py",
+      "line": 80,
+      "function": "complete_follow_up",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/follow-ups/{follow_up_id}/cancel",
+      "source": "backend/app/api/v1/follow_ups.py",
+      "line": 90,
+      "function": "cancel_follow_up",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/follow-ups/{follow_up_id}/recover",
+      "source": "backend/app/api/v1/follow_ups.py",
+      "line": 100,
+      "function": "recover_follow_up",
+      "dependencies": [
+        "require_roles(UserRole.ACADEMIC_ADMIN)",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health/live",
+      "source": "backend/app/api/v1/health.py",
+      "line": 18,
+      "function": "liveness",
+      "dependencies": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health/ready",
+      "source": "backend/app/api/v1/health.py",
+      "line": 23,
+      "function": "readiness",
+      "dependencies": [
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health",
+      "source": "backend/app/api/v1/health.py",
+      "line": 58,
+      "function": "health",
+      "dependencies": [
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/imports/template",
+      "source": "backend/app/api/v1/imports.py",
+      "line": 21,
+      "function": "download_template",
+      "dependencies": [
+        "import_read_access"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/imports/csv",
+      "source": "backend/app/api/v1/imports.py",
+      "line": 32,
+      "function": "upload_csv",
+      "dependencies": [
+        "import_write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/imports",
+      "source": "backend/app/api/v1/imports.py",
+      "line": 41,
+      "function": "list_imports",
+      "dependencies": [
+        "import_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/imports/{import_id}",
+      "source": "backend/app/api/v1/imports.py",
+      "line": 54,
+      "function": "get_import",
+      "dependencies": [
+        "import_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/imports/{import_id}/errors",
+      "source": "backend/app/api/v1/imports.py",
+      "line": 63,
+      "function": "list_import_errors",
+      "dependencies": [
+        "import_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/interventions",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 36,
+      "function": "list_interventions",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/interventions",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 80,
+      "function": "create_intervention",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/students/{student_id}/interventions",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 89,
+      "function": "student_interventions",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/interventions/{intervention_id}",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 102,
+      "function": "intervention_detail",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/interventions/{intervention_id}",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 109,
+      "function": "update_intervention",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/interventions/{intervention_id}/notes",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 123,
+      "function": "add_note",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/interventions/{intervention_id}/notes",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 136,
+      "function": "list_notes",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/interventions/{intervention_id}/complete",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 145,
+      "function": "complete_intervention",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/interventions/{intervention_id}/cancel",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 157,
+      "function": "cancel_intervention",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/interventions/{intervention_id}/follow-ups",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 171,
+      "function": "create_follow_up",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/interventions/{intervention_id}/follow-ups",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 181,
+      "function": "intervention_follow_ups",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/interventions/{intervention_id}/transfer",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 196,
+      "function": "transfer_intervention",
+      "dependencies": [
+        "require_roles(UserRole.ACADEMIC_ADMIN)",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/casework/integrity",
+      "source": "backend/app/api/v1/interventions.py",
+      "line": 206,
+      "function": "integrity_diagnostics",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/models/current",
+      "source": "backend/app/api/v1/models.py",
+      "line": 25,
+      "function": "current_model",
+      "dependencies": [
+        "model_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/models/current/performance",
+      "source": "backend/app/api/v1/models.py",
+      "line": 33,
+      "function": "current_model_performance",
+      "dependencies": [
+        "model_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/models",
+      "source": "backend/app/api/v1/models.py",
+      "line": 41,
+      "function": "model_catalog",
+      "dependencies": [
+        "model_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/models/{model_version}/validate",
+      "source": "backend/app/api/v1/models.py",
+      "line": 46,
+      "function": "validate_model",
+      "dependencies": [
+        "require_system_admin",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/models/{model_version}/activate",
+      "source": "backend/app/api/v1/models.py",
+      "line": 58,
+      "function": "activate_model",
+      "dependencies": [
+        "require_system_admin",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/students/{student_id}/prediction-readiness",
+      "source": "backend/app/api/v1/predictions.py",
+      "line": 34,
+      "function": "prediction_readiness",
+      "dependencies": [
+        "prediction_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/students/{student_id}/prediction-readiness/stages",
+      "source": "backend/app/api/v1/predictions.py",
+      "line": 47,
+      "function": "stage_readiness",
+      "dependencies": [
+        "prediction_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/students/{student_id}/predictions",
+      "source": "backend/app/api/v1/predictions.py",
+      "line": 64,
+      "function": "predict_student",
+      "dependencies": [
+        "prediction_execute_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/students/{student_id}/predictions",
+      "source": "backend/app/api/v1/predictions.py",
+      "line": 76,
+      "function": "student_prediction_history",
+      "dependencies": [
+        "prediction_read_access",
+        "get_read_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/predictions/batch",
+      "source": "backend/app/api/v1/predictions.py",
+      "line": 95,
+      "function": "predict_batch",
+      "dependencies": [
+        "prediction_execute_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/predictions",
+      "source": "backend/app/api/v1/predictions.py",
+      "line": 106,
+      "function": "list_predictions",
+      "dependencies": [
+        "prediction_read_access",
+        "get_read_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/predictions/{prediction_id}",
+      "source": "backend/app/api/v1/predictions.py",
+      "line": 137,
+      "function": "get_prediction",
+      "dependencies": [
+        "prediction_read_access",
+        "get_read_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/dashboard/overview",
+      "source": "backend/app/api/v1/read_models.py",
+      "line": 23,
+      "function": "dashboard_overview",
+      "dependencies": [
+        "read_access",
+        "get_read_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/student-registry",
+      "source": "backend/app/api/v1/read_models.py",
+      "line": 34,
+      "function": "student_registry",
+      "dependencies": [
+        "read_access",
+        "get_read_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/students/{student_id}/profile",
+      "source": "backend/app/api/v1/read_models.py",
+      "line": 75,
+      "function": "student_profile",
+      "dependencies": [
+        "read_access",
+        "get_read_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/imports/staged/csv",
+      "source": "backend/app/api/v1/staged_imports.py",
+      "line": 28,
+      "function": "stage_csv",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/imports/staged",
+      "source": "backend/app/api/v1/staged_imports.py",
+      "line": 37,
+      "function": "list_batches",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/imports/staged/{batch_id}",
+      "source": "backend/app/api/v1/staged_imports.py",
+      "line": 50,
+      "function": "get_batch",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/imports/staged/{batch_id}/rows",
+      "source": "backend/app/api/v1/staged_imports.py",
+      "line": 57,
+      "function": "list_rows",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/imports/staged/{batch_id}/rows/{row_id}",
+      "source": "backend/app/api/v1/staged_imports.py",
+      "line": 78,
+      "function": "correct_row",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/imports/staged/{batch_id}/commit",
+      "source": "backend/app/api/v1/staged_imports.py",
+      "line": 89,
+      "function": "commit_batch",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/imports/staged/{batch_id}/cancel",
+      "source": "backend/app/api/v1/staged_imports.py",
+      "line": 101,
+      "function": "cancel_batch",
+      "dependencies": [
+        "write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/imports/staged/{batch_id}/actions",
+      "source": "backend/app/api/v1/staged_imports.py",
+      "line": 113,
+      "function": "list_actions",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/imports/staged/{batch_id}/export",
+      "source": "backend/app/api/v1/staged_imports.py",
+      "line": 124,
+      "function": "export_batch",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/students",
+      "source": "backend/app/api/v1/students.py",
+      "line": 32,
+      "function": "list_students",
+      "dependencies": [
+        "student_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/students",
+      "source": "backend/app/api/v1/students.py",
+      "line": 43,
+      "function": "create_student",
+      "dependencies": [
+        "student_write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/students/{student_id}",
+      "source": "backend/app/api/v1/students.py",
+      "line": 52,
+      "function": "get_student",
+      "dependencies": [
+        "student_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/students/{student_id}",
+      "source": "backend/app/api/v1/students.py",
+      "line": 61,
+      "function": "update_student",
+      "dependencies": [
+        "student_write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/students/{student_id}",
+      "source": "backend/app/api/v1/students.py",
+      "line": 71,
+      "function": "delete_student",
+      "dependencies": [
+        "student_write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/students/{student_id}/admission",
+      "source": "backend/app/api/v1/students.py",
+      "line": 81,
+      "function": "get_admission",
+      "dependencies": [
+        "student_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/students/{student_id}/admission",
+      "source": "backend/app/api/v1/students.py",
+      "line": 90,
+      "function": "upsert_admission",
+      "dependencies": [
+        "student_write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/students/{student_id}/semester-1",
+      "source": "backend/app/api/v1/students.py",
+      "line": 100,
+      "function": "get_first_semester",
+      "dependencies": [
+        "student_read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/students/{student_id}/semester-1",
+      "source": "backend/app/api/v1/students.py",
+      "line": 109,
+      "function": "upsert_first_semester",
+      "dependencies": [
+        "student_write_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users",
+      "source": "backend/app/api/v1/users.py",
+      "line": 26,
+      "function": "list_users",
+      "dependencies": [
+        "require_system_admin",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/users",
+      "source": "backend/app/api/v1/users.py",
+      "line": 41,
+      "function": "create_user",
+      "dependencies": [
+        "require_system_admin",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users/advisors",
+      "source": "backend/app/api/v1/users.py",
+      "line": 50,
+      "function": "advisors",
+      "dependencies": [
+        "directory_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users/{user_id}",
+      "source": "backend/app/api/v1/users.py",
+      "line": 61,
+      "function": "read_user",
+      "dependencies": [
+        "require_system_admin",
+        "get_db"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/users/{user_id}",
+      "source": "backend/app/api/v1/users.py",
+      "line": 70,
+      "function": "update_user",
+      "dependencies": [
+        "require_system_admin",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/users/{user_id}/activate",
+      "source": "backend/app/api/v1/users.py",
+      "line": 80,
+      "function": "activate",
+      "dependencies": [
+        "require_system_admin",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/users/{user_id}/deactivate",
+      "source": "backend/app/api/v1/users.py",
+      "line": 89,
+      "function": "deactivate",
+      "dependencies": [
+        "require_system_admin",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/users/{user_id}/reset-password",
+      "source": "backend/app/api/v1/users.py",
+      "line": 98,
+      "function": "reset_password",
+      "dependencies": [
+        "require_system_admin",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/warnings",
+      "source": "backend/app/api/v1/warnings.py",
+      "line": 30,
+      "function": "list_warnings",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/students/{student_id}/warnings",
+      "source": "backend/app/api/v1/warnings.py",
+      "line": 65,
+      "function": "student_warning_history",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/warnings/{warning_id}",
+      "source": "backend/app/api/v1/warnings.py",
+      "line": 78,
+      "function": "get_warning",
+      "dependencies": [
+        "read_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/warnings/{warning_id}/assignment",
+      "source": "backend/app/api/v1/warnings.py",
+      "line": 85,
+      "function": "assign_warning",
+      "dependencies": [
+        "assign_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/warnings/{warning_id}/reviews",
+      "source": "backend/app/api/v1/warnings.py",
+      "line": 99,
+      "function": "review_warning",
+      "dependencies": [
+        "review_access",
+        "get_db"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/warnings/{warning_id}/reconsider",
+      "source": "backend/app/api/v1/warnings.py",
+      "line": 111,
+      "function": "reconsider_warning",
+      "dependencies": [
+        "review_access",
+        "get_db"
+      ]
+    }
+  ],
+  "tracked_ci_workflows": [],
+  "base_test_modules": [
+    "backend/tests/api/test_auth.py",
+    "backend/tests/api/test_casework.py",
+    "backend/tests/api/test_casework_integrity_audit_postgres.py",
+    "backend/tests/api/test_freshness.py",
+    "backend/tests/api/test_freshness_postgres.py",
+    "backend/tests/api/test_health.py",
+    "backend/tests/api/test_imports.py",
+    "backend/tests/api/test_outcome_predictions.py",
+    "backend/tests/api/test_outcomes_postgres.py",
+    "backend/tests/api/test_permissions.py",
+    "backend/tests/api/test_predictions.py",
+    "backend/tests/api/test_read_models.py",
+    "backend/tests/api/test_staged_imports.py",
+    "backend/tests/api/test_staged_imports_postgres.py",
+    "backend/tests/api/test_students.py",
+    "backend/tests/api/test_users.py",
+    "backend/tests/api/test_users_postgres.py",
+    "backend/tests/api/test_warnings.py",
+    "backend/tests/core/test_security.py",
+    "backend/tests/ml/test_deployment.py",
+    "backend/tests/ml/test_deployment_postgres.py",
+    "backend/tests/ml/test_feature_schema.py",
+    "backend/tests/ml/test_outcomes.py",
+    "backend/tests/ml/test_runtime.py",
+    "backend/tests/ml/test_training_pipeline.py"
+  ],
+  "tracked_environment_files": [
+    ".env.example",
+    "backend/.env.example",
+    "frontend/.env.example"
+  ],
+  "targeted_secret_pattern_hits": [],
+  "secret_scan_scope": "Current tracked source only; private-key/GitHub-token/AWS-key patterns, manual credential configuration review. Not exhaustive historical/entropy scanning."
+}
