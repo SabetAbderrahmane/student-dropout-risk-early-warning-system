@@ -21,6 +21,7 @@ from app.models import (
 )
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import AdvisorDirectoryPage, UserCreate, UserPage, UserUpdate
+from app.services.mutation_authorization import MutationAuthorization
 
 
 class UserService:
@@ -41,31 +42,9 @@ class UserService:
         return user
 
     def _administrator(self, actor: User, target_id: UUID | None = None) -> User:
-        expected_version = self.db.info.get(
-            "presented_auth", (actor.id, actor.token_version)
-        )[1]
-        self.repository.lock_administration()
-        actor_id = actor.id
-        for identifier in sorted({actor_id, target_id} - {None}, key=str):
-            self.get(identifier, lock=True)
-        actor = self.get(actor_id, lock=True)
-        if actor.token_version != expected_version or not actor.is_active:
-            raise ApplicationError(
-                401, "AUTHENTICATION_REQUIRED", "Sign in again to continue."
-            )
-        if actor.must_change_password:
-            raise ApplicationError(
-                403,
-                "PASSWORD_CHANGE_REQUIRED",
-                "Change your temporary password before using the application.",
-            )
-        if actor.role != UserRole.SYSTEM_ADMIN:
-            raise ApplicationError(
-                403,
-                "INSUFFICIENT_PERMISSIONS",
-                "Only System Admins may manage accounts.",
-            )
-        return actor
+        return MutationAuthorization(self.db, actor).lock_users(
+            (UserRole.SYSTEM_ADMIN,), (target_id,)
+        )
 
     def _commit(self) -> None:
         try:

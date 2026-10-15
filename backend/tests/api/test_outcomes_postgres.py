@@ -34,6 +34,7 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from tests.api.test_predictions import create_ready_student
+from tests.auth_context import authenticated_actor
 
 INITIAL = "B1-temporary-password-123!"
 CHANGED = "B1-owner-chosen-password-456!"
@@ -527,13 +528,15 @@ def test_concurrent_activation_is_audited_once_and_scope_uniqueness_is_enforced(
         catalog = ModelCatalogService(db)
         catalog.register_new_models()
         version = MODEL_VERSIONS[PredictionStage.ENROLLMENT]
-        catalog.validate_model(version, student.id, actor)
+        catalog.validate_model(version, student.id, authenticated_actor(db, actor))
 
     def activate():
         with Session(pg_outcomes) as db:
             return (
                 ModelCatalogService(db)
-                .activate_model(version, db.get(User, actor_id))
+                .activate_model(
+                    version, authenticated_actor(db, db.get(User, actor_id))
+                )
                 .is_active
             )
 

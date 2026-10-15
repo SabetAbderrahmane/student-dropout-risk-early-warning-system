@@ -20,6 +20,8 @@ from app.models.prediction import (
 )
 from app.schemas.prediction import BatchPredictionResponse, StageReadiness
 from app.services.prediction_service import PredictionService
+from app.models.user import User
+from app.services.mutation_authorization import academic_mutation
 
 
 class OutcomePredictionService(PredictionService):
@@ -111,7 +113,8 @@ class OutcomePredictionService(PredictionService):
             created_by=created_by,
         )
 
-    def predict_stage(self, student_id, stage, *, created_by):
+    @academic_mutation
+    def predict_stage(self, student_id, stage, *, actor: User):
         student = self._student(student_id)
         assembly = assemble(student, stage)
         if not assembly.ready:
@@ -124,7 +127,7 @@ class OutcomePredictionService(PredictionService):
         try:
             model, runtime = self._active_runtime(stage)
             prediction = self.repository.add_prediction(
-                self.build_prediction(student, assembly, runtime, model, created_by)
+                self.build_prediction(student, assembly, runtime, model, actor.id)
             )
             self._add_warning_for_prediction(prediction)
             self.db.commit()
@@ -133,7 +136,8 @@ class OutcomePredictionService(PredictionService):
             raise
         return self.get_prediction(prediction.id)
 
-    def predict_stage_batch(self, stage, *, created_by):
+    @academic_mutation
+    def predict_stage_batch(self, stage, *, actor: User):
         created, skipped, warnings = 0, 0, 0
         try:
             model, runtime = self._active_runtime(stage)
@@ -143,7 +147,7 @@ class OutcomePredictionService(PredictionService):
                     skipped += 1
                     continue
                 prediction = self.repository.add_prediction(
-                    self.build_prediction(student, assembly, runtime, model, created_by)
+                    self.build_prediction(student, assembly, runtime, model, actor.id)
                 )
                 warnings += self._add_warning_for_prediction(prediction)
                 created += 1

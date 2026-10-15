@@ -68,7 +68,7 @@ def predict_student(
     db: Session = Depends(get_db),
 ) -> PredictionDetail:
     return PredictionService(db).predict_student(
-        student_id, created_by=current_user.id, stage=prediction_stage
+        student_id, actor=current_user, stage=prediction_stage
     )
 
 
@@ -98,7 +98,7 @@ def predict_batch(
     db: Session = Depends(get_db),
 ) -> BatchPredictionResponse:
     return PredictionService(db).predict_batch(
-        created_by=current_user.id, stage=prediction_stage
+        actor=current_user, stage=prediction_stage
     )
 
 

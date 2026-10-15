@@ -34,6 +34,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from tests.api.test_imports import csv_bytes, valid_row
 from tests.api.test_users import CHANGED, INITIAL, payload, sign_in
+from tests.auth_context import authenticated_actor
 
 
 @pytest.fixture()
@@ -91,7 +92,7 @@ def parallel(engine, jobs):
 
     def run(job):
         with Session(engine, expire_on_commit=False) as db:
-            actor = db.get(User, job[0])
+            actor = authenticated_actor(db, db.get(User, job[0]))
             barrier.wait(timeout=10)
             try:
                 job[1](UserService(db), actor)
@@ -352,7 +353,9 @@ def test_supported_bootstrap_provisioning_and_assignment_race(
                         WarningService(db).assign(
                             warning_id,
                             AssignmentRequest(assigned_to=advisor_id),
-                            db.get(User, UUID(accounts["academic"]["id"])),
+                            authenticated_actor(
+                                db, db.get(User, UUID(accounts["academic"]["id"]))
+                            ),
                         )
                         return "saved"
                     except ApplicationError as exc:
@@ -360,7 +363,7 @@ def test_supported_bootstrap_provisioning_and_assignment_race(
 
             def deactivate():
                 with sessions() as db:
-                    actor = db.get(User, admin_id)
+                    actor = authenticated_actor(db, db.get(User, admin_id))
                     barrier.wait(timeout=10)
                     try:
                         UserService(db).set_active(actor, advisor_id, False)

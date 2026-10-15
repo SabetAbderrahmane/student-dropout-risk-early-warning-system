@@ -11,6 +11,7 @@ from app.models.import_job import ImportJob, ImportStatus
 from app.models.user import User
 from app.repositories.import_repository import ImportRepository
 from app.schemas.import_job import ImportErrorPage, ImportJobPage
+from app.services.mutation_authorization import academic_mutation
 from app.utils.csv_import import (
     MAX_UPLOAD_BYTES,
     CsvDataRow,
@@ -57,12 +58,17 @@ class ImportService:
             raise ApplicationError(400, exc.code, exc.message, exc.details) from exc
         return filename, rows
 
-    async def import_csv(self, upload: UploadFile, uploaded_by: User) -> ImportJob:
+    async def import_csv(self, upload: UploadFile, actor: User) -> ImportJob:
         filename, rows = await self.parse_upload(upload)
+        return self._persist_rows(filename, rows, actor=actor)
 
+    @academic_mutation
+    def _persist_rows(
+        self, filename: str, rows: list[CsvDataRow], *, actor: User
+    ) -> ImportJob:
         job = self.repository.add_job(
             ImportJob(
-                uploaded_by=uploaded_by.id,
+                uploaded_by=actor.id,
                 filename=filename,
                 total_rows=len(rows),
                 valid_rows=0,

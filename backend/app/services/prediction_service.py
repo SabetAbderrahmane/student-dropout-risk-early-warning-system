@@ -11,6 +11,7 @@ from app.ml.outcomes.contracts import ModelTargetType, PredictionStage
 from app.ml.runtime import ModelRuntime, get_model_runtime
 from app.models.prediction import ModelVersion, PredictionResult, RiskLevel
 from app.models.student import Student
+from app.models.user import User
 from app.models.warning import Warning, WarningPriority
 from app.repositories.prediction_repository import PredictionRepository
 from app.schemas.prediction import (
@@ -24,6 +25,7 @@ from app.schemas.prediction import (
     PredictionResponse,
 )
 from app.services.assessment_service import prediction_metadata, input_changes
+from app.services.mutation_authorization import academic_write
 
 
 class PredictionService:
@@ -168,59 +170,60 @@ class PredictionService:
         self,
         student_id: UUID,
         *,
-        created_by: UUID,
+        actor: User,
         stage: PredictionStage | None = None,
     ) -> PredictionDetail:
         if stage is not None:
             from app.services.outcome_prediction_service import OutcomePredictionService
 
             return OutcomePredictionService(self.db).predict_stage(
-                student_id, stage, created_by=created_by
+                student_id, stage, actor=actor
             )
-        student = self._student(student_id)
-        assembly = assemble_prediction_features(student)
-        readiness = self._readiness(assembly)
-        if not assembly.ready:
-            raise ApplicationError(
-                409,
-                "PREDICTION_NOT_READY",
-                "The student does not have all required prediction features.",
-                readiness.model_dump(),
+        with academic_write(self.db, actor):
+            student = self._student(student_id)
+            assembly = assemble_prediction_features(student)
+            readiness = self._readiness(assembly)
+            if not assembly.ready:
+                raise ApplicationError(
+                    409,
+                    "PREDICTION_NOT_READY",
+                    "The student does not have all required prediction features.",
+                    readiness.model_dump(),
+                )
+            runtime = get_model_runtime()
+            model = self.synchronize_registry(runtime)
+        # Registry synchronization commits internally. The next persistence unit
+        # must revalidate the original presented claims, not the refreshed User.
+        with academic_write(self.db, actor) as actor:
+            prediction = self._build_prediction(
+                student=student,
+                assembly=assembly,
+                runtime=runtime,
+                model=model,
+                created_by=actor.id,
             )
-        runtime = get_model_runtime()
-        model = self.synchronize_registry(runtime)
-        prediction = self._build_prediction(
-            student=student,
-            assembly=assembly,
-            runtime=runtime,
-            model=model,
-            created_by=created_by,
-        )
-        self.repository.add_prediction(prediction)
-        try:
+            self.repository.add_prediction(prediction)
             self._add_warning_for_prediction(prediction)
             self.db.commit()
-        except Exception:
-            self.db.rollback()
-            raise
         return self.get_prediction(prediction.id)
 
     def predict_batch(
-        self, *, created_by: UUID, stage: PredictionStage | None = None
+        self, *, actor: User, stage: PredictionStage | None = None
     ) -> BatchPredictionResponse:
         if stage is not None:
             from app.services.outcome_prediction_service import OutcomePredictionService
 
             return OutcomePredictionService(self.db).predict_stage_batch(
-                stage, created_by=created_by
+                stage, actor=actor
             )
-        runtime = get_model_runtime()
-        model = self.synchronize_registry(runtime)
-        students = self.repository.list_student_graphs()
+        with academic_write(self.db, actor):
+            runtime = get_model_runtime()
+            model = self.synchronize_registry(runtime)
         created = 0
         warnings = 0
         skipped = 0
-        try:
+        with academic_write(self.db, actor) as actor:
+            students = self.repository.list_student_graphs()
             for student in students:
                 assembly = assemble_prediction_features(student)
                 if not assembly.ready:
@@ -232,15 +235,12 @@ class PredictionService:
                         assembly=assembly,
                         runtime=runtime,
                         model=model,
-                        created_by=created_by,
+                        created_by=actor.id,
                     )
                 )
                 warnings += self._add_warning_for_prediction(prediction)
                 created += 1
             self.db.commit()
-        except Exception:
-            self.db.rollback()
-            raise
         return BatchPredictionResponse(
             assessed=created,
             skipped_not_ready=skipped,

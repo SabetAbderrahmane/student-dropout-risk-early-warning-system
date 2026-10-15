@@ -26,6 +26,7 @@ from app.services.prediction_service import PredictionService
 from app.services.outcome_prediction_service import OutcomePredictionService
 from app.services.read_model_service import ReadModelService
 from tests.api.test_read_models import _data
+from tests.auth_context import authenticated_actor
 
 CASES = json.loads(
     (Path(__file__).parents[1] / "fixtures/outcome_inference_cases.json").read_bytes()
@@ -92,14 +93,18 @@ def freshness_setup(db_session, create_user):
             if stage == PredictionStage.ENROLLMENT
             else source_student(db_session, "FRESH-PROBE", semester=True)
         )
-        catalog.validate_model(MODEL_VERSIONS[stage], probe.id, owner)
-        catalog.activate_model(MODEL_VERSIONS[stage], owner)
+        catalog.validate_model(
+            MODEL_VERSIONS[stage], probe.id, authenticated_actor(db_session, owner)
+        )
+        catalog.activate_model(
+            MODEL_VERSIONS[stage], authenticated_actor(db_session, owner)
+        )
     return student, actor, owner
 
 
 def predict(db, student, actor, stage=PredictionStage.ENROLLMENT):
     return OutcomePredictionService(db).predict_stage(
-        student.id, stage, created_by=actor.id
+        student.id, stage, actor=authenticated_actor(db, actor)
     )
 
 
@@ -203,7 +208,7 @@ def test_binary_fallback_and_activation_changes_eligibility(
     enrollment = predict(db_session, student, actor)
     add_semester(db_session, student)
     binary = PredictionService(db_session).predict_student(
-        student.id, created_by=actor.id
+        student.id, actor=authenticated_actor(db_session, actor)
     )
     assert fact(db_session, student)["operational_id"] == binary.id
     student.first_semester_record.average_grade = Decimal("11.00")

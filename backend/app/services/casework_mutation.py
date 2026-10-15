@@ -17,8 +17,11 @@ from sqlalchemy.exc import DBAPIError
 from app.core.exceptions import ApplicationError
 from app.models import CaseworkActionAudit, FollowUp, Intervention, UserRole, Warning
 from app.repositories.casework_repository import CaseworkRepository
-from app.repositories.user_repository import UserRepository
 from app.repositories.warning_repository import WarningRepository
+from app.services.mutation_authorization import (
+    MutationAuthorization,
+    retryable_conflict,
+)
 
 RESOURCES = (Warning, Intervention, FollowUp)
 
@@ -54,15 +57,7 @@ def check_revision(resource, expected):
 
 
 def retryable_error(exc):
-    code = getattr(exc.orig, "sqlstate", None) or getattr(exc.orig, "pgcode", None)
-    if code in {"55P03", "40P01", "40001"}:
-        return ApplicationError(
-            409,
-            "CASEWORK_RETRYABLE_CONFLICT",
-            "Another transaction is busy. Refresh and retry the entire action.",
-            {"retryable": True},
-        )
-    return None
+    return retryable_conflict(exc, code="CASEWORK_RETRYABLE_CONFLICT")
 
 
 class Mutation:
@@ -73,11 +68,7 @@ class Mutation:
         self.correlation = uuid4()
         self.before = {}
         self.root = None
-        presented_id, presented_version = self.db.info.get(
-            "presented_auth", (actor.id, actor.token_version)
-        )
-        users = UserRepository(self.db)
-        users.lock_administration()
+        authorization = MutationAuthorization(self.db, actor)
         warning_id = params.get("warning_id") or getattr(payload, "warning_id", None)
         parent_id = params.get("intervention_id")
         child_id = params.get("follow_up_id")
@@ -96,7 +87,7 @@ class Mutation:
         )
         if parent:
             warning_id = parent.warning_id
-        user_ids = {presented_id}
+        user_ids = set()
         for identifier in (
             getattr(payload, "assigned_to", None),
             parent.assigned_to if parent else None,
@@ -104,32 +95,7 @@ class Mutation:
         ):
             if identifier:
                 user_ids.add(identifier)
-        locked_users = {
-            identifier: users.lock_by_id(identifier)
-            for identifier in sorted(user_ids, key=str)
-        }
-        actor = locked_users[presented_id]
-        if (
-            actor is None
-            or not actor.is_active
-            or actor.token_version != presented_version
-        ):
-            raise ApplicationError(
-                401, "AUTHENTICATION_REQUIRED", "Sign in again to continue."
-            )
-        if actor.must_change_password:
-            raise ApplicationError(
-                403,
-                "PASSWORD_CHANGE_REQUIRED",
-                "Change your temporary password before using the application.",
-            )
-        if actor.role not in roles:
-            raise ApplicationError(
-                403,
-                "INSUFFICIENT_PERMISSIONS",
-                "You do not have permission to perform this action.",
-            )
-        self.actor = actor
+        self.actor = authorization.lock_users(roles, user_ids)
         if warning_id:
             self.root = WarningRepository(self.db).get(warning_id, lock=True)
         if parent_id:

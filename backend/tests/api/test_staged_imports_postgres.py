@@ -23,13 +23,13 @@ from app.models import (
     User,
     UserRole,
 )
-from app.repositories.import_repository import ImportRepository
 from app.services.staged_import_service import StagedImportService
 from fastapi import UploadFile
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import Session
 from sqlalchemy.schema import CreateSchema, DropSchema
 from tests.api.test_imports import csv_bytes, valid_row
+from tests.auth_context import authenticated_actor
 
 
 @pytest.fixture()
@@ -81,7 +81,7 @@ def setup_batch(engine, numbers):
                         csv_bytes([valid_row(number) for number in numbers])
                     ),
                 ),
-                actor,
+                authenticated_actor(db, actor),
             )
         )
         return batch.id, batch.version, actor.id
@@ -89,7 +89,7 @@ def setup_batch(engine, numbers):
 
 def run_commit(engine, batch_id, version, actor_id, barrier=None):
     with Session(engine, expire_on_commit=False) as db:
-        actor = db.get(User, actor_id)
+        actor = authenticated_actor(db, db.get(User, actor_id))
         if barrier:
             barrier.wait(timeout=10)
         try:
@@ -129,29 +129,21 @@ def test_same_batch_concurrent_commits_return_one_result(pg_engine):
         )
 
 
-def test_different_batches_unique_race_rolls_back_loser(pg_engine, monkeypatch):
+def test_different_batches_revalidate_duplicates_after_authorization_serializes(
+    pg_engine,
+):
     first = setup_batch(pg_engine, ["FIRST-ONLY", "SHARED"])
     second = setup_batch(pg_engine, ["SECOND-ONLY", "SHARED"])
     barrier = Barrier(2)
-    original = ImportRepository.existing_student_numbers
-
-    def synchronize_validation(self, numbers):
-        existing = original(self, numbers)
-        if not existing:
-            barrier.wait(timeout=10)
-        return existing
-
-    monkeypatch.setattr(
-        ImportRepository, "existing_student_numbers", synchronize_validation
-    )
     with ThreadPoolExecutor(max_workers=2) as workers:
         futures = [
-            workers.submit(run_commit, pg_engine, *params) for params in (first, second)
+            workers.submit(run_commit, pg_engine, *params, barrier)
+            for params in (first, second)
         ]
         results = [future.result(timeout=30) for future in futures]
     assert sum(result.get("status") == "COMMITTED" for result in results) == 1
     loser = next(result for result in results if "error" in result)
-    assert loser["error"] == "STAGED_IMPORT_COMMIT_CONFLICT"
+    assert loser["error"] == "STAGED_IMPORT_NOT_READY"
     assert loser["details"]["status"] == "REVIEW_REQUIRED"
     assert loser["details"]["invalid_included_rows"] == 1
     with Session(pg_engine) as db:
@@ -186,7 +178,7 @@ def test_competing_stale_corrections_only_one_wins(pg_engine):
 
     def edit(name):
         with Session(pg_engine) as db:
-            actor = db.get(User, actor_id)
+            actor = authenticated_actor(db, db.get(User, actor_id))
             barrier.wait(timeout=10)
             try:
                 StagedImportService(db).correct(

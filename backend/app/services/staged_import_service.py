@@ -30,6 +30,7 @@ from app.schemas.staged_import import (
     StagedRowResponse,
 )
 from app.services.import_service import ImportService
+from app.services.mutation_authorization import academic_mutation
 from app.utils.csv_import import CSV_HEADERS, CsvDataRow, validate_rows
 
 TERMINAL = (StagedImportStatus.COMMITTED, StagedImportStatus.CANCELLED)
@@ -174,6 +175,10 @@ class StagedImportService:
 
     async def stage(self, upload: UploadFile, actor: User):
         filename, source = await ImportService.parse_upload(upload)
+        return self._persist_stage(filename, source, actor=actor)
+
+    @academic_mutation
+    def _persist_stage(self, filename, source, *, actor: User):
         batch = StagedImportBatch(
             id=uuid4(),
             uploaded_by=actor.id,
@@ -261,6 +266,7 @@ class StagedImportService:
             total_pages=ceil(total / page_size),
         )
 
+    @academic_mutation
     def correct(
         self, batch_id: UUID, row_id: UUID, request: RowCorrection, actor: User
     ):
@@ -309,6 +315,7 @@ class StagedImportService:
             row=StagedRowResponse.model_validate(row),
         )
 
+    @academic_mutation
     def commit(self, batch_id: UUID, version: int, actor: User):
         batch = self._reserve(batch_id, version, commit_retry=True)
         if batch.status == StagedImportStatus.COMMITTED:
@@ -389,7 +396,8 @@ class StagedImportService:
         self.db.refresh(batch)
         return batch
 
-    def cancel(self, batch_id, version, actor):
+    @academic_mutation
+    def cancel(self, batch_id, version, actor: User):
         batch = self._reserve(batch_id, version)
         batch.status = StagedImportStatus.CANCELLED
         batch.cancelled_at = datetime.now(UTC)

@@ -10,6 +10,7 @@ from alembic import command
 from alembic.config import Config
 from app.core.config import get_settings
 from app.core.security import hash_password
+from tests.auth_context import authenticated_actor
 from app.ml.outcomes.contracts import MODEL_VERSIONS, PredictionStage
 from app.models import (
     FollowUp,
@@ -103,8 +104,12 @@ def seed(db, *, activate=True):
     if activate:
         probe = source_student(db, "PG-PROBE", semester=True)
         for stage in PredictionStage:
-            catalog.validate_model(MODEL_VERSIONS[stage], probe.id, users[0])
-            catalog.activate_model(MODEL_VERSIONS[stage], users[0])
+            catalog.validate_model(
+                MODEL_VERSIONS[stage], probe.id, authenticated_actor(db, users[0])
+            )
+            catalog.activate_model(
+                MODEL_VERSIONS[stage], authenticated_actor(db, users[0])
+            )
     return student, users
 
 
@@ -182,7 +187,9 @@ def test_populated_b1_migration_is_index_only_and_roundtrips(freshness_pg):
         add_support(db, student, enrollment, users)
         add_semester(db, student)
         predict(db, student, users[1], PredictionStage.FIRST_SEMESTER)
-        PredictionService(db).predict_student(student.id, created_by=users[1].id)
+        PredictionService(db).predict_student(
+            student.id, actor=authenticated_actor(db, users[1])
+        )
     command.downgrade(Config("alembic.ini"), "20261011_0010")
     original = historical_dump(freshness_pg)
     migrate("20261013_0011")

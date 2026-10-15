@@ -36,16 +36,18 @@ def list_students(
     _: User = Depends(student_read_access),
     db: Session = Depends(get_db),
 ) -> StudentPage:
-    return StudentService(db).list_students(page=page, page_size=page_size, search=search)
+    return StudentService(db).list_students(
+        page=page, page_size=page_size, search=search
+    )
 
 
 @router.post("", response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
 def create_student(
     payload: StudentCreate,
-    _: User = Depends(student_write_access),
+    actor: User = Depends(student_write_access),
     db: Session = Depends(get_db),
 ):
-    return StudentService(db).create_student(payload)
+    return StudentService(db).create_student(payload, actor=actor)
 
 
 @router.get("/{student_id}", response_model=StudentResponse)
@@ -61,19 +63,19 @@ def get_student(
 def update_student(
     student_id: UUID,
     payload: StudentUpdate,
-    _: User = Depends(student_write_access),
+    actor: User = Depends(student_write_access),
     db: Session = Depends(get_db),
 ):
-    return StudentService(db).update_student(student_id, payload)
+    return StudentService(db).update_student(student_id, payload, actor=actor)
 
 
 @router.delete("/{student_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_student(
     student_id: UUID,
-    _: User = Depends(student_write_access),
+    actor: User = Depends(student_write_access),
     db: Session = Depends(get_db),
 ) -> Response:
-    StudentService(db).delete_student(student_id)
+    StudentService(db).delete_student(student_id, actor=actor)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
@@ -90,10 +92,10 @@ def get_admission(
 def upsert_admission(
     student_id: UUID,
     payload: AdmissionRecordUpsert,
-    _: User = Depends(student_write_access),
+    actor: User = Depends(student_write_access),
     db: Session = Depends(get_db),
 ):
-    return StudentService(db).upsert_admission(student_id, payload)
+    return StudentService(db).upsert_admission(student_id, payload, actor=actor)
 
 
 @router.get("/{student_id}/semester-1", response_model=FirstSemesterRecordResponse)
@@ -109,7 +111,7 @@ def get_first_semester(
 def upsert_first_semester(
     student_id: UUID,
     payload: FirstSemesterRecordUpsert,
-    _: User = Depends(student_write_access),
+    actor: User = Depends(student_write_access),
     db: Session = Depends(get_db),
 ):
-    return StudentService(db).upsert_first_semester(student_id, payload)
+    return StudentService(db).upsert_first_semester(student_id, payload, actor=actor)

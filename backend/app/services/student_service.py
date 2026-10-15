@@ -7,6 +7,7 @@ from app.core.exceptions import ApplicationError
 from app.models.admission import AdmissionRecord
 from app.models.semester_one import FirstSemesterRecord
 from app.models.student import Student
+from app.models.user import User
 from app.repositories.student_repository import StudentRepository
 from app.schemas.student import (
     AdmissionRecordUpsert,
@@ -16,6 +17,7 @@ from app.schemas.student import (
     StudentResponse,
     StudentUpdate,
 )
+from app.services.mutation_authorization import academic_mutation
 
 
 class StudentService:
@@ -45,10 +47,13 @@ class StudentService:
     def get_student(self, student_id: UUID) -> Student:
         student = self.repository.get_by_id(student_id)
         if student is None:
-            raise ApplicationError(404, "STUDENT_NOT_FOUND", "The requested student does not exist.")
+            raise ApplicationError(
+                404, "STUDENT_NOT_FOUND", "The requested student does not exist."
+            )
         return student
 
-    def create_student(self, payload: StudentCreate) -> Student:
+    @academic_mutation
+    def create_student(self, payload: StudentCreate, *, actor: User) -> Student:
         if self.repository.get_by_student_number(payload.student_number):
             self._raise_duplicate_student_number()
 
@@ -62,11 +67,17 @@ class StudentService:
         self.db.refresh(student)
         return student
 
-    def update_student(self, student_id: UUID, payload: StudentUpdate) -> Student:
+    @academic_mutation
+    def update_student(
+        self, student_id: UUID, payload: StudentUpdate, *, actor: User
+    ) -> Student:
         student = self.get_student(student_id)
         values = payload.model_dump(exclude_unset=True)
         new_student_number = values.get("student_number")
-        if isinstance(new_student_number, str) and new_student_number != student.student_number:
+        if (
+            isinstance(new_student_number, str)
+            and new_student_number != student.student_number
+        ):
             existing = self.repository.get_by_student_number(new_student_number)
             if existing is not None and existing.id != student.id:
                 self._raise_duplicate_student_number()
@@ -80,7 +91,8 @@ class StudentService:
         self.db.refresh(student)
         return student
 
-    def delete_student(self, student_id: UUID) -> None:
+    @academic_mutation
+    def delete_student(self, student_id: UUID, *, actor: User) -> None:
         student = self.get_student(student_id)
         self.repository.delete(student)
         self.db.commit()
@@ -96,10 +108,13 @@ class StudentService:
             )
         return record
 
+    @academic_mutation
     def upsert_admission(
         self,
         student_id: UUID,
         payload: AdmissionRecordUpsert,
+        *,
+        actor: User,
     ) -> AdmissionRecord:
         self.get_student(student_id)
         try:
@@ -126,14 +141,19 @@ class StudentService:
             )
         return record
 
+    @academic_mutation
     def upsert_first_semester(
         self,
         student_id: UUID,
         payload: FirstSemesterRecordUpsert,
+        *,
+        actor: User,
     ) -> FirstSemesterRecord:
         self.get_student(student_id)
         try:
-            record = self.repository.upsert_first_semester(student_id, payload.model_dump())
+            record = self.repository.upsert_first_semester(
+                student_id, payload.model_dump()
+            )
             self.db.commit()
         except IntegrityError:
             self.db.rollback()

@@ -5,8 +5,9 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.core.exceptions import ApplicationError
 from app.core.security import create_access_token, hash_password, verify_password
-from app.models.user import User
+from app.models.user import User, UserRole
 from app.repositories.user_repository import UserRepository
+from app.services.mutation_authorization import MutationAuthorization
 
 
 @dataclass(frozen=True)
@@ -46,20 +47,10 @@ class AuthService:
     def change_password(
         self, current_user: User, current_password: str, new_password: str
     ) -> AuthenticationResult:
-        expected_version = self.db.info.get(
-            "presented_auth", (current_user.id, current_user.token_version)
-        )[1]
         try:
-            self.repository.lock_administration()
-            user = self.repository.lock_by_id(current_user.id)
-            if (
-                user is None
-                or not user.is_active
-                or user.token_version != expected_version
-            ):
-                raise ApplicationError(
-                    401, "AUTHENTICATION_REQUIRED", "Sign in again to continue."
-                )
+            user = MutationAuthorization(self.db, current_user).lock_users(
+                tuple(UserRole), allow_password_change=True
+            )
             if not verify_password(current_password, user.password_hash):
                 raise ApplicationError(
                     400,
