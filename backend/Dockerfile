@@ -8,8 +8,10 @@ WORKDIR /app
 
 RUN addgroup --system app && adduser --system --ingroup app app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt requirements-packaging.txt ./
+RUN python -m pip install --no-cache-dir --index-url https://pypi.org/simple -r requirements-packaging.txt && \
+    python -m pip install --no-cache-dir --index-url https://pypi.org/simple -r requirements.txt && \
+    python -m pip check
 
 COPY alembic.ini ./
 COPY alembic ./alembic

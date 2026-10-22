@@ -1,0 +1,4 @@
+# First releases covering all D1 packaging advisories; separate from scientific pins.
+pip==26.2.0
+setuptools==83.0.0
+wheel==0.46.2
