@@ -42,6 +42,13 @@ def preflight():
         raise SystemExit("Release requires Python 3.11.9")
     if os.environ.get("RUN_MODEL_INTEGRATION") != "1":
         raise SystemExit("Release requires RUN_MODEL_INTEGRATION=1")
+    if (
+        os.environ.get("APP_ENV") != "test"
+        or os.environ.get("ML_MODEL_REQUIRED", "false").lower() != "false"
+    ):
+        raise SystemExit(
+            "Backend test fixtures require APP_ENV=test and ML_MODEL_REQUIRED=false"
+        )
     if os.environ.get("RELEASE_DISPOSABLE_POSTGRES") != "1":
         raise SystemExit("Explicit disposable PostgreSQL acknowledgement required")
     urls = [os.environ.get(name) for name in URLS]

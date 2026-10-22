@@ -14,6 +14,8 @@ from release_backend import URLS, NoSkips, preflight
 
 
 def valid_environment(monkeypatch):
+    monkeypatch.setenv("APP_ENV", "test")
+    monkeypatch.setenv("ML_MODEL_REQUIRED", "false")
     monkeypatch.setenv("RUN_MODEL_INTEGRATION", "1")
     monkeypatch.setenv("RELEASE_DISPOSABLE_POSTGRES", "1")
     for name in URLS:
@@ -34,6 +36,13 @@ def test_disabled_real_models_are_fatal(monkeypatch):
     valid_environment(monkeypatch)
     monkeypatch.setenv("RUN_MODEL_INTEGRATION", "0")
     with pytest.raises(SystemExit, match="RUN_MODEL_INTEGRATION"):
+        preflight()
+
+
+def test_inherited_production_test_setting_is_fatal(monkeypatch):
+    valid_environment(monkeypatch)
+    monkeypatch.setenv("ML_MODEL_REQUIRED", "true")
+    with pytest.raises(SystemExit, match="Backend test fixtures"):
         preflight()
 
 

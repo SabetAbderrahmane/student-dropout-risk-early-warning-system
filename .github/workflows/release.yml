@@ -63,6 +63,7 @@ jobs:
           RELEASE_EVIDENCE_DIR: ${{ runner.temp }}/release-evidence
           JWT_SECRET_KEY: disposable-ci-test-signing-key-32-characters
           APP_ENV: test
+          ML_MODEL_REQUIRED: 'false'
         run: |
           url="postgresql+psycopg://release:disposable-ci-only@127.0.0.1:${PG_PORT}/release_gate"
           export MODEL_TEST_DATABASE_URL="$url" DUAL_STAGE_TEST_DATABASE_URL="$url"
