@@ -1,0 +1,706 @@
+{
+  "recorded_at": "2026-10-22T23:35:09.334122+00:00",
+  "base_commit": "b8386de921905b6188f71ecf41e1ed8ae7766289",
+  "branch": "codex/phase-e1-final-acceptance",
+  "project": "e1-acceptance-24196d32f0",
+  "verdict": {
+    "local_thesis": "CONDITIONAL GO",
+    "internet": "NO-GO"
+  },
+  "backend": {
+    "python": "3.11.9",
+    "collected": 544,
+    "passed": 544,
+    "skipped": [],
+    "exit_code": 0
+  },
+  "backend_junit_sha256": "05dd8b6a4e765361903ecefadcb8b146bdceeeb7eb28cbddb21f6f063f560a2c",
+  "backend_modules": {
+    "tests.api.test_auth": 8,
+    "tests.api.test_casework": 11,
+    "tests.api.test_casework_integrity_audit_postgres": 81,
+    "tests.api.test_d1_authorization_postgres": 163,
+    "tests.api.test_d1_security_audit": 11,
+    "tests.api.test_freshness": 15,
+    "tests.api.test_freshness_postgres": 11,
+    "tests.api.test_health": 7,
+    "tests.api.test_imports": 23,
+    "tests.api.test_outcome_predictions": 11,
+    "tests.api.test_outcomes_postgres": 12,
+    "tests.api.test_permissions": 5,
+    "tests.api.test_predictions": 9,
+    "tests.api.test_read_models": 5,
+    "tests.api.test_staged_imports": 22,
+    "tests.api.test_staged_imports_postgres": 4,
+    "tests.api.test_students": 32,
+    "tests.api.test_users": 24,
+    "tests.api.test_users_postgres": 9,
+    "tests.api.test_warnings": 7,
+    "tests.core.test_security": 4,
+    "tests.ml.test_deployment": 24,
+    "tests.ml.test_deployment_postgres": 1,
+    "tests.ml.test_feature_schema": 6,
+    "tests.ml.test_outcomes": 20,
+    "tests.ml.test_runtime": 3,
+    "tests.ml.test_training_pipeline": 16
+  },
+  "backend_duration_seconds": 927.64,
+  "backend_warnings": 298,
+  "release_controls": {
+    "passed": 24,
+    "skipped": 0,
+    "duration_seconds": 5.29
+  },
+  "browser": {
+    "stats": {
+      "startTime": "2026-10-22T18:57:57.497Z",
+      "duration": 95829.31199999999,
+      "expected": 9,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "title": "E1-01 System administrator onboarding and user lifecycle",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 9989
+          }
+        ]
+      },
+      {
+        "title": "E1-02 CSV validation, correction, commit and student editing",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 5644
+          }
+        ]
+      },
+      {
+        "title": "E1-03 System administrator validates and activates stage models",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 13912
+          }
+        ]
+      },
+      {
+        "title": "E1-04 Enrollment assessment, explanation and advisor assignment",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 5761
+          }
+        ]
+      },
+      {
+        "title": "E1-05 Advisor reviews warning, creates case, notes and scheduled contact",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 8470
+          }
+        ]
+      },
+      {
+        "title": "E1-06 Ownership transfer, unassigned denial and follow-up completion",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 12011
+          }
+        ]
+      },
+      {
+        "title": "E1-07 First-semester update, reassessment and durable case history",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 9329
+          }
+        ]
+      },
+      {
+        "title": "E1-08 All screens, navigation, desktop/tablet themes, empty/loading/error states",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 24692
+          }
+        ]
+      },
+      {
+        "title": "E1-09 Role denial, revoked account and expired-session boundary",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 3833
+          }
+        ]
+      }
+    ],
+    "page_errors": [],
+    "console_errors": [],
+    "http_status_counts": {
+      "200": 256,
+      "201": 14,
+      "401": 2
+    },
+    "security_checks": {
+      "unassigned_note": 403,
+      "advisor_student_write": 403,
+      "academic_users_read": 403,
+      "system_student_write": 403,
+      "expired_session_redirect": true,
+      "deactivated_session_redirect": true
+    },
+    "real_api": "http://127.0.0.1:65085/api/v1",
+    "frontend": "http://127.0.0.1:65086"
+  },
+  "persisted": {
+    "table_counts": {
+      "students": 3,
+      "admission_records": 2,
+      "first_semester_records": 2,
+      "staged_import_batches": 1,
+      "staged_import_rows": 2,
+      "staged_import_actions": 3,
+      "import_jobs": 1,
+      "warnings": 1,
+      "warning_reviews": 1,
+      "interventions": 1,
+      "intervention_notes": 1,
+      "follow_ups": 1,
+      "prediction_results": 4,
+      "model_validations": 2,
+      "model_activation_events": 2,
+      "casework_action_audit": 15,
+      "user_administration_audit": 14
+    },
+    "users": [
+      {
+        "id": "5eb5a092-3979-4876-aa5c-23fe7dcddf15",
+        "username": "e1_academic",
+        "role": "ACADEMIC_ADMIN",
+        "is_active": true,
+        "must_change_password": false
+      },
+      {
+        "id": "0c28d5e3-4258-48eb-a4ca-5a9b55722b55",
+        "username": "e1_advisor",
+        "role": "ACADEMIC_ADVISOR",
+        "is_active": true,
+        "must_change_password": false
+      },
+      {
+        "id": "f20f0e89-cbd2-418d-939d-674ad6a20c03",
+        "username": "e1_disposable",
+        "role": "ACADEMIC_ADVISOR",
+        "is_active": true,
+        "must_change_password": true
+      },
+      {
+        "id": "b4b56bb5-2efd-4adb-a1dd-9da6901b8e69",
+        "username": "e1_other_advisor",
+        "role": "ACADEMIC_ADVISOR",
+        "is_active": false,
+        "must_change_password": false
+      },
+      {
+        "id": "cc77b8a3-b65e-4a2e-b772-e6ebaf265cd9",
+        "username": "e1_system",
+        "role": "SYSTEM_ADMIN",
+        "is_active": true,
+        "must_change_password": false
+      }
+    ],
+    "integrity": {
+      "head": "20261014_0012",
+      "orphan_predictions": 0,
+      "mismatched_warning_student": 0,
+      "mismatched_case_student": 0,
+      "mismatched_followup_student_or_owner": 0,
+      "forbidden_students": 0,
+      "audit_actions": [
+        {
+          "action": "ADD_NOTE",
+          "count": 1
+        },
+        {
+          "action": "ASSIGN",
+          "count": 1
+        },
+        {
+          "action": "COMPLETE_FOLLOW_UP",
+          "count": 2
+        },
+        {
+          "action": "COMPLETE_INTERVENTION",
+          "count": 1
+        },
+        {
+          "action": "CREATE_FOLLOW_UP",
+          "count": 2
+        },
+        {
+          "action": "CREATE_INTERVENTION",
+          "count": 2
+        },
+        {
+          "action": "REVIEW",
+          "count": 1
+        },
+        {
+          "action": "TRANSFER_INTERVENTION",
+          "count": 4
+        },
+        {
+          "action": "UPDATE_INTERVENTION",
+          "count": 1
+        }
+      ],
+      "nondefault_databases": [],
+      "regression_root_tables": []
+    },
+    "profile": {
+      "assessment_status": "CURRENT",
+      "reassessment_required": false,
+      "recommended_stage": "FIRST_SEMESTER",
+      "recommended_target_type": "MULTICLASS_OUTCOME",
+      "recommended_model_version": "first-semester-outcome-v1",
+      "student_id": "dec8c5dc-0fd7-4b53-bac2-da46185f3403",
+      "prediction_history": [
+        {
+          "id": "1ba9517d-6e49-4326-88d2-e121cca199f1",
+          "prediction_stage": "FIRST_SEMESTER",
+          "model_target_type": "BINARY_DROPOUT",
+          "model_version": "dropout-logistic-regression-v1",
+          "risk_level": "LOW",
+          "probability": 0.24963110426641857,
+          "prediction_freshness": "NOT_SELECTED",
+          "predicted_outcome": null
+        },
+        {
+          "id": "6ea44a62-47c7-4e5c-8a68-7ba02aa77887",
+          "prediction_stage": "FIRST_SEMESTER",
+          "model_target_type": "MULTICLASS_OUTCOME",
+          "model_version": "first-semester-outcome-v1",
+          "risk_level": "LOW",
+          "probability": 0.11006443052549954,
+          "prediction_freshness": "CURRENT",
+          "predicted_outcome": "GRADUATE"
+        },
+        {
+          "id": "a03961e3-d1c0-456f-9b15-2485444c8d96",
+          "prediction_stage": "FIRST_SEMESTER",
+          "model_target_type": "MULTICLASS_OUTCOME",
+          "model_version": "first-semester-outcome-v1",
+          "risk_level": "LOW",
+          "probability": 0.18011547285576907,
+          "prediction_freshness": "INPUTS_CHANGED",
+          "predicted_outcome": "GRADUATE"
+        },
+        {
+          "id": "9f3c3c4d-9808-4720-88fc-e1216dfc92ff",
+          "prediction_stage": "ENROLLMENT",
+          "model_target_type": "MULTICLASS_OUTCOME",
+          "model_version": "enrollment-outcome-v1",
+          "risk_level": "MEDIUM",
+          "probability": 0.2497711730787302,
+          "prediction_freshness": "NOT_SELECTED",
+          "predicted_outcome": "ENROLLED"
+        }
+      ],
+      "operational_prediction_id": "6ea44a62-47c7-4e5c-8a68-7ba02aa77887",
+      "timeline_events": 11,
+      "case": {
+        "id": "3e79d80b-f4d3-4b01-9373-0d3b5da64dfc",
+        "status": "COMPLETED",
+        "owner": "0c28d5e3-4258-48eb-a4ca-5a9b55722b55",
+        "note_author_ids": [
+          "0c28d5e3-4258-48eb-a4ca-5a9b55722b55"
+        ],
+        "followups": [
+          {
+            "id": "b58cef26-ef3a-4623-9b90-c4afc08cfce1",
+            "intervention_id": "3e79d80b-f4d3-4b01-9373-0d3b5da64dfc",
+            "scheduled_for": "2026-10-23T10:00:00Z",
+            "method": "IN_PERSON",
+            "purpose": "E1 synthetic progress check",
+            "effective_status": "COMPLETED",
+            "outcome": "PROGRESS_OBSERVED",
+            "assigned_advisor": {
+              "user_id": "0c28d5e3-4258-48eb-a4ca-5a9b55722b55",
+              "full_name": "E1 Synthetic advisor"
+            },
+            "completed_at": "2026-10-22T18:58:50.680972Z"
+          }
+        ]
+      }
+    }
+  },
+  "model_sha256": {
+    "dropout-risk-v1": "0cdc1e57f145626bba9f46c729685d4ae0968fc39b96564c09c548f7577f1bd8",
+    "enrollment-outcome-v1": "bc3690bb930b3320e029673282e3e6c5bedccbfd332cdd28953677dbfc1c8602",
+    "first-semester-outcome-v1": "2d6f7f80d6d6dcc2c844d9c3b714b1f5d7d92fa42d0a2db21fb3a3b139b5da81"
+  },
+  "images": [
+    {
+      "tag": "e1-acceptance-24196d32f0:backend",
+      "id": "sha256:1fdd8af5f9ed3608598e7823e0f431888cc1e1e2f4905694b3031769f7f31b9d"
+    },
+    {
+      "tag": "e1-acceptance-24196d32f0:frontend",
+      "id": "sha256:1d874b36a2553b3813a8ed841177e50492ede16b9173f8498dfb9bdf4d7baead"
+    },
+    {
+      "tag": "e1-acceptance-24196d32f0:regression",
+      "id": "sha256:484167ed82da0230c162fa314539437f67072a13ffebed501de387e4f298a9f4"
+    }
+  ],
+  "containers_before_cleanup": [
+    {
+      "name": "/e1-acceptance-24196d32f0-database",
+      "id": "986aa34fb4af1036e962f4db9a64e6de30668c9454528aeb580ce0f179fb9f33",
+      "image": "sha256:4e6e670bb069649261c9c18031f0aded7bb249a5b6664ddec29c013a89310d50",
+      "state": "running",
+      "exit_code": 0,
+      "ports": {}
+    },
+    {
+      "name": "/e1-acceptance-24196d32f0-backend",
+      "id": "8817e7561cffbf18e97e37d9c1c2015cc9b1675a61859c82ac7a58eaf3b810c3",
+      "image": "sha256:1fdd8af5f9ed3608598e7823e0f431888cc1e1e2f4905694b3031769f7f31b9d",
+      "state": "running",
+      "exit_code": 0,
+      "ports": {
+        "8000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "65085"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/e1-acceptance-24196d32f0-frontend",
+      "id": "c9d7bb0b161c2b51cc9da85d733e37790c74ccda16cf0f20ba7950455bbca5da",
+      "image": "sha256:1d874b36a2553b3813a8ed841177e50492ede16b9173f8498dfb9bdf4d7baead",
+      "state": "running",
+      "exit_code": 0,
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "65086"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/e1-acceptance-24196d32f0-regression",
+      "id": "58f6bf7f45570d1f420efc2118cd2e7f11c37198562d321c682945fe0196c654",
+      "image": "sha256:484167ed82da0230c162fa314539437f67072a13ffebed501de387e4f298a9f4",
+      "state": "exited",
+      "exit_code": 0,
+      "ports": {}
+    }
+  ],
+  "frontend": {
+    "ci": "passed",
+    "typecheck": "passed",
+    "production_build": "passed",
+    "native_node": "24.14.0",
+    "container_node": "v22.23.4",
+    "next": "16.3.8",
+    "audit": {
+      "exit_code": 1,
+      "affected_packages": 1,
+      "severity": "critical",
+      "advisories": [
+        "GHSA-2464-fhr4-w9xw",
+        "GHSA-p3m5-59mp-jv5r",
+        "GHSA-673q-mjm6-r5xr"
+      ]
+    }
+  },
+  "screenshots": [
+    {
+      "path": "output/playwright/e1/screenshots/01-user-administration.png",
+      "bytes": 169775,
+      "sha256": "b7f1f946f7c8ba77043028dd1678ef558c0570c0b6f26000af8ffcde19cde5ca"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/02-staged-validation.png",
+      "bytes": 211555,
+      "sha256": "a69c434db2596147535209530aefe12aec6a383a0d7535706b6d9f1bfcb8d2c0"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/03-committed-import.png",
+      "bytes": 231626,
+      "sha256": "beed6e1f16d8ec678bd150d0e53f93859d0a6b1fc7afeeb9c62398f0fae16293"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/04-student-dossier.png",
+      "bytes": 235018,
+      "sha256": "852d47d99298921118b9155a3a56e9459ae28b5e28c1464473247f58f47a8362"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/05-approved-model-registry.png",
+      "bytes": 580508,
+      "sha256": "ec312a6cb13f22bc09df0e571afae4db71a266e46eccc0d8b3946a608deb82a5"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/06-enrollment-assessment-explanation.png",
+      "bytes": 234649,
+      "sha256": "c2c7bee6411ccc1d3094b8015791a41eb0ae636f0f8e3cd0ea203bfbb982725a"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/07-assigned-warning.png",
+      "bytes": 139655,
+      "sha256": "6f269abab3b5661705dd5b69c6e781a07232787971bf8ad39bcb9c0058a70ebe"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/08-advisor-intervention-and-note.png",
+      "bytes": 181942,
+      "sha256": "abd959f0cda744c0d2f307786207ada993c52b4746bb3a2e626f222eed927faa"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/09-completed-follow-up.png",
+      "bytes": 167476,
+      "sha256": "abcdf2003f42cd3ebbe165fd4acfaa6e4db206dbf7a0a53130670821343765ec"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/10-completed-intervention.png",
+      "bytes": 175982,
+      "sha256": "6b5858e48dcc9b80d9c839345bccfce0ddc5422416e961e3a4132623534b5e65"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/reassessment-required.png",
+      "bytes": 221236,
+      "sha256": "7ecba5b8036b05b1adabd6af854e3a417483195553e6953382b27a2814be153f"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/11-durable-case-history.png",
+      "bytes": 189177,
+      "sha256": "3be7493b660fb1dc81940abc28ef38bf60b4f9a6e9bee1c416157b25e6985cba"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/tablet-dark-dashboard.png",
+      "bytes": 207790,
+      "sha256": "d46874686576cb1b8a32f7027899104db90162f8194d93eb0e79ada84edbd5d7"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/portrait-dark-dashboard.png",
+      "bytes": 171213,
+      "sha256": "0bd04370510144f9d5cc545ebd6e1e85e01ca93a6878fd124fc5655378a06221"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/tablet-dark-students.png",
+      "bytes": 153790,
+      "sha256": "f9dc1e6efaafa52548907ce1e28da34a058477e316f48d9e4829a6aa53d4b8a2"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/portrait-dark-students.png",
+      "bytes": 117694,
+      "sha256": "3e61fe43e81a5306b80ff2306b89ceb1e8b83a4f1ec5af3c01987e72037fb4b3"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/tablet-dark-students-dec8c5dc-0fd7-4b53-bac2-da46185f3403.png",
+      "bytes": 291179,
+      "sha256": "54aa35d7cf7a254ec6a8c69e00727b83581bfaca3f1dd4e59c93b856393098ec"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/portrait-dark-students-dec8c5dc-0fd7-4b53-bac2-da46185f3403.png",
+      "bytes": 250238,
+      "sha256": "5f9d7bec69a8e5fa3dc74649cb84e40959955d39099e512d29b7008093ddbd32"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/tablet-dark-imports.png",
+      "bytes": 155815,
+      "sha256": "a4fd0fa69e3a09e46967f6ca006c7410df7b0e42f9227b0f59e040d3cd4e3041"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/portrait-dark-imports.png",
+      "bytes": 121577,
+      "sha256": "980de75d850d264ac448b2f57766ede81512f75284deab39cba9b8c7403a9b9c"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/tablet-dark-predictions.png",
+      "bytes": 638898,
+      "sha256": "c5c555d8ab46f3d0b45998f113239615668a2829d828f568f94f8628f1fdc193"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/portrait-dark-predictions.png",
+      "bytes": 612880,
+      "sha256": "96dd6f078b46cceda9dacbb9df309d947e18cc426862c3a82b0cea1e06fda59c"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/tablet-dark-warnings.png",
+      "bytes": 150755,
+      "sha256": "fe7f86904054717fec8f0242e4e9f77d2f4a2636e0f6c3fa74df69da861c7133"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/portrait-dark-warnings.png",
+      "bytes": 115123,
+      "sha256": "17c2d4497ea6cdbcb6dd315a816e937d4c390ace4623f3ff225bb3c8ac856498"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/tablet-dark-interventions.png",
+      "bytes": 162584,
+      "sha256": "697036cc3a2d7abebb07e61970761a6d9af0885db95a58a7d75087471a61d296"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/portrait-dark-interventions.png",
+      "bytes": 125111,
+      "sha256": "fbd7d8b2115100beef04596b135e2436e9b9e6683f8dad757dc5dcb1686b894a"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/tablet-dark-follow-ups.png",
+      "bytes": 153113,
+      "sha256": "d66ca4749013f10b64f8b3a0ccb7901ee8fbec11f2886082d5ea35e8a804d315"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/portrait-dark-follow-ups.png",
+      "bytes": 115955,
+      "sha256": "ba284a3480ee755636653c55bcb547f522dd12aeeb60248e3e7cb7498355eac7"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/tablet-dark-admin-users.png",
+      "bytes": 132773,
+      "sha256": "2831e9ab90e28c2707e2c4e10f0efcaa79c233b70f07092298935d9054bec3b7"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/portrait-dark-admin-users.png",
+      "bytes": 100841,
+      "sha256": "885cda2e6fbaa233452c1cefa452cb548a191c0c4c254f9f725905f6751127c6"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/tablet-dark-change-password.png",
+      "bytes": 125684,
+      "sha256": "fe7bb668d5051909543f987952d434694ca332e9921093ec9357553d39c0b536"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/portrait-dark-change-password.png",
+      "bytes": 112085,
+      "sha256": "1915df0864c4ee68beedae0a2c1d50218eb73128143780a006a4cd263b8da10b"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/12-empty-registry-search.png",
+      "bytes": 132246,
+      "sha256": "bc259d457ce38dc35a3d4e80d847722343cd70c801126a5247174449890076f8"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/13-loading-dashboard.png",
+      "bytes": 69267,
+      "sha256": "81308ec15a2cc25799d487401b49e578300522595e2f1f7c332a30391abc9224"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/14-offline-error-state.png",
+      "bytes": 73383,
+      "sha256": "733186080f3676f97aea2138c15d5ef4614cdd146abe93fb62358af3fd0e248d"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/16-home-tablet-dark.png",
+      "bytes": 127928,
+      "sha256": "7092de8f5bf420b9ca00f67c3de4ed43a3709636eba06bd838782515b871c594"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/17-login-tablet-dark.png",
+      "bytes": 118881,
+      "sha256": "85957fbaa617b3bf7dc705a1c28f86ba4dc121842deaaf03e16743158a8393c6"
+    },
+    {
+      "path": "output/playwright/e1/screenshots/15-expired-session-sign-in.png",
+      "bytes": 261782,
+      "sha256": "ba9e96f785defc7199208e6514bd2f208c3a23c728cbb3929b916a7615c47aa1"
+    },
+    {
+      "path": "output/playwright/e1-before-homepage.png",
+      "bytes": 173445,
+      "sha256": "b297601e3326073f7ed44bc3f13d6fb77b593f4e513bf4b2fa476f772cd1683a"
+    }
+  ],
+  "local_log_sha256": {
+    ".venv/e1-regression.log": "fab768dcf7f57f711cefc5ba7fc47d2ca1bd55955ede2a4d7da3fa8b5e6c68b0",
+    ".venv/e1-controls.log": "390e40f7916635df62b7e0952a8839edd5e84c40cd5f409c0eb3a8093a17b2eb",
+    ".venv/e1-frontend-ci.log": "4f05a90d078968fa382315c04d4615ac1b80a54597ca01e3f0a0aefd2453d212",
+    ".venv/e1-frontend-typecheck.log": "8371370a60104cbc782f1a548d56651368e5f25ae84d306be448023aa987f576",
+    ".venv/e1-frontend-build.log": "b766a94dd309bb7318e1e0dfba7281dc1eab155edec65bacc09bd4d02b6803e6",
+    ".venv/e1-frontend-audit.log": "8ec992804db7f4869f809a3f57830cd981b6dd5180b062c8b6c003b87a829f29",
+    ".venv/e1-frontend-container-final.log": "54e20c9770bc4406b5fdf011e71a0370abfbf8e8e6987ca007aa4acddb76acc1",
+    ".venv/e1-browser-attempt-8.log": "da9a683c97bbf131d63e168169cb1f9a3bf26139f146435b93b29b0a16ac6bd1",
+    ".venv/e1-live-legacy-verify.log": "6351f43cec42a816072621bdd92a0d8a4acf2e7a9c578fef3c7b51756a3eb3ab",
+    ".venv/e1-live-outcomes-verify.log": "fc2887b588d234c8064d6b2dced0379abbfd40a13e37cd2d29a453033a6e7f52",
+    ".venv/e1-live-alembic.log": "3d44e2abb98072c4b76f030a965410a5c062e985c6749a0faab860d5ad823f3a",
+    ".venv/e1-acceptance-ci.log": "92be811125ad1c6a9746df4af97a1db60dd568c1417065d65faf61c4381c649b",
+    ".venv/e1-acceptance-audit.log": "4b02d4a3c23d969c46bd2041360f80bfcb1fe760d9db864009acdd710f9de601"
+  },
+  "local_report_sha256": {
+    "output/playwright/e1/results.json": "02d6499e0a161c6d150598ce7eb87f51cfda691fcd08739f8ba4bb343e1a61c3",
+    "output/playwright/e1/http-evidence.json": "6a116ed4682319905d1143086b36accd22e117f4f64013f9a3af9c1b245b6fe6"
+  },
+  "source_sha256": {
+    "acceptance/tests/acceptance.spec.ts": "20029ca03bc8fb3d6b742cc5991910e1eb394dd34265aefb0d261affcfd19ee2",
+    "acceptance/playwright.config.ts": "f2aee26abfbb867b70a4395edfeb8472617ee40218ceb45fa8ef0ea52e2f735c",
+    "acceptance/package-lock.json": "29d46716f01e5973446224905f21de4b31145de6e892f725bc397b80ceb88f9f",
+    "scripts/acceptance/stack.py": "3a9c8b2ae175dc490b59b8022c0e2d3eb2849dcff156e7efab487ec8e2795f4c",
+    "frontend/app/page.tsx": "377ff8049eff1b7aa214823abb8573b88fc0e63067378a71977556e9de887c2e"
+  },
+  "cleanup": {
+    "exit_code": 0,
+    "remaining_labelled_resources": {
+      "container": [],
+      "network": [],
+      "image": []
+    },
+    "shared_resource_inventory_unchanged": true,
+    "shared_inventory_counts": {
+      "container": 4,
+      "network": 12,
+      "image": 49
+    },
+    "docker_prune_used": false,
+    "log_sha256": "baabb03781be65d6ecb1a5556bd0731df57ebe099369b5e5e0106209d1858ee4",
+    "private_state_archived": true,
+    "foreign_image_ownership_negative_control": "Unlabelled postgres:16-alpine rejected before mutation"
+  },
+  "acceptance_install": {
+    "npm_ci": "passed",
+    "npm_audit": "0 vulnerabilities"
+  },
+  "integrated_ancestors": [
+    "2dfb37b",
+    "17a914e",
+    "9cd8abd",
+    "b45058c",
+    "103a283"
+  ],
+  "excluded_historical_branch": {
+    "branch": "codex/frontend-usability-onboarding",
+    "head": "2d10cda83bf8c380cbd400e764451e3a50c84183",
+    "is_ancestor": false,
+    "absent": [
+      "guide-provider",
+      "next-actions",
+      "workspace-guide",
+      "usability.css",
+      "icon refresh"
+    ],
+    "disposition": "Documented; no feature merge in acceptance scope"
+  },
+  "backend_science_migrations_workflows_unchanged": true
+}

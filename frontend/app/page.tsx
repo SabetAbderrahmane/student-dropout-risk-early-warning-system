@@ -8,14 +8,13 @@ export default function HomePage() {
         <div className="home-theme-row">
           <ThemeControl />
         </div>
-        <div className="eyebrow">Phase 1 &amp; 2 foundation</div>
+        <div className="eyebrow">Academic risk and student support</div>
         <h1>Student Dropout Risk Early Warning System</h1>
         <p className="lead">
-          The secure foundation and student academic domain are ready.
-          Predictions, warnings, interventions, and dashboards remain
-          intentionally deferred to later phases.
+          Review student academic records, assess enrollment and first-semester
+          risk, and coordinate advisor-led support with a recorded case history.
         </p>
-        <div className="status-row" aria-label="Foundation services">
+        <div className="status-row" aria-label="Application services">
           <span>Next.js</span>
           <span>FastAPI</span>
           <span>PostgreSQL</span>
