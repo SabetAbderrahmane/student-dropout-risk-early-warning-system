@@ -1,0 +1,330 @@
+{
+  "retrieved_date": "2026-10-22",
+  "source": "GitHub reviewed advisory API",
+  "advisories": [
+    {
+      "id": "GHSA-39w2-rjm5-chcv",
+      "url": "https://github.com/advisories/GHSA-39w2-rjm5-chcv",
+      "summary": "Next.js has information disclosure in development server's Model Context Protocol endpoint",
+      "updated_at": "2026-10-07T20:31:52Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "next"
+          },
+          "vulnerable_version_range": ">= 16.0.0, < 16.3.8",
+          "first_patched_version": "16.3.8",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-3w37-wq28-93x7",
+      "url": "https://github.com/advisories/GHSA-3w37-wq28-93x7",
+      "summary": "Next.js: Pending `use cache` fill can leak Draft Mode content into regular responses and persisted pages",
+      "updated_at": "2026-10-07T20:32:15Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "next"
+          },
+          "vulnerable_version_range": ">= 16.3.0, < 16.3.8",
+          "first_patched_version": "16.3.8",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-4jqv-mc3x-m676",
+      "url": "https://github.com/advisories/GHSA-4jqv-mc3x-m676",
+      "summary": "Next.js has cache poisoning of SSG and ISR pages in self-hosted applications",
+      "updated_at": "2026-10-07T20:32:07Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "next"
+          },
+          "vulnerable_version_range": ">= 15.0.0, < 15.5.27",
+          "first_patched_version": "15.5.27",
+          "vulnerable_functions": []
+        },
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "next"
+          },
+          "vulnerable_version_range": ">= 16.0.0, < 16.3.8",
+          "first_patched_version": "16.3.8",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-4xh5-x5gv-qwph",
+      "url": "https://github.com/advisories/GHSA-4xh5-x5gv-qwph",
+      "summary": "pip's fallback tar extraction doesn't check symbolic links point to extraction directory",
+      "updated_at": "2025-12-19T16:46:02Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "pip",
+            "name": "pip"
+          },
+          "vulnerable_version_range": "<= 25.2",
+          "first_patched_version": "25.3",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-58qw-9mgm-455v",
+      "url": "https://github.com/advisories/GHSA-58qw-9mgm-455v",
+      "summary": "pip has an interpretation conflict due to handling both concatenated tar and ZIP files as ZIP files",
+      "updated_at": "2026-05-20T20:54:26Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "pip",
+            "name": "pip"
+          },
+          "vulnerable_version_range": "<= 26.0.1",
+          "first_patched_version": "26.1",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-5rjg-fvgr-3xxf",
+      "url": "https://github.com/advisories/GHSA-5rjg-fvgr-3xxf",
+      "summary": "setuptools has a path traversal vulnerability in PackageIndex.download that leads to Arbitrary File Write",
+      "updated_at": "2025-06-13T04:13:22Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "pip",
+            "name": "setuptools"
+          },
+          "vulnerable_version_range": "< 78.1.1",
+          "first_patched_version": "78.1.1",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-68fv-2mgg-jv7q",
+      "url": "https://github.com/advisories/GHSA-68fv-2mgg-jv7q",
+      "summary": "source-map-js allows event-loop denial of service through indexed source-map section offsets",
+      "updated_at": "2026-10-05T23:31:22Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "source-map-js"
+          },
+          "vulnerable_version_range": ">= 1.0.0, < 1.2.2",
+          "first_patched_version": "1.2.2",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-6vgw-5pg2-w6jp",
+      "url": "https://github.com/advisories/GHSA-6vgw-5pg2-w6jp",
+      "summary": "pip Path Traversal vulnerability",
+      "updated_at": "2026-02-02T22:08:55Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "pip",
+            "name": "pip"
+          },
+          "vulnerable_version_range": "< 26.0",
+          "first_patched_version": "26.0",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-cjq9-62q9-8jv4",
+      "url": "https://github.com/advisories/GHSA-cjq9-62q9-8jv4",
+      "summary": "Next.js has Server-Side Request Forgery in Image Optimization",
+      "updated_at": "2026-10-07T20:30:56Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "next"
+          },
+          "vulnerable_version_range": ">= 16.0.0, < 16.3.8",
+          "first_patched_version": "16.3.8",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-cx63-2mw6-8hw5",
+      "url": "https://github.com/advisories/GHSA-cx63-2mw6-8hw5",
+      "summary": "setuptools vulnerable to Command Injection via package URL",
+      "updated_at": "2025-11-04T19:47:21Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "pip",
+            "name": "setuptools"
+          },
+          "vulnerable_version_range": "< 70.0.0",
+          "first_patched_version": "70.0.0",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-f87g-xv8r-7p7x",
+      "url": "https://github.com/advisories/GHSA-f87g-xv8r-7p7x",
+      "summary": "Next.js has information disclosure in App Router metadata image routes via dynamicParams bypass",
+      "updated_at": "2026-10-07T20:31:35Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "next"
+          },
+          "vulnerable_version_range": ">= 16.0.0, < 16.3.8",
+          "first_patched_version": "16.3.8",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-h35f-9h28-mq5c",
+      "url": "https://github.com/advisories/GHSA-h35f-9h28-mq5c",
+      "summary": "setuptools: MANIFEST.in exclusion bypass in sdist via Unicode normalization collision (NFC/NFD) on macOS APFS/HFS+",
+      "updated_at": "2026-07-21T19:09:21Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "pip",
+            "name": "setuptools"
+          },
+          "vulnerable_version_range": "< 83.0.0",
+          "first_patched_version": "83.0.0",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-jp4c-xjxw-mgf9",
+      "url": "https://github.com/advisories/GHSA-jp4c-xjxw-mgf9",
+      "summary": "pip Vulnerable to Inclusion of Functionality from Untrusted Control Sphere",
+      "updated_at": "2026-05-05T22:05:47Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "pip",
+            "name": "pip"
+          },
+          "vulnerable_version_range": "< 26.1",
+          "first_patched_version": "26.1",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-mcj8-r9mp-w47p",
+      "url": "https://github.com/advisories/GHSA-mcj8-r9mp-w47p",
+      "summary": "Next.js has cache poisoning in SSG/ISR rendering that leads to cross-user content substitution and persistent denial of service",
+      "updated_at": "2026-10-07T20:31:15Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "next"
+          },
+          "vulnerable_version_range": ">= 16.0.0, < 16.3.8",
+          "first_patched_version": "16.3.8",
+          "vulnerable_functions": []
+        },
+        {
+          "package": {
+            "ecosystem": "npm",
+            "name": "next"
+          },
+          "vulnerable_version_range": ">= 15.0.0, < 15.5.27",
+          "first_patched_version": "15.5.27",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-qwm4-qh6w-59xr",
+      "url": "https://github.com/advisories/GHSA-qwm4-qh6w-59xr",
+      "summary": "pip would incorrectly handle doubly-encoded package URLs from indexes",
+      "updated_at": "2026-09-01T18:57:44Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "pip",
+            "name": "pip"
+          },
+          "vulnerable_version_range": "< 26.2.0",
+          "first_patched_version": "26.2.0",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-r9hx-vwmv-q579",
+      "url": "https://github.com/advisories/GHSA-r9hx-vwmv-q579",
+      "summary": "pypa/setuptools vulnerable to Regular Expression Denial of Service (ReDoS)",
+      "updated_at": "2025-11-04T19:37:01Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "pip",
+            "name": "setuptools"
+          },
+          "vulnerable_version_range": "< 65.5.1",
+          "first_patched_version": "65.5.1",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-wf93-45jw-7689",
+      "url": "https://github.com/advisories/GHSA-wf93-45jw-7689",
+      "summary": " pip: Path traversal in console_scripts/gui_scripts\u00a0entry point names allows installing scripts outside of target directory",
+      "updated_at": "2026-07-10T12:31:50Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "pip",
+            "name": "pip"
+          },
+          "vulnerable_version_range": "< 26.1.2",
+          "first_patched_version": "26.1.2",
+          "vulnerable_functions": []
+        }
+      ]
+    },
+    {
+      "id": "GHSA-8rrh-rw8j-w5fx",
+      "url": "https://github.com/advisories/GHSA-8rrh-rw8j-w5fx",
+      "summary": "Wheel Affected by Arbitrary File Permission Modification via Path Traversal in wheel unpack",
+      "updated_at": "2026-01-23T17:44:38Z",
+      "vulnerabilities": [
+        {
+          "package": {
+            "ecosystem": "pip",
+            "name": "wheel"
+          },
+          "vulnerable_version_range": ">= 0.40.0, <= 0.46.1",
+          "first_patched_version": "0.46.2",
+          "vulnerable_functions": []
+        }
+      ]
+    }
+  ]
+}

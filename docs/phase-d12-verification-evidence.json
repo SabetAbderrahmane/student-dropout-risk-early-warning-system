@@ -1,0 +1,663 @@
+{
+  "date": "2026-10-22",
+  "timezone": "Africa/Casablanca",
+  "base_commit": "0fb70a51f5b5bb07830c439edcea6f132676746c",
+  "branch": "codex/phase-d12-release-gates",
+  "executable_commit": "103a283e2fe03211874f364e91eac658eb7c7ff2",
+  "source_git_blobs": {
+    ".github/workflows/release.yml": "b390a07b8e43941e7abecd275013bafc2238c0c2",
+    "backend/Dockerfile": "ab779ed3ba802bd431813d1bd624b8474e9cddaa",
+    "backend/requirements-packaging.txt": "53e84462c394eb8cd77293439682bd81d59862d6",
+    "frontend/package.json": "e35225a07a4b44f4b75aad129b3a9f3850fd4425",
+    "frontend/package-lock.json": "ffe0159fc5d2d72a2b9e56a467ced5db27ff49cf",
+    "scripts/ci/docker_smoke.py": "c88c7d46a74a9bbddd2db46c9cc16fce8ec49b79",
+    "scripts/ci/provision_models.py": "67f3f5ea2e61df7986db8b071b14f9c8377eeaeb",
+    "scripts/ci/release_backend.py": "b288a5b4a0c579baa38484af87fd696b8001d7de",
+    "scripts/ci/test_release_controls.py": "8ee486c7838290158998ac835179fcdd1fc6adbf"
+  },
+  "unchanged_trees": {
+    "backend/app": {
+      "base": "3f801ada144b0acd4147db3429d9d65066161cf8",
+      "delivery": "3f801ada144b0acd4147db3429d9d65066161cf8"
+    },
+    "backend/tests": {
+      "base": "e11d5a31fe7421b33f359217576ff9e73a3284fb",
+      "delivery": "e11d5a31fe7421b33f359217576ff9e73a3284fb"
+    },
+    "backend/alembic": {
+      "base": "ffded39162ff499ea1d74848aeb8621bd447f319",
+      "delivery": "ffded39162ff499ea1d74848aeb8621bd447f319"
+    }
+  },
+  "artifact_sha256": {
+    "dropout-risk-v1": "0cdc1e57f145626bba9f46c729685d4ae0968fc39b96564c09c548f7577f1bd8",
+    "enrollment-outcome-v1": "bc3690bb930b3320e029673282e3e6c5bedccbfd332cdd28953677dbfc1c8602",
+    "first-semester-outcome-v1": "2d6f7f80d6d6dcc2c844d9c3b714b1f5d7d92fa42d0a2db21fb3a3b139b5da81"
+  },
+  "environment": {
+    "python": "3.11.9",
+    "postgresql": "16.13",
+    "postgres_image": "postgres:16-alpine",
+    "native_node": "24.14.0",
+    "container_and_ci_node": "22",
+    "resolved_backend_packages": [
+      {
+        "name": "alembic",
+        "version": "1.20.1"
+      },
+      {
+        "name": "annotated-doc",
+        "version": "0.0.5"
+      },
+      {
+        "name": "annotated-types",
+        "version": "0.8.0"
+      },
+      {
+        "name": "anyio",
+        "version": "4.15.1"
+      },
+      {
+        "name": "argon2-cffi",
+        "version": "25.1.0"
+      },
+      {
+        "name": "argon2-cffi-bindings",
+        "version": "26.1.0"
+      },
+      {
+        "name": "certifi",
+        "version": "2026.10.19"
+      },
+      {
+        "name": "cffi",
+        "version": "2.1.1"
+      },
+      {
+        "name": "click",
+        "version": "8.5.0"
+      },
+      {
+        "name": "cloudpickle",
+        "version": "3.1.2"
+      },
+      {
+        "name": "coverage",
+        "version": "7.17.0"
+      },
+      {
+        "name": "dnspython",
+        "version": "2.9.0"
+      },
+      {
+        "name": "email-validator",
+        "version": "2.3.0"
+      },
+      {
+        "name": "fastapi",
+        "version": "0.160.0"
+      },
+      {
+        "name": "h11",
+        "version": "0.16.0"
+      },
+      {
+        "name": "httpcore2",
+        "version": "2.16.0"
+      },
+      {
+        "name": "httptools",
+        "version": "0.9.0"
+      },
+      {
+        "name": "httpx2",
+        "version": "2.16.0"
+      },
+      {
+        "name": "idna",
+        "version": "3.20"
+      },
+      {
+        "name": "iniconfig",
+        "version": "2.3.1"
+      },
+      {
+        "name": "joblib",
+        "version": "1.6.0"
+      },
+      {
+        "name": "Mako",
+        "version": "1.4.3"
+      },
+      {
+        "name": "MarkupSafe",
+        "version": "3.0.4"
+      },
+      {
+        "name": "numpy",
+        "version": "2.4.6"
+      },
+      {
+        "name": "opentelemetry-api",
+        "version": "1.45.1"
+      },
+      {
+        "name": "packaging",
+        "version": "26.3"
+      },
+      {
+        "name": "pandas",
+        "version": "2.3.3"
+      },
+      {
+        "name": "pip",
+        "version": "26.2"
+      },
+      {
+        "name": "pluggy",
+        "version": "1.7.0"
+      },
+      {
+        "name": "psycopg",
+        "version": "3.3.6"
+      },
+      {
+        "name": "psycopg-binary",
+        "version": "3.3.6"
+      },
+      {
+        "name": "pwdlib",
+        "version": "0.3.1"
+      },
+      {
+        "name": "pycparser",
+        "version": "3.12"
+      },
+      {
+        "name": "pydantic",
+        "version": "2.14.1"
+      },
+      {
+        "name": "pydantic_core",
+        "version": "2.50.1"
+      },
+      {
+        "name": "pydantic-settings",
+        "version": "2.16.1"
+      },
+      {
+        "name": "Pygments",
+        "version": "2.21.0"
+      },
+      {
+        "name": "PyJWT",
+        "version": "2.15.1"
+      },
+      {
+        "name": "pytest",
+        "version": "9.1.1"
+      },
+      {
+        "name": "pytest-cov",
+        "version": "7.1.0"
+      },
+      {
+        "name": "python-dateutil",
+        "version": "3.0.0"
+      },
+      {
+        "name": "python-dotenv",
+        "version": "1.2.4"
+      },
+      {
+        "name": "python-multipart",
+        "version": "0.0.32"
+      },
+      {
+        "name": "pytz",
+        "version": "2026.5"
+      },
+      {
+        "name": "PyYAML",
+        "version": "6.0.3"
+      },
+      {
+        "name": "scikit-learn",
+        "version": "1.7.2"
+      },
+      {
+        "name": "scipy",
+        "version": "1.17.1"
+      },
+      {
+        "name": "setuptools",
+        "version": "83.0.0"
+      },
+      {
+        "name": "six",
+        "version": "1.17.0"
+      },
+      {
+        "name": "SQLAlchemy",
+        "version": "2.1.6"
+      },
+      {
+        "name": "starlette",
+        "version": "1.9.0"
+      },
+      {
+        "name": "threadpoolctl",
+        "version": "3.7.0"
+      },
+      {
+        "name": "truststore",
+        "version": "0.10.5"
+      },
+      {
+        "name": "typing_extensions",
+        "version": "4.16.0"
+      },
+      {
+        "name": "typing-inspection",
+        "version": "0.4.4"
+      },
+      {
+        "name": "tzdata",
+        "version": "2026.5"
+      },
+      {
+        "name": "ucimlrepo",
+        "version": "0.0.7"
+      },
+      {
+        "name": "uvicorn",
+        "version": "0.54.0"
+      },
+      {
+        "name": "uvloop",
+        "version": "0.23.0"
+      },
+      {
+        "name": "watchfiles",
+        "version": "1.3.0"
+      },
+      {
+        "name": "websockets",
+        "version": "17.3"
+      },
+      {
+        "name": "wheel",
+        "version": "0.46.2"
+      },
+      {
+        "name": "xgboost-cpu",
+        "version": "3.2.0"
+      }
+    ],
+    "packaging_requires_python": {
+      "pip": {
+        "version": "26.2.0",
+        "requires_python": ">=3.10"
+      },
+      "setuptools": {
+        "version": "83.0.0",
+        "requires_python": ">=3.10"
+      },
+      "wheel": {
+        "version": "0.46.2",
+        "requires_python": ">=3.9"
+      }
+    }
+  },
+  "baseline_final": {
+    "tests": 544,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 945.841,
+    "modules": {
+      "tests.api.test_auth": 8,
+      "tests.api.test_casework": 11,
+      "tests.api.test_casework_integrity_audit_postgres": 81,
+      "tests.api.test_d1_authorization_postgres": 163,
+      "tests.api.test_d1_security_audit": 11,
+      "tests.api.test_freshness": 15,
+      "tests.api.test_freshness_postgres": 11,
+      "tests.api.test_health": 7,
+      "tests.api.test_imports": 23,
+      "tests.api.test_outcome_predictions": 11,
+      "tests.api.test_outcomes_postgres": 12,
+      "tests.api.test_permissions": 5,
+      "tests.api.test_predictions": 9,
+      "tests.api.test_read_models": 5,
+      "tests.api.test_staged_imports": 22,
+      "tests.api.test_staged_imports_postgres": 4,
+      "tests.api.test_students": 32,
+      "tests.api.test_users": 24,
+      "tests.api.test_users_postgres": 9,
+      "tests.api.test_warnings": 7,
+      "tests.core.test_security": 4,
+      "tests.ml.test_deployment": 24,
+      "tests.ml.test_deployment_postgres": 1,
+      "tests.ml.test_feature_schema": 6,
+      "tests.ml.test_outcomes": 20,
+      "tests.ml.test_runtime": 3,
+      "tests.ml.test_training_pipeline": 16
+    },
+    "failed_tests": []
+  },
+  "baseline_first_complete_attempt": {
+    "tests": 544,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 1045.81,
+    "modules": {
+      "tests.api.test_auth": 8,
+      "tests.api.test_casework": 11,
+      "tests.api.test_casework_integrity_audit_postgres": 81,
+      "tests.api.test_d1_authorization_postgres": 163,
+      "tests.api.test_d1_security_audit": 11,
+      "tests.api.test_freshness": 15,
+      "tests.api.test_freshness_postgres": 11,
+      "tests.api.test_health": 7,
+      "tests.api.test_imports": 23,
+      "tests.api.test_outcome_predictions": 11,
+      "tests.api.test_outcomes_postgres": 12,
+      "tests.api.test_permissions": 5,
+      "tests.api.test_predictions": 9,
+      "tests.api.test_read_models": 5,
+      "tests.api.test_staged_imports": 22,
+      "tests.api.test_staged_imports_postgres": 4,
+      "tests.api.test_students": 32,
+      "tests.api.test_users": 24,
+      "tests.api.test_users_postgres": 9,
+      "tests.api.test_warnings": 7,
+      "tests.core.test_security": 4,
+      "tests.ml.test_deployment": 24,
+      "tests.ml.test_deployment_postgres": 1,
+      "tests.ml.test_feature_schema": 6,
+      "tests.ml.test_outcomes": 20,
+      "tests.ml.test_runtime": 3,
+      "tests.ml.test_training_pipeline": 16
+    },
+    "failed_tests": [
+      "tests.ml.test_deployment::test_required_model_fails_startup_even_with_cached_error[False]",
+      "tests.ml.test_deployment::test_required_model_fails_startup_even_with_cached_error[True]"
+    ]
+  },
+  "d12_final": {
+    "tests": 544,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 1285.964,
+    "modules": {
+      "tests.api.test_auth": 8,
+      "tests.api.test_casework": 11,
+      "tests.api.test_casework_integrity_audit_postgres": 81,
+      "tests.api.test_d1_authorization_postgres": 163,
+      "tests.api.test_d1_security_audit": 11,
+      "tests.api.test_freshness": 15,
+      "tests.api.test_freshness_postgres": 11,
+      "tests.api.test_health": 7,
+      "tests.api.test_imports": 23,
+      "tests.api.test_outcome_predictions": 11,
+      "tests.api.test_outcomes_postgres": 12,
+      "tests.api.test_permissions": 5,
+      "tests.api.test_predictions": 9,
+      "tests.api.test_read_models": 5,
+      "tests.api.test_staged_imports": 22,
+      "tests.api.test_staged_imports_postgres": 4,
+      "tests.api.test_students": 32,
+      "tests.api.test_users": 24,
+      "tests.api.test_users_postgres": 9,
+      "tests.api.test_warnings": 7,
+      "tests.core.test_security": 4,
+      "tests.ml.test_deployment": 24,
+      "tests.ml.test_deployment_postgres": 1,
+      "tests.ml.test_feature_schema": 6,
+      "tests.ml.test_outcomes": 20,
+      "tests.ml.test_runtime": 3,
+      "tests.ml.test_training_pipeline": 16
+    },
+    "failed_tests": []
+  },
+  "d12_gate_summary": {
+    "python": "3.11.9",
+    "collected": 544,
+    "passed": 544,
+    "skipped": [],
+    "exit_code": 0
+  },
+  "baseline_smoke": {
+    "project": "d1-audit-8ff43a5b",
+    "run": "8f9a6f728c75",
+    "http": [
+      "GET /health/live 200",
+      "GET /health/ready 200 ready",
+      "GET /students unauthenticated 401",
+      "POST /auth/login 200 forced password change",
+      "POST /auth/change-password 200",
+      "GET /auth/me 200 SYSTEM_ADMIN",
+      "GET /models 200 three models"
+    ],
+    "images": {
+      "backend": "sha256:383f12d0062b74e15df1910824e3bb0ea22415157bac2c513c14cd9c6d572fd7"
+    },
+    "result": "passed",
+    "cleanup": "owned containers, empty network and image tags removed"
+  },
+  "d12_smoke": {
+    "project": "d1-audit-8ff43a5b",
+    "run": "1bdd63e062cd",
+    "http": [
+      "GET /health/live 200",
+      "GET /health/ready 200 ready",
+      "GET /students unauthenticated 401",
+      "POST /auth/login 200 forced password change",
+      "POST /auth/change-password 200",
+      "GET /auth/me 200 SYSTEM_ADMIN",
+      "GET /models 200 three models",
+      "GET frontend /login 200 HTML with security headers"
+    ],
+    "images": {
+      "backend": "sha256:8f7bd5374a47649885b8e8c9fb3e63b004b7ae02099ba796fc872d3e207d00ae",
+      "frontend": "sha256:878611832d4a46cb984597a2e15c9397e32ed94d4476c643875e75e86efd7a08"
+    },
+    "result": "passed",
+    "cleanup": {
+      "owned_containers_removed": 3,
+      "owned_network_removed": true,
+      "owned_image_tags_removed": 2
+    }
+  },
+  "migrations": {
+    "head": "20261014_0012",
+    "fresh_upgrade": "passed",
+    "actual_revision_query": "passed",
+    "alembic_check": "passed",
+    "empty_database_downgrade_base_upgrade_head_check": "passed",
+    "temporary_database_cleanup": "passed"
+  },
+  "controls": {
+    "tests": 24,
+    "result": "passed",
+    "ruff_F_E9": "passed",
+    "ruff_format": "passed",
+    "actionlint": "1.7.12 passed",
+    "git_diff_check": "passed"
+  },
+  "frontend": {
+    "npm_ci": "passed",
+    "typecheck": "passed",
+    "production_build": "passed",
+    "next": "16.3.8",
+    "source-map-js": "1.2.2",
+    "npm_audit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 1,
+      "total": 1
+    }
+  },
+  "python_audit": {
+    "tool": "pip-audit 2.10.1",
+    "distributions": 63,
+    "vulnerability_records": 0
+  },
+  "hosted_settings": {
+    "/actions/permissions": {
+      "status": 200,
+      "data": {
+        "enabled": true,
+        "allowed_actions": "all",
+        "sha_pinning_required": false
+      }
+    },
+    "/branches/main/protection": {
+      "status": 403,
+      "data": {
+        "message": "Upgrade to GitHub Pro or make this repository public to enable this feature."
+      }
+    },
+    "/rulesets": {
+      "status": 403,
+      "data": {
+        "message": "Upgrade to GitHub Pro or make this repository public to enable this feature."
+      }
+    },
+    "/actions/secrets": {
+      "status": 200,
+      "data": {
+        "names": []
+      }
+    },
+    "artifact_secret": {
+      "status": 201,
+      "name": "LEGACY_MODEL_BASE64",
+      "result": "provisioned",
+      "detail": {}
+    }
+  },
+  "hosted_runs": [
+    {
+      "id": 39825944164,
+      "name": "",
+      "head_sha": "103a283e2fe03211874f364e91eac658eb7c7ff2",
+      "html_url": "https://github.com/SabetAbderrahmane/student-dropout-risk-early-warning-system/actions/runs/39825944164",
+      "status": "completed",
+      "conclusion": "startup_failure",
+      "created_at": "2026-10-22T17:48:51Z",
+      "updated_at": "2026-10-22T17:48:51Z",
+      "jobs": [],
+      "startup_checks": []
+    },
+    {
+      "id": 39825442693,
+      "name": "",
+      "head_sha": "edb2ce6468e529b163c43606ae64dded41518ac1",
+      "html_url": "https://github.com/SabetAbderrahmane/student-dropout-risk-early-warning-system/actions/runs/39825442693",
+      "status": "completed",
+      "conclusion": "startup_failure",
+      "created_at": "2026-10-22T17:45:17Z",
+      "updated_at": "2026-10-22T17:45:17Z",
+      "jobs": [],
+      "startup_checks": []
+    },
+    {
+      "id": 39824623182,
+      "name": "",
+      "head_sha": "cf0c36af72921d5561f6ed2bb54dbf2bdad69729",
+      "html_url": "https://github.com/SabetAbderrahmane/student-dropout-risk-early-warning-system/actions/runs/39824623182",
+      "status": "completed",
+      "conclusion": "startup_failure",
+      "created_at": "2026-10-22T17:39:31Z",
+      "updated_at": "2026-10-22T17:39:31Z",
+      "jobs": [],
+      "startup_checks": []
+    }
+  ],
+  "hosted_retry": {
+    "status": 403,
+    "message": "This workflow run cannot be retried"
+  },
+  "cleanup": {
+    "project": "d1-audit-8ff43a5b",
+    "databases": {
+      "d1-audit-8ff43a5b-database": {
+        "remaining_fixture_databases": 0,
+        "remaining_fixture_schemas": 0,
+        "public_tables": 0,
+        "other_clients": 0
+      },
+      "d1-audit-8ff43a5b-d12-database": {
+        "remaining_fixture_databases": 0,
+        "remaining_fixture_schemas": 0,
+        "public_tables": 0,
+        "other_clients": 0
+      }
+    },
+    "containers": {
+      "d1-audit-8ff43a5b-baseline-tests": {
+        "id": "8938272e9540d5a3c5f72ea7985f56d396e497d3fe314290c2f2f2d78125ab0a",
+        "image": "sha256:bb5109f8ecedb8cc08da579d1089b04c29f831d4a8bf751463617acaf2523e76",
+        "exit_code": 0
+      },
+      "d1-audit-8ff43a5b-d12-tests": {
+        "id": "4692321968f259bfa0099a70f24720d91db3278e2f73cdaf3e350ca23d51817f",
+        "image": "sha256:09e87b4b66b145b058a5f4a7849ff50b2f00d00aa2e7e716a3ea6117ca722590",
+        "exit_code": 0
+      },
+      "d1-audit-8ff43a5b-database": {
+        "id": "802b5cb579194bcb2876d0c295d7e5c173249e9a9b0bca453a716bc36966cd41",
+        "image": "sha256:4e6e670bb069649261c9c18031f0aded7bb249a5b6664ddec29c013a89310d50",
+        "exit_code": 0
+      },
+      "d1-audit-8ff43a5b-d12-database": {
+        "id": "3c3912df6a0945828cc545b78e4a3c8b928ff13366e9c24f7f4fdf3eb08bc214",
+        "image": "sha256:4e6e670bb069649261c9c18031f0aded7bb249a5b6664ddec29c013a89310d50",
+        "exit_code": 0
+      }
+    },
+    "network": {
+      "id": "3500efa3abe6ea4c9226b38fb627f6369ebab163f1871eac6c0595b2eb9173dc",
+      "remaining_endpoints": 0,
+      "removed": true
+    },
+    "image_tags_removed": [
+      "d1-audit-8ff43a5b:baseline-tests",
+      "d1-audit-8ff43a5b:baseline",
+      "d1-audit-8ff43a5b:d12-tests",
+      "d1-audit-8ff43a5b:d12"
+    ],
+    "owned_untagged_image_ids_removed": [],
+    "remaining_project_containers": [],
+    "remaining_project_networks": [],
+    "remaining_project_volumes": [],
+    "remaining_project_images": []
+  },
+  "private_log_sha256": {
+    "baseline-build.log": "21badc10b110d4ad598a6e174d5b493c68c54b7999170febc231d5a6329a8abd",
+    "baseline-build-retry.log": "ea4b21eca992d827f80477dc58477cbc7abf08ebbe975b8e397fe5954f25cccf",
+    "baseline-inherited-setting-tests.log": "1542320d0c89102e6ce2067a1a3a21e22168414671472338d854638bd6e0a97c",
+    "baseline-tests.log": "3604ee70722982ea43953dbebf4a0187573cf262ecd975d10b6c423378832a0f",
+    "baseline-smoke-final.log": "ba0b3e6e3361bf6eec9928cc3519306328482275669460d80fab8c7452097db3",
+    "d12-final-build.log": "db4f6b5667cc88ec052a883f452ffbad7594c00dc500f4d0fb7f70a97050ae0b",
+    "d12-final-tests.log": "d4ef64d113a549a638cf59f67d9ed6401ee2694e4b619a3b93b5329963a97879",
+    "d12-final-script-smoke.log": "f7a218ed9aebbe9b3aebfa6e8badb5581a68bc12807d38ecb44e75ed96a2f7e8",
+    "release-controls.log": "e03f9d5957615302427ad887c319f039995d5b0a411dcaa6f4c721095c5552ff",
+    "frontend-ci.log": "d7d8c8bb3a28b340879b6671e86ed70c933fcaa12386ffbeaf479654b12370ee",
+    "frontend-typecheck.log": "8371370a60104cbc782f1a548d56651368e5f25ae84d306be448023aa987f576",
+    "frontend-build.log": "5edf946c875bcee371a14d15f8961f74d60b132743056087bc3df2e796a6c8cd",
+    "pip-audit-final.log": "e82148c0c30269ca5a2c35420ece6af011a4faf5a375325d750e243ffdb10625",
+    "startup-fixture-corrected.log": "fdd9f2778a4131f034c45e4e2f159de11b71081d6d5d9d231e7f5ddcaa4b6254"
+  },
+  "limitations": [
+    "GitHub private-repository plan rejects protection/rulesets (HTTP 403)",
+    "Hosted Actions startup_failure / deleted BuildFailed entry with zero jobs; exact cause unconfirmed",
+    "Backend non-scientific ranges and mutable base tags remain; this is not a full lock or OS certification"
+  ]
+}

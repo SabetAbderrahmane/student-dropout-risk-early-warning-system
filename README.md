@@ -14,6 +14,9 @@ Student academic early-warning system using a modular-monolith architecture:
 Includes runtime predictions, persisted warnings, intervention and follow-up
 casework, audit history, and dashboard read models.
 
+Release verification, secure three-model provisioning and hosted enforcement
+requirements are documented in the [D1.2 release checklist](docs/phase-d12-release-gates.md).
+
 ## Run with Docker Compose
 
 1. Copy `.env.example` to `.env`.
@@ -60,7 +63,10 @@ Student read endpoints allow all three roles. Student creation, editing, deletio
 
 ## Backend development
 
-Create a virtual environment, install `backend/requirements-dev.txt`, export the variables from `backend/.env.example`, and run:
+Create a Python 3.11.9 virtual environment. First install
+`backend/requirements-packaging.txt`, then `backend/requirements-dev.txt`, using
+`python -m pip install --index-url https://pypi.org/simple -r <file>` for each.
+Export the variables from `backend/.env.example`, and run:
 
 ```bash
 cd backend
