@@ -9,6 +9,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from docker_smoke import require_ownership
 from provision_models import CHECKSUMS, main as provision, verify_bytes
 from release_backend import URLS, NoSkips, preflight
 
@@ -51,6 +52,25 @@ def test_missing_artifact_secret_is_fatal(monkeypatch):
     monkeypatch.delenv("LEGACY_MODEL_BASE64", raising=False)
     with pytest.raises(SystemExit, match="secret is unavailable"):
         provision()
+
+
+@pytest.mark.parametrize(
+    "labels",
+    [
+        {},
+        {
+            "com.docker.compose.project": "shared",
+            "org.student-warning.release-run": "ours",
+        },
+        {
+            "com.docker.compose.project": "ours",
+            "org.student-warning.release-run": "another",
+        },
+    ],
+)
+def test_cleanup_refuses_unidentified_or_other_docker_resources(labels):
+    with pytest.raises(RuntimeError, match="Refusing cleanup"):
+        require_ownership(labels, "ours", "ours")
 
 
 @pytest.mark.parametrize(

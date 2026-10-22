@@ -59,6 +59,14 @@ def wait_http(url, container):
     raise RuntimeError("HTTP readiness timeout: " + url)
 
 
+def require_ownership(labels, project, owner):
+    if (
+        labels.get("com.docker.compose.project") != project
+        or labels.get("org.student-warning.release-run") != owner
+    ):
+        raise RuntimeError("Refusing cleanup: Docker ownership labels do not match")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project", required=True)
@@ -251,8 +259,7 @@ def main():
                         capture=True,
                     )
                 )
-                assert labels.get("com.docker.compose.project") == args.project
-                assert labels.get("org.student-warning.release-run") == owner
+                require_ownership(labels, args.project, owner)
                 docker("rm", "-f", name)
             networks = json.loads(
                 docker(
@@ -270,9 +277,9 @@ def main():
                 data = json.loads(docker("network", "inspect", network, capture=True))[
                     0
                 ]
-                assert data["Labels"].get("org.student-warning.release-run") == owner
-                assert data["Labels"].get("com.docker.compose.project") == args.project
-                assert not data["Containers"]
+                require_ownership(data["Labels"], args.project, owner)
+                if data["Containers"]:
+                    raise RuntimeError("Refusing cleanup: Docker network has endpoints")
                 docker("network", "rm", network)
             for image in images:
                 labels = json.loads(
@@ -285,8 +292,7 @@ def main():
                         capture=True,
                     )
                 )
-                assert labels.get("org.student-warning.release-run") == owner
-                assert labels.get("com.docker.compose.project") == args.project
+                require_ownership(labels, args.project, owner)
                 docker("image", "rm", image)
             evidence["cleanup"] = {
                 "owned_containers_removed": len(containers),
