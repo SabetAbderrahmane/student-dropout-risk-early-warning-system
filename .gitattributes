@@ -1,0 +1,5 @@
+# Preserve byte-checksummed release evidence across Windows and Linux checkouts.
+.gitattributes text eol=lf
+docs/evidence/**/*.json text eol=lf
+release/*.json text eol=lf
+release/*.csv text eol=lf

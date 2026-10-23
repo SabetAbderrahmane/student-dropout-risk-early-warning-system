@@ -17,6 +17,14 @@ casework, audit history, and dashboard read models.
 Release verification, secure three-model provisioning and hosted enforcement
 requirements are documented in the [D1.2 release checklist](docs/phase-d12-release-gates.md).
 
+For the **local thesis demonstration release candidate**, follow the
+[RC1 startup, presentation and shutdown procedure](docs/thesis-demo-rc1-runbook.md)
+and [exact release inventory](release/thesis-demo-rc1.json). It uses generated
+credentials, approved existing model bytes and isolated loopback-only containers.
+Do not run model reproduction/training for this release. The Compose procedure
+below is the development configuration and publishes ports on all interfaces;
+it is not the thesis demonstration startup procedure.
+
 ## Run with Docker Compose
 
 1. Copy `.env.example` to `.env`.

@@ -1,0 +1,24 @@
+{
+  "project": "e3-rc1-20261023",
+  "run": "b4132f7f208e",
+  "http": [
+    "GET /health/live 200",
+    "GET /health/ready 200 ready",
+    "GET /students unauthenticated 401",
+    "POST /auth/login 200 forced password change",
+    "POST /auth/change-password 200",
+    "GET /auth/me 200 SYSTEM_ADMIN",
+    "GET /models 200 three models",
+    "GET frontend /login 200 HTML with security headers"
+  ],
+  "images": {
+    "backend": "sha256:a38ba9f5bcf68cd208715a083d5c4a4418213aa3497ee21ed85a304ce52fc88d",
+    "frontend": "sha256:1eeaa5975057c8a2fcf1552df96ad1a42046fe9ee79d459dc09e80f008a20bb9"
+  },
+  "result": "passed",
+  "cleanup": {
+    "owned_containers_removed": 3,
+    "owned_network_removed": true,
+    "owned_image_tags_removed": 2
+  }
+}

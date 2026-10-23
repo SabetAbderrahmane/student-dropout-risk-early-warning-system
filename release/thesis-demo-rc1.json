@@ -1,0 +1,1092 @@
+{
+  "schema_version": 1,
+  "release": "thesis-demo-rc1",
+  "branch": "release/thesis-demo-rc1",
+  "recorded_at_utc": "2026-10-23T00:32:55.748127+00:00",
+  "user_timezone": "Africa/Casablanca",
+  "tested_application_revision": "e80114ddbad85ec48d53a42a80a0e6c7b354e308",
+  "release_packaging_revision": "Git commit containing this manifest; resolve with git rev-parse HEAD",
+  "approved_phases": {
+    "backend_read_models": {
+      "commit": "385f62f27901fdf5f294a8d19fc995d49de38667",
+      "subject": "feat: add Stitch backend read models",
+      "included": true
+    },
+    "frontend_integration": {
+      "commit": "2dfb37becf133a918130647070b94d38a940c5ec",
+      "subject": "feat(frontend): integrate follow-ups and outcomes workspace",
+      "included": true
+    },
+    "frontend_dark_mode": {
+      "commit": "17a914ecd5e67b47719a6d2c46f0386e9a60f52b",
+      "subject": "feat(frontend): add complete persistent light dark and system themes",
+      "included": true
+    },
+    "artifact_delivery_A1": {
+      "commit": "1d533d5a37db61caed97f95d9b82a976a6977a68",
+      "subject": "fix(ml): verify artifact delivery and expose deployment readiness",
+      "included": true
+    },
+    "user_management_A2": {
+      "commit": "4bf6f89f60cac0b806a27d47ccbf91cb1040b9e7",
+      "subject": "Implement secure administrative user provisioning and credential lifecycle",
+      "included": true
+    },
+    "B1": {
+      "commit": "5e6dcdff95205a79eb778f9e646780c9bdb5a2e2",
+      "subject": "Add verified dual-stage three-class academic outcome prediction",
+      "included": true
+    },
+    "B2": {
+      "commit": "6727cac3f1aa619e02d384e21a6fe38a44005032",
+      "subject": "Centralize prediction freshness and stage-aware operational risk",
+      "included": true
+    },
+    "C1": {
+      "commit": "9cd8abd63131d5a6d63931045a8796c45475c6ab",
+      "subject": "Implement C1 transactional casework ownership and lifecycle integrity",
+      "included": true
+    },
+    "D1_audit": {
+      "commit": "bea3570b497e99d6903ea904bba694c6803dc889",
+      "subject": "Audit D1 release security, CI and deployment readiness",
+      "included": true
+    },
+    "D1.1": {
+      "commit": "b45058c02c731a5913221aa85a3f1247910c6c77",
+      "subject": "Fix transactional authorization for Academic Admin writes",
+      "included": true
+    },
+    "D1.2": {
+      "commit": "b8386de921905b6188f71ecf41e1ed8ae7766289",
+      "subject": "Document D1.2 release checklist and exact verification evidence",
+      "included": true
+    },
+    "E1": {
+      "commit": "6881d78e4240f6bc15f5253e019f5e7949816e90",
+      "subject": "Verify E1 full-stack browser acceptance and document local demonstration verdict",
+      "included": true
+    },
+    "E1.1": {
+      "commit": "e80114ddbad85ec48d53a42a80a0e6c7b354e308",
+      "subject": "Patch Next.js to 16.4.2 and reverify full-stack acceptance",
+      "included": true
+    }
+  },
+  "excluded_onboarding": {
+    "head": "2d10cda83bf8c380cbd400e764451e3a50c84183",
+    "included": false,
+    "breaks_approved_workflow": false
+  },
+  "unchanged_source_tree_ids": {
+    "backend": "eb83c8c87494d6cc23332117836a052440468f8d",
+    "frontend": "cac321d681ab74ca56aeac553ca0f8a6dcb5e538",
+    "acceptance": "be686447fd9486250d0d7830055c7bfd3e62c1cd",
+    "scripts": "40cb4eeedf7221b2c674a0e2520870d760e31f26",
+    ".github": "70440f6aa02bba24f2151ae3173f9c1044a09239",
+    "docker-compose.yml": "f808761e2c861232b1435d71766b85716921a6fd",
+    ".env.example": "254e1612d684a6676c55d3d827ee7471b37def34"
+  },
+  "clean_checkout": {
+    "base": "e80114ddbad85ec48d53a42a80a0e6c7b354e308",
+    "initial_git_status": "",
+    "existing_generated_state": false,
+    "existing_frontend_node_modules": false,
+    "legacy_artifact_in_checkout": false,
+    "root_env_exists": false,
+    "backend_env_exists": false
+  },
+  "authorized_legacy_provisioning": {
+    "required_private_input": true,
+    "missing_artifact_exit": 1,
+    "approved_checksums_verified": true,
+    "retraining_used": false
+  },
+  "migration_head": "20261014_0012",
+  "models": [
+    {
+      "registry": "dropout-risk-v1",
+      "path": "backend/app/ml/artifacts/dropout-risk-v1/model.joblib",
+      "bytes": 11572,
+      "sha256": "0cdc1e57f145626bba9f46c729685d4ae0968fc39b96564c09c548f7577f1bd8",
+      "registry_files_sha256": {
+        "backend/app/ml/model_registry/dropout-risk-v1/artifact_manifest.json": "3806fba960d72438945dcfb29ca0a15a93d0e57f07862c6ce2bdf78ebf50c691",
+        "backend/app/ml/model_registry/dropout-risk-v1/evaluation.json": "a837914cf9b9c4a59c5cc6b6089bcecc956fe09e925e2d0ec6f75784040db1de",
+        "backend/app/ml/model_registry/dropout-risk-v1/metadata.json": "7ceabd0c3c430fd078c61a7d050df78337c515c1474f90692b56420c491a366a",
+        "backend/app/ml/model_registry/dropout-risk-v1/split_manifest.json": "125ea98eaa6a374126685be51e021839f8d94c09b8fd2593f933c3937e0690d4",
+        "backend/app/ml/model_registry/dropout-risk-v1/training_report.md": "8be6cff5faab073f8ddb65bdf9a29132edb8cef342b70326c5b9632f40a58a76"
+      },
+      "registry_files_working_sha256": {
+        "backend/app/ml/model_registry/dropout-risk-v1/artifact_manifest.json": "f3824dafbd785ef36fb21c4a0ff05be89060a363ca42eeb5804cae2e8d8e4563",
+        "backend/app/ml/model_registry/dropout-risk-v1/evaluation.json": "1e2098bf8076ddcce03c867e976711d65eca40c191940ba3d0590d019b5778f0",
+        "backend/app/ml/model_registry/dropout-risk-v1/metadata.json": "499daca57d335f947996e69ff9c4476e3be4526e81e916cf612c1b7c7913a01f",
+        "backend/app/ml/model_registry/dropout-risk-v1/split_manifest.json": "224c455b302f2c6262d160adb8d13b0a59b264174a1576b1355e7dd616887124",
+        "backend/app/ml/model_registry/dropout-risk-v1/training_report.md": "d59d912ddcf291440b388192619c5612be35ae4f4c3265c55f59d714a56ee893"
+      },
+      "registry_hash_basis": "Canonical Git blob bytes; working-copy hashes recorded separately"
+    },
+    {
+      "registry": "enrollment-outcome-v1",
+      "path": "backend/app/ml/artifacts/enrollment-outcome-v1/model.joblib",
+      "bytes": 1917631,
+      "sha256": "bc3690bb930b3320e029673282e3e6c5bedccbfd332cdd28953677dbfc1c8602",
+      "registry_files_sha256": {
+        "backend/app/ml/model_registry/enrollment-outcome-v1/artifact_manifest.json": "8e398f22e4c3e43f1057b92f50c2d13958dd7161a53bcf2d9acf06d1cfe8ec6a",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/data_audit.json": "bc5d5204d8edd4d30ea0c7f43bf9b66bfa54c3d5578d840aa765b80e6afcccac",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/evaluation.json": "4a1c150d40213d461ab8ac6fc98d4382e9874a20d9c8928097b52a6224a6ed81",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/metadata.json": "751bfb2d2ad731f44d030b2c4f97c6b22384eb2a7e992e462a6ad578517e8603",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/model_selection.json": "eb322b69a06cd595e55f7ec2ef51fe87fd89bfed012f7e0d60b2e5d39ebe2e51",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/split_manifest.json": "e6b6708b2d4caaefc1cceb6bdb5686923e1eb6a6019acc77568520aec2e9c2e4",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/threshold_calibration.json": "4b7df0791075f33a3320088f1f54f0842bc69f95e0dcba276e7e0aeba6cab67f",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/training_report.md": "a5949a2a47765d8c67fe188bc10a5a0a18a50b1e9e9faa9201b603a39afb5c46"
+      },
+      "registry_files_working_sha256": {
+        "backend/app/ml/model_registry/enrollment-outcome-v1/artifact_manifest.json": "eb0b729bf398efa1eb201dccd19e7fed0427ba16fcb83be8e66bb20cae104b59",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/data_audit.json": "8885b10146e562d68e023fcec49bba01a3f341a873ae4db55041d1ee55e7248e",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/evaluation.json": "0f3a0db50e6fc46e07ee741f58fa9d3e580f3969beec570a65d7a4692f60fbc4",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/metadata.json": "c34a669c794d9e68cbbc86a9a7a692481ac25b1ca0d450a88fefe17527e014f1",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/model_selection.json": "db0c3581433f8e19079a31cc8dc7ac05697068e05b8c54633b6450afdbc8d41c",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/split_manifest.json": "364a66901d82d8ec54c9a39d35b7917b9dca8c5aadff09303e74e6a02ec75cd7",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/threshold_calibration.json": "2c35bef2ab23ee82fc0b3a49e527533d622021fdf5a643c5e0456cb703c9f35b",
+        "backend/app/ml/model_registry/enrollment-outcome-v1/training_report.md": "6b7d92a41ee7c680bb50dee85acb1546c4a335d31f4e1a27b91ced86837518f2"
+      },
+      "registry_hash_basis": "Canonical Git blob bytes; working-copy hashes recorded separately"
+    },
+    {
+      "registry": "first-semester-outcome-v1",
+      "path": "backend/app/ml/artifacts/first-semester-outcome-v1/model.joblib",
+      "bytes": 8868,
+      "sha256": "2d6f7f80d6d6dcc2c844d9c3b714b1f5d7d92fa42d0a2db21fb3a3b139b5da81",
+      "registry_files_sha256": {
+        "backend/app/ml/model_registry/first-semester-outcome-v1/artifact_manifest.json": "cf5b2d4fd5dd46393a60f378992130345fe6eb7b0eaac1287b44270557ffcc08",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/data_audit.json": "bc5d5204d8edd4d30ea0c7f43bf9b66bfa54c3d5578d840aa765b80e6afcccac",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/evaluation.json": "6907edd59ecbb1dbff8b6864f8c65a29129b1acf658bde72358bd8f99bc7cc23",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/metadata.json": "26e2978ae378631f7a8748e68c42121fe512566c52ec3a5e36a2d5f541d18f2e",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/model_selection.json": "e1172aeebadcd1ef0026db0d94172200d3a43954a46ece8bde4b08be6cf8d44a",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/split_manifest.json": "e6b6708b2d4caaefc1cceb6bdb5686923e1eb6a6019acc77568520aec2e9c2e4",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/threshold_calibration.json": "79bc84c00125b3ff165cbb3c148afe947b236f2135725140bf76daefa47cf240",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/training_report.md": "48eade2166c2b0e22ba8c698f11e619877e415a417f9d9d1b93ce05d346a8099"
+      },
+      "registry_files_working_sha256": {
+        "backend/app/ml/model_registry/first-semester-outcome-v1/artifact_manifest.json": "d714002d69bcc2e5c3ba639038feb516f4b8edf3634086dec5f0162fff461a35",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/data_audit.json": "8885b10146e562d68e023fcec49bba01a3f341a873ae4db55041d1ee55e7248e",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/evaluation.json": "bb72e97cbcbe506d120434bc6654a46c9db50a7c5c994875f2140b37dc266332",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/metadata.json": "6028e0217a001d602e81bbf839ebe2d5e15e58ce8d5292acd8828160a0061a36",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/model_selection.json": "2b701842032697f75ff586840924092c955225e1253d2bfae8e4343e70e56cdb",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/split_manifest.json": "364a66901d82d8ec54c9a39d35b7917b9dca8c5aadff09303e74e6a02ec75cd7",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/threshold_calibration.json": "e04fcc7d5eb1e300177371facef75dcd237faa19a1d4943c51756d79b7f304f0",
+        "backend/app/ml/model_registry/first-semester-outcome-v1/training_report.md": "80370b89501a88a5b822e1f8794268f90f918492996bd6f956667a3c14bd5729"
+      },
+      "registry_hash_basis": "Canonical Git blob bytes; working-copy hashes recorded separately"
+    }
+  ],
+  "environment": {
+    "docker_engine": "29.5.3",
+    "native_python": "Python 3.11.9",
+    "native_node": "v24.14.0",
+    "production_frontend": {
+      "node": "v22.23.4",
+      "next": "16.4.2",
+      "react": "19.3.0",
+      "reactDom": "19.3.0",
+      "sharp": "0.35.5"
+    },
+    "postgresql": "PostgreSQL 16.13 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit",
+    "playwright": "1.64.1",
+    "chromium": "156.0.8078.4",
+    "playwright_browser_revision": 1248
+  },
+  "dependencies": {
+    "frontend_lockfile_sha256": "a9c604e9d06a04d1524293153c926997f983ad1de2a4e756d974c0ef925017d4",
+    "frontend_resolved_versions": {
+      "node_modules/@emnapi/runtime": "1.11.3",
+      "node_modules/@img/colour": "1.1.0",
+      "node_modules/@img/sharp-darwin-arm64": "0.35.5",
+      "node_modules/@img/sharp-darwin-x64": "0.35.5",
+      "node_modules/@img/sharp-freebsd-wasm32": "0.35.5",
+      "node_modules/@img/sharp-libvips-darwin-arm64": "1.3.4",
+      "node_modules/@img/sharp-libvips-darwin-x64": "1.3.4",
+      "node_modules/@img/sharp-libvips-linux-arm": "1.3.4",
+      "node_modules/@img/sharp-libvips-linux-arm64": "1.3.4",
+      "node_modules/@img/sharp-libvips-linux-ppc64": "1.3.4",
+      "node_modules/@img/sharp-libvips-linux-riscv64": "1.3.4",
+      "node_modules/@img/sharp-libvips-linux-s390x": "1.3.4",
+      "node_modules/@img/sharp-libvips-linux-x64": "1.3.4",
+      "node_modules/@img/sharp-libvips-linuxmusl-arm64": "1.3.4",
+      "node_modules/@img/sharp-libvips-linuxmusl-x64": "1.3.4",
+      "node_modules/@img/sharp-linux-arm": "0.35.5",
+      "node_modules/@img/sharp-linux-arm64": "0.35.5",
+      "node_modules/@img/sharp-linux-ppc64": "0.35.5",
+      "node_modules/@img/sharp-linux-riscv64": "0.35.5",
+      "node_modules/@img/sharp-linux-s390x": "0.35.5",
+      "node_modules/@img/sharp-linux-x64": "0.35.5",
+      "node_modules/@img/sharp-linuxmusl-arm64": "0.35.5",
+      "node_modules/@img/sharp-linuxmusl-x64": "0.35.5",
+      "node_modules/@img/sharp-wasm32": "0.35.5",
+      "node_modules/@img/sharp-webcontainers-wasm32": "0.35.5",
+      "node_modules/@img/sharp-win32-arm64": "0.35.5",
+      "node_modules/@img/sharp-win32-ia32": "0.35.5",
+      "node_modules/@img/sharp-win32-x64": "0.35.5",
+      "node_modules/@next/env": "16.4.2",
+      "node_modules/@next/swc-darwin-arm64": "16.4.2",
+      "node_modules/@next/swc-darwin-x64": "16.4.2",
+      "node_modules/@next/swc-linux-arm64-gnu": "16.4.2",
+      "node_modules/@next/swc-linux-arm64-musl": "16.4.2",
+      "node_modules/@next/swc-linux-x64-gnu": "16.4.2",
+      "node_modules/@next/swc-linux-x64-musl": "16.4.2",
+      "node_modules/@next/swc-win32-arm64-msvc": "16.4.2",
+      "node_modules/@next/swc-win32-x64-msvc": "16.4.2",
+      "node_modules/@swc/helpers": "0.5.23",
+      "node_modules/@types/node": "24.19.0",
+      "node_modules/@types/react": "19.3.0",
+      "node_modules/@types/react-dom": "19.3.0",
+      "node_modules/baseline-browser-mapping": "2.11.26",
+      "node_modules/caniuse-lite": "1.0.30001813",
+      "node_modules/client-only": "0.0.1",
+      "node_modules/csstype": "3.2.3",
+      "node_modules/detect-libc": "2.1.2",
+      "node_modules/nanoid": "3.3.19",
+      "node_modules/next": "16.4.2",
+      "node_modules/picocolors": "1.1.1",
+      "node_modules/postcss": "8.5.23",
+      "node_modules/react": "19.3.0",
+      "node_modules/react-dom": "19.3.0",
+      "node_modules/scheduler": "0.28.0",
+      "node_modules/semver": "7.8.5",
+      "node_modules/sharp": "0.35.5",
+      "node_modules/source-map-js": "1.2.2",
+      "node_modules/styled-jsx": "5.1.6",
+      "node_modules/tslib": "2.8.1",
+      "node_modules/typescript": "5.9.3",
+      "node_modules/undici-types": "7.24.6"
+    },
+    "backend_runtime_packages": [
+      {
+        "name": "alembic",
+        "version": "1.20.1"
+      },
+      {
+        "name": "annotated-doc",
+        "version": "0.0.5"
+      },
+      {
+        "name": "annotated-types",
+        "version": "0.8.0"
+      },
+      {
+        "name": "anyio",
+        "version": "4.15.1"
+      },
+      {
+        "name": "argon2-cffi",
+        "version": "25.1.0"
+      },
+      {
+        "name": "argon2-cffi-bindings",
+        "version": "26.1.0"
+      },
+      {
+        "name": "certifi",
+        "version": "2026.10.19"
+      },
+      {
+        "name": "cffi",
+        "version": "2.1.1"
+      },
+      {
+        "name": "click",
+        "version": "8.5.0"
+      },
+      {
+        "name": "cloudpickle",
+        "version": "3.1.2"
+      },
+      {
+        "name": "dnspython",
+        "version": "2.9.0"
+      },
+      {
+        "name": "email-validator",
+        "version": "2.3.0"
+      },
+      {
+        "name": "fastapi",
+        "version": "0.161.1"
+      },
+      {
+        "name": "h11",
+        "version": "0.16.0"
+      },
+      {
+        "name": "httptools",
+        "version": "0.9.0"
+      },
+      {
+        "name": "idna",
+        "version": "3.20"
+      },
+      {
+        "name": "joblib",
+        "version": "1.6.0"
+      },
+      {
+        "name": "Mako",
+        "version": "1.4.3"
+      },
+      {
+        "name": "MarkupSafe",
+        "version": "3.0.4"
+      },
+      {
+        "name": "numpy",
+        "version": "2.4.6"
+      },
+      {
+        "name": "opentelemetry-api",
+        "version": "1.45.1"
+      },
+      {
+        "name": "packaging",
+        "version": "26.3"
+      },
+      {
+        "name": "pandas",
+        "version": "2.3.3"
+      },
+      {
+        "name": "pip",
+        "version": "26.2"
+      },
+      {
+        "name": "psycopg",
+        "version": "3.3.6"
+      },
+      {
+        "name": "psycopg-binary",
+        "version": "3.3.6"
+      },
+      {
+        "name": "pwdlib",
+        "version": "0.3.1"
+      },
+      {
+        "name": "pycparser",
+        "version": "3.12"
+      },
+      {
+        "name": "pydantic",
+        "version": "2.14.1"
+      },
+      {
+        "name": "pydantic_core",
+        "version": "2.50.1"
+      },
+      {
+        "name": "pydantic-settings",
+        "version": "2.16.1"
+      },
+      {
+        "name": "PyJWT",
+        "version": "2.15.1"
+      },
+      {
+        "name": "python-dateutil",
+        "version": "3.0.0"
+      },
+      {
+        "name": "python-dotenv",
+        "version": "1.2.4"
+      },
+      {
+        "name": "python-multipart",
+        "version": "0.0.32"
+      },
+      {
+        "name": "pytz",
+        "version": "2026.5"
+      },
+      {
+        "name": "PyYAML",
+        "version": "6.0.3"
+      },
+      {
+        "name": "scikit-learn",
+        "version": "1.7.2"
+      },
+      {
+        "name": "scipy",
+        "version": "1.17.1"
+      },
+      {
+        "name": "setuptools",
+        "version": "83.0.0"
+      },
+      {
+        "name": "six",
+        "version": "1.17.0"
+      },
+      {
+        "name": "SQLAlchemy",
+        "version": "2.1.6"
+      },
+      {
+        "name": "starlette",
+        "version": "1.9.0"
+      },
+      {
+        "name": "threadpoolctl",
+        "version": "3.7.0"
+      },
+      {
+        "name": "typing_extensions",
+        "version": "4.16.0"
+      },
+      {
+        "name": "typing-inspection",
+        "version": "0.4.4"
+      },
+      {
+        "name": "tzdata",
+        "version": "2026.5"
+      },
+      {
+        "name": "ucimlrepo",
+        "version": "0.0.7"
+      },
+      {
+        "name": "uvicorn",
+        "version": "0.54.0"
+      },
+      {
+        "name": "uvloop",
+        "version": "0.23.0"
+      },
+      {
+        "name": "watchfiles",
+        "version": "1.3.0"
+      },
+      {
+        "name": "websockets",
+        "version": "17.3"
+      },
+      {
+        "name": "wheel",
+        "version": "0.46.2"
+      },
+      {
+        "name": "xgboost-cpu",
+        "version": "3.2.0"
+      }
+    ],
+    "backend_requirements_sha256": {
+      "requirements.txt": "4618af8bc2b48b3e98966bd8b843459ff01643e7d680b863e0227adf3a9ccaf7",
+      "requirements-packaging.txt": "4dea906a3f005c9ae0dcc8bb914c57fe7c87b50cc0917d3e2cf7bf53160a1434",
+      "requirements-dev.txt": "b2bbc33d0cdd0fb211567b8b35d16a10b34a4edded03e57edc5b4bdca29d9fb1"
+    },
+    "base_image_references": [
+      "docker.io/library/node:22-alpine@sha256:fe4f6d74e20370acb04ad889077d14d0f64a9c8ea6a42bc60cddf1e844699914",
+      "docker.io/library/python:3.11.9-slim@sha256:8fb099199b9f2d70342674bd9dbccd3ed03a258f26bbd1d556822c6dfc60c317"
+    ],
+    "byte_identical_future_images_promised": false,
+    "frontend_lockfile_working_sha256": "df5b5cfc69a44313ed8d7178b8f6b3c2be2ccbaec2e6136a08dd3e26be965616",
+    "backend_requirements_working_sha256": {
+      "requirements.txt": "52e56a6c056eb8034f7eb2d3fa2ddafcb99d8b12d5d917c0d80f9f255ca8aeea",
+      "requirements-packaging.txt": "208b2f31f1588f163bfcdf768b66b007c21f0e7d769c2cc632f754687984378c",
+      "requirements-dev.txt": "9b2357ef4b682f76e564319418e4f177a3126d08426431d1e9762bf432fdade0"
+    },
+    "text_hash_basis": "Canonical Git blob bytes; working-copy hashes recorded separately"
+  },
+  "configuration": {
+    "manual_environment_values_required": [],
+    "runtime": [
+      {
+        "name": "POSTGRES_USER",
+        "source": "helper constant",
+        "secret": false,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "POSTGRES_PASSWORD",
+        "source": "helper random secret",
+        "secret": true,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "POSTGRES_DB",
+        "source": "helper disposable database root",
+        "secret": false,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "APP_ENV",
+        "source": "helper production",
+        "secret": false,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "DATABASE_URL",
+        "source": "helper generated private URL for e1_demo",
+        "secret": true,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "JWT_SECRET_KEY",
+        "source": "helper random secret",
+        "secret": true,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "CORS_ORIGINS",
+        "source": "helper actual loopback frontend URL",
+        "secret": false,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "BOOTSTRAP_ADMIN_USERNAME",
+        "source": "helper synthetic system account",
+        "secret": false,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "BOOTSTRAP_ADMIN_EMAIL",
+        "source": "helper synthetic example.edu account",
+        "secret": false,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "BOOTSTRAP_ADMIN_FULL_NAME",
+        "source": "helper synthetic display name",
+        "secret": false,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "BOOTSTRAP_ADMIN_PASSWORD",
+        "source": "helper random initial password",
+        "secret": true,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "ML_MODEL_REQUIRED",
+        "source": "production Docker image true",
+        "secret": false,
+        "manual_configuration_required": false
+      },
+      {
+        "name": "NEXT_PUBLIC_API_URL",
+        "source": "helper actual loopback API URL; frontend build argument",
+        "secret": false,
+        "manual_configuration_required": false
+      }
+    ],
+    "JWT_ALGORITHM_default": "HS256",
+    "ACCESS_TOKEN_EXPIRE_MINUTES_default": 30,
+    "hosted_only_optional_secret": "LEGACY_MODEL_BASE64; local startup uses private --source file instead",
+    "regression_settings": {
+      "RUN_MODEL_INTEGRATION": "1",
+      "RELEASE_DISPOSABLE_POSTGRES": "1",
+      "APP_ENV": "test",
+      "ML_MODEL_REQUIRED": "false",
+      "required_postgres_url_names": [
+        "MODEL_TEST_DATABASE_URL",
+        "DUAL_STAGE_TEST_DATABASE_URL",
+        "STAGED_IMPORT_TEST_DATABASE_URL",
+        "USER_MANAGEMENT_TEST_DATABASE_URL",
+        "FRESHNESS_TEST_DATABASE_URL",
+        "C1_CASEWORK_TEST_DATABASE_URL",
+        "D1_AUDIT_TEST_DATABASE_URL"
+      ]
+    }
+  },
+  "runtime": {
+    "project": "e1-acceptance-28493f0614",
+    "frontend": "http://127.0.0.1:57404",
+    "api": "http://127.0.0.1:57403/api/v1",
+    "database": "isolated tmpfs; no host port",
+    "images": [
+      {
+        "tag": "e1-acceptance-28493f0614:backend",
+        "id": "sha256:07d55743058afe95f6a0fa94ec88814144b32aeda336042751d603801b5b847e"
+      },
+      {
+        "tag": "e1-acceptance-28493f0614:frontend",
+        "id": "sha256:25b7e360bfa96399cae65b51a2ce380528a5e99c4fb7b61a1469fd93a954cb52"
+      },
+      {
+        "tag": "e1-acceptance-28493f0614:regression",
+        "id": "sha256:9a9c173ab571045831a42909f2178c4d80cbcebf8189d90268068d753453a773"
+      }
+    ],
+    "containers": [
+      {
+        "name": "/e1-acceptance-28493f0614-database",
+        "id": "7d0d8bfe664ca087fb33b3b35550d2abb550aa47c56e546ed3b3ad3d7f3c03e6",
+        "image": "sha256:4e6e670bb069649261c9c18031f0aded7bb249a5b6664ddec29c013a89310d50",
+        "ports": {}
+      },
+      {
+        "name": "/e1-acceptance-28493f0614-backend",
+        "id": "c636838deea594fcdf694c4711942a1a699ba8d4116c085007ee4432ad0a1bea",
+        "image": "sha256:07d55743058afe95f6a0fa94ec88814144b32aeda336042751d603801b5b847e",
+        "ports": {
+          "8000/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "57403"
+            }
+          ]
+        }
+      },
+      {
+        "name": "/e1-acceptance-28493f0614-frontend",
+        "id": "2a759bd0f171cd87e016a8926cad622caa8795620ed4eff980c9a3f5c2c2737e",
+        "image": "sha256:25b7e360bfa96399cae65b51a2ce380528a5e99c4fb7b61a1469fd93a954cb52",
+        "ports": {
+          "3000/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "57404"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "checks": {
+    "frontend": {
+      "clean_install_exit": 0,
+      "audit": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "audit_exit": 0,
+      "typecheck_exit": 0,
+      "production_build_exit": 0
+    },
+    "docker_smoke": {
+      "project": "e3-rc1-20261023",
+      "run": "b4132f7f208e",
+      "http": [
+        "GET /health/live 200",
+        "GET /health/ready 200 ready",
+        "GET /students unauthenticated 401",
+        "POST /auth/login 200 forced password change",
+        "POST /auth/change-password 200",
+        "GET /auth/me 200 SYSTEM_ADMIN",
+        "GET /models 200 three models",
+        "GET frontend /login 200 HTML with security headers"
+      ],
+      "images": {
+        "backend": "sha256:a38ba9f5bcf68cd208715a083d5c4a4418213aa3497ee21ed85a304ce52fc88d",
+        "frontend": "sha256:1eeaa5975057c8a2fcf1552df96ad1a42046fe9ee79d459dc09e80f008a20bb9"
+      },
+      "result": "passed",
+      "cleanup": {
+        "owned_containers_removed": 3,
+        "owned_network_removed": true,
+        "owned_image_tags_removed": 2
+      }
+    },
+    "release_controls": {
+      "passed": 24,
+      "skipped": 0,
+      "duration_seconds": 3.42,
+      "exit_code": 0
+    },
+    "lint": {
+      "rules": [
+        "F",
+        "E9"
+      ],
+      "exit_code": 0
+    },
+    "browser": {
+      "stats": {
+        "startTime": "2026-10-23T00:19:08.412Z",
+        "duration": 93110.80900000001,
+        "expected": 9,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "tests": [
+        {
+          "title": "E1-01 System administrator onboarding and user lifecycle",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration_ms": 13011
+            }
+          ]
+        },
+        {
+          "title": "E1-02 CSV validation, correction, commit and student editing",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration_ms": 5430
+            }
+          ]
+        },
+        {
+          "title": "E1-03 System administrator validates and activates stage models",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration_ms": 11980
+            }
+          ]
+        },
+        {
+          "title": "E1-04 Enrollment assessment, explanation and advisor assignment",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration_ms": 5181
+            }
+          ]
+        },
+        {
+          "title": "E1-05 Advisor reviews warning, creates case, notes and scheduled contact",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration_ms": 8399
+            }
+          ]
+        },
+        {
+          "title": "E1-06 Ownership transfer, unassigned denial and follow-up completion",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration_ms": 10742
+            }
+          ]
+        },
+        {
+          "title": "E1-07 First-semester update, reassessment and durable case history",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration_ms": 8350
+            }
+          ]
+        },
+        {
+          "title": "E1-08 All screens, navigation, desktop/tablet themes, empty/loading/error states",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration_ms": 23891
+            }
+          ]
+        },
+        {
+          "title": "E1-09 Role denial, revoked account and expired-session boundary",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "duration_ms": 3016
+            }
+          ]
+        }
+      ],
+      "page_errors": [],
+      "console_errors": [],
+      "http_status_counts": {
+        "200": 262,
+        "201": 14,
+        "401": 2
+      },
+      "security_checks": {
+        "unassigned_note": 403,
+        "advisor_student_write": 403,
+        "academic_users_read": 403,
+        "system_student_write": 403,
+        "expired_session_redirect": true,
+        "deactivated_session_redirect": true
+      },
+      "suite_unchanged": true
+    },
+    "csv": {
+      "demo-students.csv": {
+        "valid": 2,
+        "errors": []
+      },
+      "demo-students-validation.csv": {
+        "valid": 1,
+        "errors": [
+          {
+            "row": 3,
+            "field": "age_at_enrollment",
+            "code": "INVALID_INTEGER"
+          }
+        ]
+      }
+    },
+    "backend": {
+      "python": "3.11.9",
+      "collected": 544,
+      "passed": 544,
+      "skipped": [],
+      "exit_code": 0,
+      "duration_seconds": 784.08,
+      "warnings": 298,
+      "module_counts": {
+        "tests.api.test_auth": 8,
+        "tests.api.test_casework": 11,
+        "tests.api.test_casework_integrity_audit_postgres": 81,
+        "tests.api.test_d1_authorization_postgres": 163,
+        "tests.api.test_d1_security_audit": 11,
+        "tests.api.test_freshness": 15,
+        "tests.api.test_freshness_postgres": 11,
+        "tests.api.test_health": 7,
+        "tests.api.test_imports": 23,
+        "tests.api.test_outcome_predictions": 11,
+        "tests.api.test_outcomes_postgres": 12,
+        "tests.api.test_permissions": 5,
+        "tests.api.test_predictions": 9,
+        "tests.api.test_read_models": 5,
+        "tests.api.test_staged_imports": 22,
+        "tests.api.test_staged_imports_postgres": 4,
+        "tests.api.test_students": 32,
+        "tests.api.test_users": 24,
+        "tests.api.test_users_postgres": 9,
+        "tests.api.test_warnings": 7,
+        "tests.core.test_security": 4,
+        "tests.ml.test_deployment": 24,
+        "tests.ml.test_deployment_postgres": 1,
+        "tests.ml.test_feature_schema": 6,
+        "tests.ml.test_outcomes": 20,
+        "tests.ml.test_runtime": 3,
+        "tests.ml.test_training_pipeline": 16
+      },
+      "junit_sha256": "625276026de744e2fcaae7cfbec9a35f766f9b7440d9b7dea58a3e418fffb424",
+      "runner_id": "b9e98bcafd50d7b34d15a479c55a373de19540b4daedfc6c21fcd6104d26a799",
+      "generated_databases_remaining": [],
+      "regression_root_tables": []
+    }
+  },
+  "persisted": {
+    "counts": {
+      "students": 3,
+      "admission_records": 2,
+      "first_semester_records": 2,
+      "staged_import_batches": 1,
+      "staged_import_rows": 2,
+      "staged_import_actions": 3,
+      "import_jobs": 1,
+      "prediction_results": 4,
+      "warnings": 1,
+      "warning_reviews": 1,
+      "interventions": 1,
+      "intervention_notes": 1,
+      "follow_ups": 1,
+      "model_validations": 2,
+      "model_activation_events": 2,
+      "casework_action_audit": 15
+    },
+    "integrity": {
+      "migration_head": "20261014_0012",
+      "orphan_predictions": 0,
+      "warning_student_mismatch": 0,
+      "case_student_mismatch": 0,
+      "followup_student_or_owner_mismatch": 0,
+      "forbidden_students": 0
+    },
+    "student_id": "feb8d5b7-4ad8-4648-aaff-5ff7b04bf5d1",
+    "prediction_history": [
+      {
+        "id": "13fdb393-3168-457a-abf2-c45f852decf8",
+        "prediction_stage": "FIRST_SEMESTER",
+        "model_target_type": "BINARY_DROPOUT",
+        "model_version": "dropout-logistic-regression-v1",
+        "risk_level": "LOW",
+        "probability": 0.24963110426641857,
+        "prediction_freshness": "NOT_SELECTED",
+        "predicted_outcome": null
+      },
+      {
+        "id": "542fcc5a-b8e7-48d4-bf1b-b8c6ca58cb31",
+        "prediction_stage": "FIRST_SEMESTER",
+        "model_target_type": "MULTICLASS_OUTCOME",
+        "model_version": "first-semester-outcome-v1",
+        "risk_level": "LOW",
+        "probability": 0.11006443052549954,
+        "prediction_freshness": "CURRENT",
+        "predicted_outcome": "GRADUATE"
+      },
+      {
+        "id": "89f7b35e-5838-47d0-9006-fc8dfcca6e57",
+        "prediction_stage": "FIRST_SEMESTER",
+        "model_target_type": "MULTICLASS_OUTCOME",
+        "model_version": "first-semester-outcome-v1",
+        "risk_level": "LOW",
+        "probability": 0.18011547285576907,
+        "prediction_freshness": "INPUTS_CHANGED",
+        "predicted_outcome": "GRADUATE"
+      },
+      {
+        "id": "fb728f41-48f8-42fb-a119-d35ca1edd1b1",
+        "prediction_stage": "ENROLLMENT",
+        "model_target_type": "MULTICLASS_OUTCOME",
+        "model_version": "enrollment-outcome-v1",
+        "risk_level": "MEDIUM",
+        "probability": 0.2497711730787302,
+        "prediction_freshness": "NOT_SELECTED",
+        "predicted_outcome": "ENROLLED"
+      }
+    ],
+    "predictions_match_e11": true,
+    "operational_prediction_id": "542fcc5a-b8e7-48d4-bf1b-b8c6ca58cb31",
+    "case": {
+      "id": "7434ff71-295c-46b5-97f3-1ae189fbcbc5",
+      "status": "COMPLETED",
+      "advisor_id": "2f75a1f2-e6a6-4896-9589-67474e0c4dab",
+      "note_author_ids": [
+        "2f75a1f2-e6a6-4896-9589-67474e0c4dab"
+      ]
+    },
+    "follow_ups": [
+      {
+        "id": "8b3ac002-9db7-47d5-92ba-b9752bf8de4e",
+        "intervention_id": "7434ff71-295c-46b5-97f3-1ae189fbcbc5",
+        "scheduled_for": "2026-10-24T10:00:00Z",
+        "method": "IN_PERSON",
+        "purpose": "E1 synthetic progress check",
+        "effective_status": "COMPLETED",
+        "outcome": "PROGRESS_OBSERVED",
+        "assigned_advisor": {
+          "user_id": "2f75a1f2-e6a6-4896-9589-67474e0c4dab",
+          "full_name": "E1 Synthetic advisor"
+        },
+        "completed_at": "2026-10-23T00:20:01.881221Z"
+      }
+    ],
+    "timeline_events": 11
+  },
+  "release_artifact_sha256": {
+    "release/demo-students-validation.csv": "6d87e38c94c2843de8c9b15cb0eae2a30d9ee1a49cb2d6981127f58a50c1e807",
+    "release/demo-students.csv": "9f58896589d3eaaeb8c31bcd6711c485053e7490bb2b92ca7f63faee7de9cbaa",
+    ".gitattributes": "3bebbcd7b41c23ed07e63b99617357a215e6af1aba301fbadde02e5c7030fa48"
+  },
+  "evidence_files": [
+    {
+      "path": "docs/evidence/rc1/06-enrollment-assessment-explanation.png",
+      "sha256": "e963ba2e53bbfb6e4934846165c64a1a46bf0564d3b7b5b6b33c278c938cbaa2",
+      "bytes": 234581
+    },
+    {
+      "path": "docs/evidence/rc1/10-completed-intervention.png",
+      "sha256": "cc1bb3c19d042f4b9144dc7a98eeba309a38eca9909541ba696f40c2c9bf3edf",
+      "bytes": 175429
+    },
+    {
+      "path": "docs/evidence/rc1/11-durable-case-history.png",
+      "sha256": "58a7b0e7c110f6cd8b02f95f2669bfa2734e9c74d61dc486d2d7573b09d4427c",
+      "bytes": 189351
+    },
+    {
+      "path": "docs/evidence/rc1/backend-summary.json",
+      "sha256": "a5020850f11337402095e9c1d6c008a91201da2dc903fb77fbb8d6450d5abc17",
+      "bytes": 97
+    },
+    {
+      "path": "docs/evidence/rc1/docker-smoke.json",
+      "sha256": "2070510baa94ee1d5fe52ab24bbe6fd8e2b644eb20aac8f699229106dc3c58cd",
+      "bytes": 745
+    },
+    {
+      "path": "docs/evidence/rc1/npm-audit.json",
+      "sha256": "1edfafa47b19e0370e6d56a342e61d4a7e05f3fc950dbbb9a217fdcb10dee904",
+      "bytes": 361
+    },
+    {
+      "path": "docs/evidence/rc1/tablet-dark-dashboard.png",
+      "sha256": "be67d56cf2fd11fa35396a8f809d8219008b108ecbb839493e1a95816e978b74",
+      "bytes": 207565
+    }
+  ],
+  "historical_evidence_preserved": true,
+  "hosted_plan_restrictions_local_functional_failure": false,
+  "historical_artifact_hash_checks": {
+    "e1_screenshots": 39,
+    "e11_evidence_files": 6,
+    "unchanged": true,
+    "checkout_discrepancy": "Two JSON files converted to CRLF by Windows checkout; original Git blobs match historical hashes",
+    "resolution": "Scoped LF attributes verified with core.autocrlf=true and core.eol=crlf"
+  },
+  "qa_tools": {
+    "python": "3.11.9",
+    "pytest": "9.1.1",
+    "ruff": "0.17.1",
+    "native_backend_environment_required_for_startup": false
+  },
+  "verdict": {
+    "local_university_thesis_demonstration": "GO",
+    "unresolved_local_functional_blockers": [],
+    "internet_deployment": "NO-GO / outside RC1 scope and existing prerequisites remain",
+    "hosted_plan_limit_is_local_functional_failure": false
+  },
+  "local_log_sha256": {
+    ".venv/e3/stack-up.log": "edd65bb06b795e0122dd8055cb194e1f4d61b6710b7adb18ea1f85e3b38aea92",
+    ".venv/e3/frontend-ci.log": "627c5533f350e185df3f5f477e7acf41a04a20cb2bf75dc63dd195da2d250b6e",
+    ".venv/e3/frontend-audit.json": "1edfafa47b19e0370e6d56a342e61d4a7e05f3fc950dbbb9a217fdcb10dee904",
+    ".venv/e3/frontend-typecheck.log": "8371370a60104cbc782f1a548d56651368e5f25ae84d306be448023aa987f576",
+    ".venv/e3/frontend-build.log": "ce9818b7a3c631fbd4b8fdee641f22d485b48973247099bafcb06d4a2546fa6d",
+    ".venv/e3/acceptance-ci.log": "92be811125ad1c6a9746df4af97a1db60dd568c1417065d65faf61c4381c649b",
+    ".venv/e3/browser-install.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".venv/e3/browser.log": "5481695da8e578b85949ed1aa0623df2ebc6e71c69c63a2a855c9e020753f021",
+    ".venv/e3/backend-release.log": "abdc091297c989d6e497a09b90bf647822b374e86b7522f2c907050e3ba934b8",
+    ".venv/e3/docker-smoke.log": "5811cbf55e0ed89aaeb7dc7f77758f5c9437d3c8633cf71fa459d6f8bc539eb1",
+    ".venv/e3/legacy-verify.log": "ec5fafd276a6163110ea9eaaa61457e25a5ef1fa1c25f4a7679438dfb8e8bcbf",
+    ".venv/e3/outcome-verify.log": "00c4784aadd2883879690bdbd0ac86dca4f822e39593347280ab265d8bab72b4",
+    ".venv/e3/alembic-current.log": "db1c333042848a645c2bf227428749fd013e01b2994c70c4d2f5deb1cf9a0166",
+    ".venv/e3/release-controls.log": "5fc591f3b30fbcd769101d465b68b86b7be5bc4846ea08a5d86eef91fa32fcc0",
+    ".venv/e3/lint.log": "a4443afdcfb6d7363adb285762515ccf7cf50473b1a05c20c1a50f6bed4d26b0",
+    ".venv/e3/demo-csv-validation.json": "f77ed32899b0396e50fa5f3c7e314ceb7709f5a75ca2767a7696e27d942782c4",
+    ".venv/e3/runtime-versions.json": "a1925bf6b16be683cab7c38753b97ecfaf3b744c439f69bb5d620a7089d21941",
+    ".venv/e3/backend-packages.json": "970eae89689081712132c5c2408ac1f9b0ad3569cb690ed8518ca004c2db151f",
+    ".venv/e3/missing-legacy.log": "18857481ccfaff3d1c774c61fd768d8b2118a6e7b793e82c4d5e20b55612c685"
+  },
+  "cleanup": {
+    "exit_code": 0,
+    "remaining_labelled_resources": {
+      "container": [],
+      "network": [],
+      "image": []
+    },
+    "shared_resource_inventory_unchanged": true,
+    "shared_inventory_counts": {
+      "container": 16,
+      "network": 12,
+      "image": 49
+    },
+    "independent_smoke_resources_remaining": 0,
+    "docker_prune_used": false,
+    "private_state_archived": true,
+    "log_sha256": "fb965a5d9de75ba540476345b7c2490f4e434c9521fbb7cafb117fac7594d6cc",
+    "published_http_ports_closed": {
+      "frontend": true,
+      "backend": true
+    }
+  },
+  "release_documentation": {
+    "runbook": "docs/thesis-demo-rc1-runbook.md",
+    "verification": "docs/phase-e3-release-candidate.md",
+    "handoff_requirements": "docs/phase-e3-release-candidate.md#reproduction-limits-and-handoff"
+  }
+}
