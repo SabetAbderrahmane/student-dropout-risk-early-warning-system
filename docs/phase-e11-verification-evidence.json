@@ -1,0 +1,744 @@
+{
+  "recorded_at": "2026-10-22T23:51:59.092288+00:00",
+  "base_commit": "6881d78e4240f6bc15f5253e019f5e7949816e90",
+  "branch": "codex/phase-e11-security-remediation",
+  "project": "e1-acceptance-31f71547f3",
+  "frontend": {
+    "runtime": {
+      "node": "v22.23.4",
+      "next": "16.4.2",
+      "react": "19.3.0",
+      "reactDom": "19.3.0",
+      "sharp": "0.35.5"
+    },
+    "resolved_versions": {
+      "next": "16.4.2",
+      "@next/env": "16.4.2",
+      "react": "19.3.0",
+      "react-dom": "19.3.0",
+      "typescript": "5.9.3",
+      "sharp": "0.35.5",
+      "@swc/helpers": "0.5.23",
+      "postcss": "8.5.23"
+    },
+    "audit_before_exit": 1,
+    "audit_before": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 1,
+      "total": 1
+    },
+    "audit_after_exit": 0,
+    "audit_after": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "lock_changes": [
+      {
+        "package": "",
+        "before": "0.1.0",
+        "after": "0.1.0",
+        "fields": [
+          "dependencies"
+        ]
+      },
+      {
+        "package": "node_modules/@next/env",
+        "before": "16.3.8",
+        "after": "16.4.2",
+        "fields": [
+          "integrity",
+          "resolved",
+          "version"
+        ]
+      },
+      {
+        "package": "node_modules/@next/swc-darwin-arm64",
+        "before": "16.3.8",
+        "after": "16.4.2",
+        "fields": [
+          "integrity",
+          "resolved",
+          "version"
+        ]
+      },
+      {
+        "package": "node_modules/@next/swc-darwin-x64",
+        "before": "16.3.8",
+        "after": "16.4.2",
+        "fields": [
+          "integrity",
+          "resolved",
+          "version"
+        ]
+      },
+      {
+        "package": "node_modules/@next/swc-linux-arm64-gnu",
+        "before": "16.3.8",
+        "after": "16.4.2",
+        "fields": [
+          "integrity",
+          "resolved",
+          "version"
+        ]
+      },
+      {
+        "package": "node_modules/@next/swc-linux-arm64-musl",
+        "before": "16.3.8",
+        "after": "16.4.2",
+        "fields": [
+          "integrity",
+          "resolved",
+          "version"
+        ]
+      },
+      {
+        "package": "node_modules/@next/swc-linux-x64-gnu",
+        "before": "16.3.8",
+        "after": "16.4.2",
+        "fields": [
+          "integrity",
+          "resolved",
+          "version"
+        ]
+      },
+      {
+        "package": "node_modules/@next/swc-linux-x64-musl",
+        "before": "16.3.8",
+        "after": "16.4.2",
+        "fields": [
+          "integrity",
+          "resolved",
+          "version"
+        ]
+      },
+      {
+        "package": "node_modules/@next/swc-win32-arm64-msvc",
+        "before": "16.3.8",
+        "after": "16.4.2",
+        "fields": [
+          "integrity",
+          "resolved",
+          "version"
+        ]
+      },
+      {
+        "package": "node_modules/@next/swc-win32-x64-msvc",
+        "before": "16.3.8",
+        "after": "16.4.2",
+        "fields": [
+          "integrity",
+          "resolved",
+          "version"
+        ]
+      },
+      {
+        "package": "node_modules/next",
+        "before": "16.3.8",
+        "after": "16.4.2",
+        "fields": [
+          "dependencies",
+          "integrity",
+          "optionalDependencies",
+          "resolved",
+          "version"
+        ]
+      }
+    ],
+    "npm_ci_exit": 0,
+    "typecheck_exit": 0,
+    "production_build_exit": 0
+  },
+  "candidate_metadata": {
+    "16.4.1": {
+      "version": "16.4.1",
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "peerDependencies": {
+        "sass": "^1.3.0",
+        "react": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0",
+        "react-dom": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0",
+        "@playwright/test": "^1.51.1",
+        "@opentelemetry/api": "^1.1.0",
+        "babel-plugin-react-compiler": "*"
+      },
+      "dependencies": {
+        "postcss": "8.5.23",
+        "@next/env": "16.4.1",
+        "styled-jsx": "5.1.6",
+        "@swc/helpers": "0.5.23",
+        "caniuse-lite": "^1.0.30001579",
+        "baseline-browser-mapping": "^2.9.19"
+      },
+      "dist": {
+        "shasum": "a4e3397b5d2b1356950cb13be7e6a05d1a4e7545",
+        "tarball": "https://registry.npmjs.org/next/-/next-16.4.1.tgz",
+        "fileCount": 8688,
+        "integrity": "sha512-uc657V62E34fOI6W5NtG9IzwsPcms0Z60grz2MJGtglgD+pTFnNt4Yw2PzaU622tfX4vhrDgLZzicE2YlhI20Q==",
+        "signatures": [
+          {
+            "sig": "MEQCIHGGr538FqcSLV62oe2yNtA7X89AQ/1QGyuAg8l1NxWEAiBo19UeagBFoeTa7JweYWYCL5aoAwn+X/uFQ0kNQ40++Q==",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          },
+          {
+            "sig": "MEUCIQCCgpuc0evlaIQEFIiFDo6Q/mvsoODpTcnsSyvJHJxQgQIgShkIjPwBSPRF8FgS9aDo/SnpaASoffRdfQo0D4Ds42k=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "attestations": {
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/next@16.4.1",
+          "provenance": {
+            "predicateType": "https://slsa.dev/provenance/v1"
+          }
+        },
+        "unpackedSize": 192509261
+      },
+      "optionalDependencies": {
+        "sharp": "^0.35.5",
+        "@next/swc-darwin-x64": "16.4.1",
+        "@next/swc-darwin-arm64": "16.4.1",
+        "@next/swc-linux-x64-gnu": "16.4.1",
+        "@next/swc-linux-x64-musl": "16.4.1",
+        "@next/swc-win32-x64-msvc": "16.4.1",
+        "@next/swc-linux-arm64-gnu": "16.4.1",
+        "@next/swc-linux-arm64-musl": "16.4.1",
+        "@next/swc-win32-arm64-msvc": "16.4.1"
+      }
+    },
+    "16.4.2": {
+      "version": "16.4.2",
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "peerDependencies": {
+        "sass": "^1.3.0",
+        "react": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0",
+        "react-dom": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0",
+        "@playwright/test": "^1.51.1",
+        "@opentelemetry/api": "^1.1.0",
+        "babel-plugin-react-compiler": "*"
+      },
+      "dependencies": {
+        "postcss": "8.5.23",
+        "@next/env": "16.4.2",
+        "styled-jsx": "5.1.6",
+        "@swc/helpers": "0.5.23",
+        "caniuse-lite": "^1.0.30001579",
+        "baseline-browser-mapping": "^2.9.19"
+      },
+      "dist": {
+        "shasum": "5b35585834dd7ed338099723eefe117eb6ab497b",
+        "tarball": "https://registry.npmjs.org/next/-/next-16.4.2.tgz",
+        "fileCount": 8690,
+        "integrity": "sha512-r+oBJojfefUjOiWkBhXgLS+igxX/7BWyK59uHnyOyplMSLtBZ+QLP3okrdYTbrfrbrmNTVWLBPaHDX9KRaIt3w==",
+        "signatures": [
+          {
+            "sig": "MEUCIBJU9xbb/wbuS42idTzzcSnj16UvCTgWEGkp+o4Rdm9VAiEAmjiQqhr3ATBa1NE8dtE2LwHxAiUd997VjXfe3LHoCkM=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          },
+          {
+            "sig": "MEUCIB5fOb32vsM4KMVNpbscR16j3peCrChqvXCB79dqnAHZAiEA8c0cJxXsGKDTasckOeGDDvoejmvr+utP9JFYtaK3oEM=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "attestations": {
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/next@16.4.2",
+          "provenance": {
+            "predicateType": "https://slsa.dev/provenance/v1"
+          }
+        },
+        "unpackedSize": 192517704
+      },
+      "optionalDependencies": {
+        "sharp": "^0.35.5",
+        "@next/swc-darwin-x64": "16.4.2",
+        "@next/swc-darwin-arm64": "16.4.2",
+        "@next/swc-linux-x64-gnu": "16.4.2",
+        "@next/swc-linux-x64-musl": "16.4.2",
+        "@next/swc-win32-x64-msvc": "16.4.2",
+        "@next/swc-linux-arm64-gnu": "16.4.2",
+        "@next/swc-linux-arm64-musl": "16.4.2",
+        "@next/swc-win32-arm64-msvc": "16.4.2"
+      }
+    }
+  },
+  "browser": {
+    "stats": {
+      "startTime": "2026-10-22T23:49:23.769Z",
+      "duration": 87300.544,
+      "expected": 9,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "title": "E1-01 System administrator onboarding and user lifecycle",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 8807
+          }
+        ]
+      },
+      {
+        "title": "E1-02 CSV validation, correction, commit and student editing",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 5311
+          }
+        ]
+      },
+      {
+        "title": "E1-03 System administrator validates and activates stage models",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 11238
+          }
+        ]
+      },
+      {
+        "title": "E1-04 Enrollment assessment, explanation and advisor assignment",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 4835
+          }
+        ]
+      },
+      {
+        "title": "E1-05 Advisor reviews warning, creates case, notes and scheduled contact",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 8181
+          }
+        ]
+      },
+      {
+        "title": "E1-06 Ownership transfer, unassigned denial and follow-up completion",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 10826
+          }
+        ]
+      },
+      {
+        "title": "E1-07 First-semester update, reassessment and durable case history",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 8411
+          }
+        ]
+      },
+      {
+        "title": "E1-08 All screens, navigation, desktop/tablet themes, empty/loading/error states",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 24840
+          }
+        ]
+      },
+      {
+        "title": "E1-09 Role denial, revoked account and expired-session boundary",
+        "status": "expected",
+        "results": [
+          {
+            "status": "passed",
+            "duration_ms": 2745
+          }
+        ]
+      }
+    ],
+    "page_errors": [],
+    "console_errors": [],
+    "http_status_counts": {
+      "200": 260,
+      "201": 14,
+      "401": 2
+    },
+    "security_checks": {
+      "unassigned_note": 403,
+      "advisor_student_write": 403,
+      "academic_users_read": 403,
+      "system_student_write": 403,
+      "expired_session_redirect": true,
+      "deactivated_session_redirect": true
+    },
+    "real_api": "http://127.0.0.1:54779/api/v1",
+    "frontend": "http://127.0.0.1:54780",
+    "suite_unchanged": true
+  },
+  "persisted": {
+    "table_counts": {
+      "students": 3,
+      "staged_import_batches": 1,
+      "staged_import_rows": 2,
+      "staged_import_actions": 3,
+      "import_jobs": 1,
+      "warnings": 1,
+      "warning_reviews": 1,
+      "interventions": 1,
+      "intervention_notes": 1,
+      "follow_ups": 1,
+      "prediction_results": 4,
+      "model_validations": 2,
+      "model_activation_events": 2,
+      "casework_action_audit": 15
+    },
+    "integrity": {
+      "head": "20261014_0012",
+      "orphan_predictions": 0,
+      "mismatched_warning_student": 0,
+      "mismatched_case_student": 0,
+      "mismatched_followup_student_or_owner": 0,
+      "forbidden_students": 0
+    },
+    "profile": {
+      "student_id": "b8e95555-e556-4238-8138-9fe351f6d937",
+      "recommended_stage": "FIRST_SEMESTER",
+      "operational_prediction_id": "ce0e3bf4-8382-4457-8ea3-a523b7a4784a",
+      "timeline_events": 11,
+      "predictions": [
+        {
+          "id": "faba070f-408b-4534-9406-d5d16dca529e",
+          "prediction_stage": "FIRST_SEMESTER",
+          "model_target_type": "BINARY_DROPOUT",
+          "model_version": "dropout-logistic-regression-v1",
+          "risk_level": "LOW",
+          "probability": 0.24963110426641857,
+          "prediction_freshness": "NOT_SELECTED",
+          "predicted_outcome": null
+        },
+        {
+          "id": "ce0e3bf4-8382-4457-8ea3-a523b7a4784a",
+          "prediction_stage": "FIRST_SEMESTER",
+          "model_target_type": "MULTICLASS_OUTCOME",
+          "model_version": "first-semester-outcome-v1",
+          "risk_level": "LOW",
+          "probability": 0.11006443052549954,
+          "prediction_freshness": "CURRENT",
+          "predicted_outcome": "GRADUATE"
+        },
+        {
+          "id": "4b3d3e75-8ec9-4a3f-ad3d-a4e565c0ae91",
+          "prediction_stage": "FIRST_SEMESTER",
+          "model_target_type": "MULTICLASS_OUTCOME",
+          "model_version": "first-semester-outcome-v1",
+          "risk_level": "LOW",
+          "probability": 0.18011547285576907,
+          "prediction_freshness": "INPUTS_CHANGED",
+          "predicted_outcome": "GRADUATE"
+        },
+        {
+          "id": "887f5dcc-8e48-4a21-8ab9-fd4e46c5bc6c",
+          "prediction_stage": "ENROLLMENT",
+          "model_target_type": "MULTICLASS_OUTCOME",
+          "model_version": "enrollment-outcome-v1",
+          "risk_level": "MEDIUM",
+          "probability": 0.2497711730787302,
+          "prediction_freshness": "NOT_SELECTED",
+          "predicted_outcome": "ENROLLED"
+        }
+      ],
+      "case": {
+        "id": "5cd5b8c4-9c47-409f-b00a-d8ed665bb81e",
+        "status": "COMPLETED",
+        "owner": "dacb8b51-ea0e-43f9-8780-8c75ab791de5",
+        "note_author_ids": [
+          "dacb8b51-ea0e-43f9-8780-8c75ab791de5"
+        ]
+      },
+      "follow_ups": [
+        {
+          "id": "78c7d71f-b525-4f99-b7a3-5c84adc84b86",
+          "intervention_id": "5cd5b8c4-9c47-409f-b00a-d8ed665bb81e",
+          "scheduled_for": "2026-10-23T10:00:00Z",
+          "method": "IN_PERSON",
+          "purpose": "E1 synthetic progress check",
+          "effective_status": "COMPLETED",
+          "outcome": "PROGRESS_OBSERVED",
+          "assigned_advisor": {
+            "user_id": "dacb8b51-ea0e-43f9-8780-8c75ab791de5",
+            "full_name": "E1 Synthetic advisor"
+          },
+          "completed_at": "2026-10-22T23:50:10.511145Z"
+        }
+      ]
+    }
+  },
+  "model_sha256": {
+    "dropout-risk-v1": "0cdc1e57f145626bba9f46c729685d4ae0968fc39b96564c09c548f7577f1bd8",
+    "enrollment-outcome-v1": "bc3690bb930b3320e029673282e3e6c5bedccbfd332cdd28953677dbfc1c8602",
+    "first-semester-outcome-v1": "2d6f7f80d6d6dcc2c844d9c3b714b1f5d7d92fa42d0a2db21fb3a3b139b5da81"
+  },
+  "images": [
+    {
+      "tag": "e1-acceptance-31f71547f3:backend",
+      "id": "sha256:3459380763475ce89eefe3f35b18ca043dc4cb9d45deb7df5ae1af5de90a7819"
+    },
+    {
+      "tag": "e1-acceptance-31f71547f3:frontend",
+      "id": "sha256:48229daf76b744703574fbee5b883b017b8faff758573a31d8f83b73fb10c904"
+    },
+    {
+      "tag": "e1-acceptance-31f71547f3:regression",
+      "id": "sha256:9b360926a1c5b3749ff660d1a319a65f902617c140a4537d1e728534d3a6e472"
+    }
+  ],
+  "containers": [
+    {
+      "name": "/e1-acceptance-31f71547f3-database",
+      "id": "d68deb054e31db088bd6c5095d202f6c8cfaa1660730f59d07c628499deb5773",
+      "image": "sha256:4e6e670bb069649261c9c18031f0aded7bb249a5b6664ddec29c013a89310d50",
+      "state": "running",
+      "ports": {}
+    },
+    {
+      "name": "/e1-acceptance-31f71547f3-backend",
+      "id": "78543f1a94a1e219a3aa4d80176e8f5b3bd2646b12c047a7b8bd67823bcefd1c",
+      "image": "sha256:3459380763475ce89eefe3f35b18ca043dc4cb9d45deb7df5ae1af5de90a7819",
+      "state": "running",
+      "ports": {
+        "8000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "54779"
+          }
+        ]
+      }
+    },
+    {
+      "name": "/e1-acceptance-31f71547f3-frontend",
+      "id": "b6823f1c138be0a2367a02e4b72dd0444e45b6589cc5b56a112cb31bfd377882",
+      "image": "sha256:48229daf76b744703574fbee5b883b017b8faff758573a31d8f83b73fb10c904",
+      "state": "running",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "54780"
+          }
+        ]
+      }
+    }
+  ],
+  "source_sha256": {
+    "frontend/package.json": "b85cfe4f1d0055159de0de9f6d82c06f3c9a7f97f159e47b9579f05173c2eff1",
+    "frontend/package-lock.json": "df5b5cfc69a44313ed8d7178b8f6b3c2be2ccbaec2e6136a08dd3e26be965616",
+    "acceptance/tests/acceptance.spec.ts": "20029ca03bc8fb3d6b742cc5991910e1eb394dd34265aefb0d261affcfd19ee2",
+    "acceptance/playwright.config.ts": "f2aee26abfbb867b70a4395edfeb8472617ee40218ceb45fa8ef0ea52e2f735c",
+    "scripts/acceptance/stack.py": "3a9c8b2ae175dc490b59b8022c0e2d3eb2849dcff156e7efab487ec8e2795f4c"
+  },
+  "evidence_files": [
+    {
+      "path": "docs/evidence/e11/06-enrollment-assessment-explanation.png",
+      "sha256": "44b3a02236c07f79d33cbe9722458f491577acfb550b9893c2ce313da4eb0a81",
+      "bytes": 234462
+    },
+    {
+      "path": "docs/evidence/e11/10-completed-intervention.png",
+      "sha256": "23e3b58ad7af5a978f1e7d19b95501e571daba62abfe98dc1e061582f12c41b8",
+      "bytes": 175536
+    },
+    {
+      "path": "docs/evidence/e11/11-durable-case-history.png",
+      "sha256": "105a3650903df5a2f0496b3b59b78bed6e0e9f609b669c9eb2846cdb6a35a8f8",
+      "bytes": 188083
+    },
+    {
+      "path": "docs/evidence/e11/npm-audit-after.json",
+      "sha256": "1edfafa47b19e0370e6d56a342e61d4a7e05f3fc950dbbb9a217fdcb10dee904",
+      "bytes": 361
+    },
+    {
+      "path": "docs/evidence/e11/npm-audit-before.json",
+      "sha256": "56e7fc7ac66099f991918423a9d833c5190b7d589759bab2a1d9e04dfdb7ee7f",
+      "bytes": 2210
+    },
+    {
+      "path": "docs/evidence/e11/tablet-dark-dashboard.png",
+      "sha256": "0dc726fbf4bc2b8baf36a47e1fc36ec5585f2fd56245505bee0ea01411e87d18",
+      "bytes": 207503
+    }
+  ],
+  "browser_reports_sha256": {
+    "results.json": "689ca2ddd4bbe4e9290884d44f15c3edb20efedc8bc19671579d05c613db859f",
+    "http-evidence.json": "d5780e9085823fe4cae3f70a8f56d0774ea8c46b71b181a5f852728244c26cfa"
+  },
+  "prediction_results_match_e1_for_identical_synthetic_inputs": true,
+  "unchanged_base_tree_ids": {
+    "backend": "eb83c8c87494d6cc23332117836a052440468f8d",
+    "acceptance": "be686447fd9486250d0d7830055c7bfd3e62c1cd",
+    "scripts": "40cb4eeedf7221b2c674a0e2520870d760e31f26",
+    ".github": "70440f6aa02bba24f2151ae3173f9c1044a09239",
+    "frontend/app": "561afd1703bfb29072a15c23c5bbd00b678c2ca7",
+    "frontend/components": "23ea87417f87f820600ec2b5dbab6af415875d49",
+    "frontend/lib": "0dffb0d9ef309999fa1d2889a2ceb167c8a63837",
+    "frontend/types": "d037da9600156e18bd349145044b8f9be96dfd21"
+  },
+  "historical_e1_screenshots_unchanged": 39,
+  "supplementary_diagnostic": {
+    "initial_sharp_package_inspection": "require(sharp/package.json) rejected by package exports",
+    "corrected_inspection": "Read installed /app/node_modules/sharp/package.json directly: 0.35.5",
+    "application_changes_required": false
+  },
+  "bounded_lock_update_verified": {
+    "changed_package_entries": 10,
+    "root_dependency_coordinate_changed": true,
+    "unrelated_package_changes": 0
+  },
+  "environment": {
+    "docker_engine": "29.5.3",
+    "native_python": "Python 3.11.9",
+    "native_node": "v24.14.0",
+    "backend_python": "Python 3.11.9",
+    "postgresql": "PostgreSQL 16.13 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit",
+    "playwright": "1.64.1",
+    "chromium": "156.0.8078.4",
+    "playwright_browser_revision": 1248
+  },
+  "backend_gate_settings": {
+    "python_required": "3.11.9",
+    "RUN_MODEL_INTEGRATION": "1",
+    "APP_ENV": "test",
+    "ML_MODEL_REQUIRED": "false",
+    "RELEASE_DISPOSABLE_POSTGRES": "1",
+    "disposable_database": "release_gate",
+    "required_url_variables": [
+      "MODEL_TEST_DATABASE_URL",
+      "DUAL_STAGE_TEST_DATABASE_URL",
+      "STAGED_IMPORT_TEST_DATABASE_URL",
+      "USER_MANAGEMENT_TEST_DATABASE_URL",
+      "FRESHNESS_TEST_DATABASE_URL",
+      "C1_CASEWORK_TEST_DATABASE_URL",
+      "D1_AUDIT_TEST_DATABASE_URL"
+    ]
+  },
+  "release_controls": {
+    "passed": 24,
+    "skipped": 0,
+    "duration_seconds": 3.65,
+    "exit_code": 0
+  },
+  "targeted_lint": {
+    "exit_code": 0,
+    "rules": [
+      "F",
+      "E9"
+    ]
+  },
+  "backend": {
+    "python": "3.11.9",
+    "collected": 544,
+    "passed": 544,
+    "skipped": [],
+    "exit_code": 0,
+    "duration_seconds": 768.14,
+    "warnings": 298,
+    "module_counts": {
+      "tests.api.test_auth": 8,
+      "tests.api.test_casework": 11,
+      "tests.api.test_casework_integrity_audit_postgres": 81,
+      "tests.api.test_d1_authorization_postgres": 163,
+      "tests.api.test_d1_security_audit": 11,
+      "tests.api.test_freshness": 15,
+      "tests.api.test_freshness_postgres": 11,
+      "tests.api.test_health": 7,
+      "tests.api.test_imports": 23,
+      "tests.api.test_outcome_predictions": 11,
+      "tests.api.test_outcomes_postgres": 12,
+      "tests.api.test_permissions": 5,
+      "tests.api.test_predictions": 9,
+      "tests.api.test_read_models": 5,
+      "tests.api.test_staged_imports": 22,
+      "tests.api.test_staged_imports_postgres": 4,
+      "tests.api.test_students": 32,
+      "tests.api.test_users": 24,
+      "tests.api.test_users_postgres": 9,
+      "tests.api.test_warnings": 7,
+      "tests.core.test_security": 4,
+      "tests.ml.test_deployment": 24,
+      "tests.ml.test_deployment_postgres": 1,
+      "tests.ml.test_feature_schema": 6,
+      "tests.ml.test_outcomes": 20,
+      "tests.ml.test_runtime": 3,
+      "tests.ml.test_training_pipeline": 16
+    },
+    "junit_sha256": "7d858988f741a2c7f01c8d32e91890f087850d3daa891be68f968d31cd4d781d",
+    "runner_id": "dc588e2d9b71bd167ced53eaafad61f4955c2b3c907164752c364c5c57f7b0bb",
+    "runner_exit_code": 0,
+    "leftover_generated_databases": [],
+    "regression_root_tables": []
+  },
+  "verdict": {
+    "local_university_thesis_demonstration": "GO",
+    "internet_deployment": "NO-GO / existing deployment prerequisites remain"
+  },
+  "local_log_sha256": {
+    ".venv/e11/lock-update.log": "e8e7a630947be91dca9c1bff6e08378160d4ba85e6c524b9a2f29494a6ecdeed",
+    ".venv/e11/frontend-ci.log": "627c5533f350e185df3f5f477e7acf41a04a20cb2bf75dc63dd195da2d250b6e",
+    ".venv/e11/frontend-typecheck.log": "8371370a60104cbc782f1a548d56651368e5f25ae84d306be448023aa987f576",
+    ".venv/e11/frontend-build.log": "4871ca899443fd8406e1321e8be5518dbcf4bdfad8461c65b727a0fcb52c64fc",
+    ".venv/e11/audit-before.json": "56e7fc7ac66099f991918423a9d833c5190b7d589759bab2a1d9e04dfdb7ee7f",
+    ".venv/e11/audit-after.json": "1edfafa47b19e0370e6d56a342e61d4a7e05f3fc950dbbb9a217fdcb10dee904",
+    ".venv/e11/stack-up.log": "55d083ea25c09f15b34a4fcc145043633c43dec3f56a78955abf43330163c5f2",
+    ".venv/e11/backend-release.log": "15106f8c19d7e1e55ac652d9457237ce65b486422249fde77c943be368c1a74c",
+    ".venv/e11/acceptance-ci.log": "aa0bafc0b89d838f408ae6d45cc633fcba3a6484d2a181d249d69b9bea5ab246",
+    ".venv/e11/browser.log": "084960f500241c36c956b120348f4498f48c788da33bd1fb1235c573ea43f93c",
+    ".venv/e11/live-legacy-verify.log": "ec5fafd276a6163110ea9eaaa61457e25a5ef1fa1c25f4a7679438dfb8e8bcbf",
+    ".venv/e11/live-outcomes-verify.log": "00c4784aadd2883879690bdbd0ac86dca4f822e39593347280ab265d8bab72b4",
+    ".venv/e11/live-alembic.log": "db1c333042848a645c2bf227428749fd013e01b2994c70c4d2f5deb1cf9a0166",
+    ".venv/e11/release-controls.log": "762072e4e0719ec6123d1712c192cc494cae193087d01074db9513ccaff9928b",
+    ".venv/e11/targeted-lint.log": "a4443afdcfb6d7363adb285762515ccf7cf50473b1a05c20c1a50f6bed4d26b0",
+    ".venv/e11/runtime-versions.json": "a1925bf6b16be683cab7c38753b97ecfaf3b744c439f69bb5d620a7089d21941"
+  },
+  "completed_required_checks": {
+    "clean_install": 0,
+    "typecheck": 0,
+    "production_build": 0,
+    "npm_audit_low": 0,
+    "backend_release_gate": 0,
+    "model_integrity": 0,
+    "docker_build_start": 0,
+    "nine_browser_scenarios": 0,
+    "production_runtime_version_check": 0
+  },
+  "cleanup": {
+    "exit_code": 0,
+    "remaining_labelled_resources": {
+      "container": [],
+      "network": [],
+      "image": []
+    },
+    "shared_inventory_unchanged": true,
+    "shared_inventory_counts": {
+      "container": 16,
+      "network": 12,
+      "image": 49
+    },
+    "docker_prune_used": false,
+    "private_state_archived": true,
+    "log_sha256": "67750768faddb69b53f59c75f957f0e0bbc44bcd3d680db23b19b7afb9d82347"
+  }
+}
